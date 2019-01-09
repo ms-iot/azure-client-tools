@@ -1,0 +1,40 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "our first test case!",
+      "input": {
+        "properties": {
+          "desired": {
+            "rebootInfo": {
+              "__meta": {
+                "deploymentId": "reboot_schedule_v1"
+              },
+              "singleRebootTime": "2016-10-10T17:00:00Z",
+              "dailyRebootTime": "2016-10-10T17:00:00Z"
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "rebootInfo": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "reboot_schedule_v1",
+                  "time": "<ignore>"
+                },
+                "lastBootTime": "<ignore>",
+                "singleRebootTime": "2016-10-10T17:00:00Z",
+                "dailyRebootTime": "2016-10-10T17:00:00Z"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

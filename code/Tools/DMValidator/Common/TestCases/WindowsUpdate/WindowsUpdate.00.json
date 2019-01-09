@@ -1,0 +1,53 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "our windows update policy test case!",
+      "input": {
+        "properties": {
+          "desired": {
+            "windowsUpdate": {
+              "__meta": {
+                "deploymentId": "windows_update_v1"
+              },
+              "activeHoursStart": 1,
+              "activeHoursEnd": 2,
+              "allowAutoUpdate": 1,
+              "allowUpdateService": 0,
+              "branchReadinessLevel": 16,
+              "pauseFeatureUpdates": 0,
+              "pauseQualityUpdates": 0,
+              "scheduledInstallDay": 3,
+              "scheduledInstallTime": 2
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "windowsUpdate": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "windows_update_v1",
+                  "time": "<ignore>"
+                },
+                "activeHoursStart": 1,
+                "activeHoursEnd": 2,
+                "allowAutoUpdate": 1,
+                "allowUpdateService": 0,
+                "branchReadinessLevel": 16,
+                "pauseFeatureUpdates": 0,
+                "pauseQualityUpdates": 0,
+                "scheduledInstallDay": 3,
+                "scheduledInstallTime": 2
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

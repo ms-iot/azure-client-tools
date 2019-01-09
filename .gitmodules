@@ -1,0 +1,12 @@
+[submodule "deps/security"]
+	path = deps/security
+	url = https://github.com/ms-iot/security.git
+[submodule "deps/azure-iot-sdk-c"]
+	path = deps/azure-iot-sdk-c
+	url = https://github.com/ms-iot/azure-iot-sdk-c
+[submodule "deps/azure-storage-cpp"]
+	path = deps/azure-storage-cpp
+	url = https://github.com/ms-iot/azure-storage-cpp
+[submodule "deps/cpprestsdk"]
+	path = deps/cpprestsdk
+	url = https://github.com/ms-iot/cpprestsdk

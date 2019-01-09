@@ -1,0 +1,92 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "trigger certificate install.",
+      "input": {
+        "properties": {
+          "desired": {
+            "certificates": {
+              "__meta": {
+                "deploymentId": "certificates_v1"
+              },
+              "connectionString": "DefaultEndpointsProtocol=https;AccountName=gmilekastore01;AccountKey=n6/bZt5xykS9Udaj5gcrk/yf8ImnUydEsnQtZqvYSEhXF6snZyPWmNB5SviLsdxT1pMe5w8SDVyj4v+gvIuO4w==;EndpointSuffix=core.windows.net",
+              "rootCATrustedCertificates_Root": {
+                "09DE264388CCF8607966266135DA76E0B8D7798B": {
+                  "state": "installed",
+                  "fileName": "certificates\\gmileka0927.cer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "certificates": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "certificates_v1",
+                  "time": "<ignore>"
+                },
+                "rootCATrustedCertificates_Root": {
+                  "09DE264388CCF8607966266135DA76E0B8D7798B": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "deviceTwin",
+      "description": "trigger certificate uninstall.",
+      "input": {
+        "properties": {
+          "desired": {
+            "certificates": {
+              "__meta": {
+                "deploymentId": "certificates_v2"
+              },
+              "rootCATrustedCertificates_Root": {
+                "09DE264388CCF8607966266135DA76E0B8D7798B": {
+                  "state": "uninstalled"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "certificates": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "certificates_v2",
+                  "time": "<ignore>"
+                }
+              }
+            }
+          }
+        },
+        "absent": {
+          "properties": {
+            "reported": {
+              "certificates": {
+                "rootCATrustedCertificates_Root": {
+                  "09DE264388CCF8607966266135DA76E0B8D7798B": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

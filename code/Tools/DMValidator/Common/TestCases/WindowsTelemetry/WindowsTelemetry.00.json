@@ -1,0 +1,37 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "set Windows telemetry level",
+      "input": {
+        "properties": {
+          "desired": {
+            "windowsTelemetry": {
+              "__meta": {
+                "deploymentId": "windows_telemetry_v1"
+              },
+              "level": "security"
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "windowsTelemetry": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "windows_telemetry_v1",
+                  "time": "<ignore>"
+                },
+                "level": "security"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

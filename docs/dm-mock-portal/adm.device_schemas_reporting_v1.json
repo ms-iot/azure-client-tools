@@ -1,0 +1,20 @@
+{
+  "name": "device_schemas_reporting_v1",
+  "priority": 20,
+  "desiredState": {
+    "__deviceSchemas": {
+      "__meta": {
+        "deploymentId": "device_schemas_reporting_v1"
+      },
+      "reporting": {
+        "groups": "all",
+        "types": "all",
+        "tags": ""
+      }
+    }
+  },
+  "targetCondition": "properties.reported.deviceInfo.oem='Hewlett-Packard'",
+  "successCondition": "properties.reported.__deviceSchemas.__meta.deploymentStatus='succeeded'",
+  "failureCondition": "properties.reported.__deviceSchemas.__meta.deploymentStatus='failed'",
+  "pendingCondition": "properties.reported.__deviceSchemas.__meta.deploymentStatus='pending'"
+}

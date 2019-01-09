@@ -1,0 +1,10 @@
+LIBRARY
+EXPORTS
+
+PluginCreate @1 PRIVATE
+
+PluginInvoke @2 PRIVATE
+PluginDeleteBuffer @3 PRIVATE
+
+PluginSetReverseInvoke @4 PRIVATE
+PluginSetReverseDeleteBuffer @5 PRIVATE

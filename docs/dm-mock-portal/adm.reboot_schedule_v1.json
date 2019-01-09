@@ -1,0 +1,17 @@
+{
+  "name": "reboot_schedule_v1",
+  "priority": 20,
+  "desiredState": {
+    "rebootInfo": {
+      "__meta": {
+        "deploymentId": "reboot_schedule_v1"
+      },
+      "singleRebootTime": "2016-10-10T17:00:00Z",
+      "dailyRebootTime": "2016-10-10T17:00:00Z"
+    }
+  },
+  "targetCondition": "properties.reported.deviceInfo.oem='Hewlett-Packard'",
+  "successCondition": "properties.reported.rebootInfo.__meta.deploymentStatus='succeeded'",
+  "failureCondition": "properties.reported.rebootInfo.__meta.deploymentStatus='failed'",
+  "pendingCondition": "properties.reported.rebootInfo.__meta.deploymentStatus='pending'"
+}

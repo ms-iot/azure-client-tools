@@ -1,0 +1,9 @@
+{
+    "connection-string" : "Paste your connection string here",
+    "tests" : "../Common/",
+    "devices" : [
+        "myDevice1",
+        "MyDevice2"
+    ],
+    "log" : ".",
+}

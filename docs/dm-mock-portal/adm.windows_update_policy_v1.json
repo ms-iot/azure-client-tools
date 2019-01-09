@@ -1,0 +1,26 @@
+{
+  "name": "windows_update_policy_v1",
+  "priority": 20,
+  "desiredState": {
+    "windowsUpdate": {
+      "__meta": {
+        "deploymentId": "windows_update_policy_v1"
+      },
+      "activeHoursStart": 1,
+      "activeHoursEnd": 2,
+      "allowAutoUpdate": 1,
+      "allowUpdateService": 0,
+      "branchReadinessLevel": 16,
+      "deferFeatureUpdatesPeriod": 30,
+      "deferQualityUpdatesPeriod": 15,
+      "pauseFeatureUpdates": 0,
+      "pauseQualityUpdates": 0,
+      "scheduledInstallDay": 3,
+      "scheduledInstallTime": 2
+    }
+  },
+  "targetCondition": "properties.reported.deviceInfo.oem='Hewlett-Packard'",
+  "successCondition": "properties.reported.windowsUpdate.__meta.deploymentStatus='succeeded'",
+  "failureCondition": "properties.reported.windowsUpdate.__meta.deploymentStatus='failed'",
+  "pendingCondition": "properties.reported.windowsUpdate.__meta.deploymentStatus='pending'"
+}

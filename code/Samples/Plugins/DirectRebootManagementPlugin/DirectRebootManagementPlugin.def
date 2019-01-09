@@ -1,0 +1,8 @@
+LIBRARY
+EXPORTS
+
+PluginCreate @1 PRIVATE
+PluginGetHandlersInfo @2 PRIVATE
+
+PluginCreateRawHandler @3 PRIVATE
+PluginDestroyRawHandler @4 PRIVATE
