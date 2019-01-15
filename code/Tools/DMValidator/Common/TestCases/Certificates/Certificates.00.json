@@ -11,7 +11,7 @@
               "__meta": {
                 "deploymentId": "certificates_v1"
               },
-              "connectionString": "DefaultEndpointsProtocol=https;AccountName=gmilekastore01;AccountKey=n6/bZt5xykS9Udaj5gcrk/yf8ImnUydEsnQtZqvYSEhXF6snZyPWmNB5SviLsdxT1pMe5w8SDVyj4v+gvIuO4w==;EndpointSuffix=core.windows.net",
+              "connectionString": "<storage connection string>",
               "rootCATrustedCertificates_Root": {
                 "09DE264388CCF8607966266135DA76E0B8D7798B": {
                   "state": "installed",
