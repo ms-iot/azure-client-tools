@@ -17,17 +17,25 @@ The tool can be found under the folder AzureDeviceManagementPlugins in the solut
 
 The syntax for using it is:
 <pre>
-PluginCreator.exe skeletonFolder pluginName targetFolderParent
+PluginCreator.exe <skeletonPluginFolder> <pluginName> <targetFolderParent>
 </pre>
 
-For example, to create a new plug-in for a component named ComponentName, we can run the following command:
+For example, to create a new plug-in for a component named SampleComponentName, we can run the following command:
 
 <pre>
 cd &lt;repo root&gt;
-code\x64\Debug\PluginCreator.exe code\AzureDeviceManagementPlugins\SkeletonPlugin ComponentName code\AzureDeviceManagementPlugins
+code\output\x64\Debug\PluginCreator.exe code\AzureDeviceManagementPlugins\SkeletonPlugin SampleComponentName code\AzureDeviceManagementPlugins
 </pre>
 
 **Note**: Make sure you review all the generated files and modify them as necessary.
+**Note**: If you do not see the newly created plugin as a part of your solution, you might have to add it manually (..add existing project). 
+
+#### Setting up the project
+
+- Add dependencies on the following projects (or their output if using your own solution):
+    - `AzureDeviceManagementPluginCommon`
+    - `AzureDeviceManagementCommon`
+    - `Utilities`.
 
 ### Creating the Skeleton Manually
 

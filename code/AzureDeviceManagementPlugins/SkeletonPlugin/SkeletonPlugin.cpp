@@ -13,8 +13,8 @@ using namespace std;
 using namespace DMUtils;
 using namespace DMCommon;
 
-using namespace Microsoft::Windows::Azure::DeviceManagement::Plugin::Common;
-using namespace Microsoft::Windows::Azure::DeviceManagement::SkeletonPlugin;
+using namespace Microsoft::Azure::DeviceManagement::Plugin::Common;
+using namespace Microsoft::Azure::DeviceManagement::SkeletonPlugin;
 
 PluginStub gPluginStub;
 std::shared_ptr<IRawHandler> gSkeletonCmdHandler;

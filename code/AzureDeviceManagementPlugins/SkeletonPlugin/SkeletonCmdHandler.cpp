@@ -11,7 +11,7 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
-namespace Microsoft { namespace Windows { namespace Azure { namespace DeviceManagement { namespace SkeletonPlugin {
+namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace SkeletonPlugin {
 
     SkeletonCmdHandler::SkeletonCmdHandler() :
         BaseHandler(SkeletonCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
@@ -36,6 +36,40 @@ namespace Microsoft { namespace Windows { namespace Azure { namespace DeviceMana
         }
 
         active = true;
+    }
+
+    void SkeletonCmdHandler::OnConnectionStatusChanged(
+        DMCommon::ConnectionStatus status)
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+        if (status == ConnectionStatus::eOffline)
+        {
+            TRACELINE(LoggingLevel::Verbose, "Connection Status: Offline.");
+        }
+        else
+        {
+            TRACELINE(LoggingLevel::Verbose, "Connection Status: Online.");
+
+            Json::Value handlerConfig = GetConfig();
+
+            // Report on connect...
+            Json::Value reportOnConnect = handlerConfig[JsonHandlerConfigReportOnConnect];
+            if (!reportOnConnect.isNull() && reportOnConnect.isBool())
+            {
+                if (reportOnConnect.asBool())
+                {
+                    TRACELINE(LoggingLevel::Verbose, "Report on connect is on...");
+
+                    Json::Value reportedObject(Json::objectValue);
+                    std::shared_ptr<ReportedErrorList> errorList = make_shared<ReportedErrorList>();
+                    FinalizeAndReport(reportedObject, errorList);
+                }
+                else
+                {
+                    TRACELINE(LoggingLevel::Verbose, "Report on connect is off...");
+                }
+            }
+        }
     }
 
     InvokeResult SkeletonCmdHandler::Invoke(
@@ -82,4 +116,4 @@ namespace Microsoft { namespace Windows { namespace Azure { namespace DeviceMana
         return invokeResult;
     }
 
-}}}}}
+}}}}
