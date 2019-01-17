@@ -17,7 +17,7 @@ The tool can be found under the folder AzureDeviceManagementPlugins in the solut
 
 The syntax for using it is:
 <pre>
-PluginCreator.exe <skeletonPluginFolder> <pluginName> <targetFolderParent>
+PluginCreator.exe &lt;skeletonPluginFolder&gt; &gt;pluginName&gt; &gt;targetFolderParent&gt;
 </pre>
 
 For example, to create a new plug-in for a component named SampleComponentName, we can run the following command:
