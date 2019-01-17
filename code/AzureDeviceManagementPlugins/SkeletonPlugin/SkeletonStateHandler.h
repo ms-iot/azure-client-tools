@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace Microsoft { namespace Windows { namespace Azure { namespace DeviceManagement { namespace SkeletonPlugin {
+namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace SkeletonPlugin {
 
     class SkeletonStateHandler : public DMCommon::BaseHandler
     {
@@ -14,6 +14,9 @@ namespace Microsoft { namespace Windows { namespace Azure { namespace DeviceMana
         void Start(
             const Json::Value& config,
             bool& active);
+
+        void OnConnectionStatusChanged(
+            DMCommon::ConnectionStatus status);
 
         DMCommon::InvokeResult Invoke(
             const Json::Value& groupDesiredConfigJson) noexcept;
@@ -29,4 +32,4 @@ namespace Microsoft { namespace Windows { namespace Azure { namespace DeviceMana
 
     };
 
-}}}}}
+}}}}

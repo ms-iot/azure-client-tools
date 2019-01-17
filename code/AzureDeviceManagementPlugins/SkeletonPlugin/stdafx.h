@@ -16,7 +16,7 @@
 #include <memory>
 
 #include "..\..\Utilities\Utils.h"
-namespace DMUtils = Microsoft::Windows::Azure::DeviceManagement::Utils;
+namespace DMUtils = Microsoft::Azure::DeviceManagement::Utils;
 
 #include "..\..\AzureDeviceManagementCommon\DMCommon.h"
-namespace DMCommon = Microsoft::Windows::Azure::DeviceManagement::Common;
+namespace DMCommon = Microsoft::Azure::DeviceManagement::Common;
