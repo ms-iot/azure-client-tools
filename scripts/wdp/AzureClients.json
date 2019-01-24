@@ -1,0 +1,339 @@
+{
+  "DeviceManagementClient": {
+    "Title": "Device Management Client",
+    "Description": "The Azure Device Management client allows the device to be remotely configured by an operator through Azure IoT Hub.",
+    "HelpUrl": "https://github.com/ms-iot/iot-core-azure-dm-client",
+    "x86": {
+      "PreDownloadCommands": [],
+      "Payloads": [
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/Limpet.exe",
+          "Target": "c:\\windows\\system32\\Limpet.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/AzureDeviceManagementClient.exe",
+          "Target": "c:\\dm\\AzureDeviceManagementClient.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/AzureDeviceManagementClient.json",
+          "Target": "c:\\dm\\AzureDeviceManagementClient.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/AzureDeviceManagementPluginHost.exe",
+          "Target": "c:\\dm\\AzureDeviceManagementPluginHost.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/CertificateManagementPlugin.dll",
+          "Target": "c:\\dm\\CertificateManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/CertificateManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\CertificateManagementManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/cpprest141d_2_10.dll",
+          "Target": "c:\\dm\\cpprest141d_2_10.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/concrt140d.dll",
+          "Target": "c:\\dm\\concrt140d.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/wastorage.dll",
+          "Target": "c:\\dm\\wastorage.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/DeviceInfoPlugin.dll",
+          "Target": "c:\\dm\\DeviceInfoPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/DeviceInfoManifest.json",
+          "Target": "c:\\dm\\manifests\\DeviceInfoManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/FactoryResetPlugin.dll",
+          "Target": "c:\\dm\\FactoryResetPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/FactoryResetManifest.json",
+          "Target": "c:\\dm\\manifests\\FactoryResetManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/RebootPlugin.dll",
+          "Target": "c:\\dm\\RebootPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/RebootManifest.json",
+          "Target": "c:\\dm\\manifests\\RebootManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/RemoteWipePlugin.dll",
+          "Target": "c:\\dm\\RemoteWipePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/RemoteWipeManifest.json",
+          "Target": "c:\\dm\\manifests\\RemoteWipeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/TimePlugin.dll",
+          "Target": "c:\\dm\\TimePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/TimeManifest.json",
+          "Target": "c:\\dm\\manifests\\TimeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/WindowsTelemetryPlugin.dll",
+          "Target": "c:\\dm\\WindowsTelemetryPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/WindowsTelemetryManifest.json",
+          "Target": "c:\\dm\\manifests\\WindowsTelemetryManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/WindowsUpdatePlugin.dll",
+          "Target": "c:\\dm\\WindowsUpdatePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/WindowsUpdateManifest.json",
+          "Target": "c:\\dm\\manifests\\WindowsUpdateManifest.json"
+        }
+      ],
+      "PostDownloadCommands": [
+        "c:\\dm\\AzureDeviceManagementClient.exe -install"
+      ],
+      "StartCommands": [
+        "net start AzureDeviceManagementClient"
+      ],
+      "StopCommands": [
+        "net stop AzureDeviceManagementClient"
+      ],
+      "IsStarted": {
+        "Service": "AzureDeviceManagementClient"
+      }
+    },
+    "arm": {
+      "PreDownloadCommands": [],
+      "Payloads": [
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/Limpet.exe",
+          "Target": "c:\\windows\\system32\\Limpet.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/AzureDeviceManagementClient.exe",
+          "Target": "c:\\dm\\AzureDeviceManagementClient.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/AzureDeviceManagementClient.json",
+          "Target": "c:\\dm\\AzureDeviceManagementClient.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/AzureDeviceManagementPluginHost.exe",
+          "Target": "c:\\dm\\AzureDeviceManagementPluginHost.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/CertificateManagementPlugin.dll",
+          "Target": "c:\\dm\\CertificateManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/CertificateManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\CertificateManagementManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/cpprest141d_2_10.dll",
+          "Target": "c:\\dm\\cpprest141d_2_10.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/concrt140d.dll",
+          "Target": "c:\\dm\\concrt140d.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/wastorage.dll",
+          "Target": "c:\\dm\\wastorage.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/DeviceInfoPlugin.dll",
+          "Target": "c:\\dm\\DeviceInfoPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/DeviceInfoManifest.json",
+          "Target": "c:\\dm\\manifests\\DeviceInfoManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/FactoryResetPlugin.dll",
+          "Target": "c:\\dm\\FactoryResetPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/FactoryResetManifest.json",
+          "Target": "c:\\dm\\manifests\\FactoryResetManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/RebootPlugin.dll",
+          "Target": "c:\\dm\\RebootPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/RebootManifest.json",
+          "Target": "c:\\dm\\manifests\\RebootManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/RemoteWipePlugin.dll",
+          "Target": "c:\\dm\\RemoteWipePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/RemoteWipeManifest.json",
+          "Target": "c:\\dm\\manifests\\RemoteWipeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/TimePlugin.dll",
+          "Target": "c:\\dm\\TimePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/TimeManifest.json",
+          "Target": "c:\\dm\\manifests\\TimeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/WindowsTelemetryPlugin.dll",
+          "Target": "c:\\dm\\WindowsTelemetryPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/WindowsTelemetryManifest.json",
+          "Target": "c:\\dm\\manifests\\WindowsTelemetryManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/WindowsUpdatePlugin.dll",
+          "Target": "c:\\dm\\WindowsUpdatePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/WindowsUpdateManifest.json",
+          "Target": "c:\\dm\\manifests\\WindowsUpdateManifest.json"
+        }
+      ],
+      "PostDownloadCommands": [
+        "c:\\dm\\AzureDeviceManagementClient.exe -install"
+      ],
+      "StartCommands": [
+        "net start AzureDeviceManagementClient"
+      ],
+      "StopCommands": [
+        "net stop AzureDeviceManagementClient"
+      ],
+      "IsStarted": {
+        "Service": "AzureDeviceManagementClient"
+      }
+    },
+    "x64": {
+      "PreDownloadCommands": [],
+      "Payloads": [
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/Limpet.exe",
+          "Target": "c:\\windows\\system32\\Limpet.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/AzureDeviceManagementClient.exe",
+          "Target": "c:\\dm\\AzureDeviceManagementClient.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/AzureDeviceManagementClient.json",
+          "Target": "c:\\dm\\AzureDeviceManagementClient.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/AzureDeviceManagementPluginHost.exe",
+          "Target": "c:\\dm\\AzureDeviceManagementPluginHost.exe"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/CertificateManagementPlugin.dll",
+          "Target": "c:\\dm\\CertificateManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/CertificateManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\CertificateManagementManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/cpprest141d_2_10.dll",
+          "Target": "c:\\dm\\cpprest141d_2_10.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/concrt140d.dll",
+          "Target": "c:\\dm\\concrt140d.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/wastorage.dll",
+          "Target": "c:\\dm\\wastorage.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/DeviceInfoPlugin.dll",
+          "Target": "c:\\dm\\DeviceInfoPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/DeviceInfoManifest.json",
+          "Target": "c:\\dm\\manifests\\DeviceInfoManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/FactoryResetPlugin.dll",
+          "Target": "c:\\dm\\FactoryResetPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/FactoryResetManifest.json",
+          "Target": "c:\\dm\\manifests\\FactoryResetManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/RebootPlugin.dll",
+          "Target": "c:\\dm\\RebootPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/RebootManifest.json",
+          "Target": "c:\\dm\\manifests\\RebootManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/RemoteWipePlugin.dll",
+          "Target": "c:\\dm\\RemoteWipePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/RemoteWipeManifest.json",
+          "Target": "c:\\dm\\manifests\\RemoteWipeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/TimePlugin.dll",
+          "Target": "c:\\dm\\TimePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/TimeManifest.json",
+          "Target": "c:\\dm\\manifests\\TimeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/WindowsTelemetryPlugin.dll",
+          "Target": "c:\\dm\\WindowsTelemetryPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/WindowsTelemetryManifest.json",
+          "Target": "c:\\dm\\manifests\\WindowsTelemetryManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/WindowsUpdatePlugin.dll",
+          "Target": "c:\\dm\\WindowsUpdatePlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/WindowsUpdateManifest.json",
+          "Target": "c:\\dm\\manifests\\WindowsUpdateManifest.json"
+        }
+      ],
+      "PostDownloadCommands": [
+        "c:\\dm\\AzureDeviceManagementClient.exe -install"
+      ],
+      "StartCommands": [
+        "net start AzureDeviceManagementClient"
+      ],
+      "StopCommands": [
+        "net stop AzureDeviceManagementClient"
+      ],
+      "IsStarted": {
+        "Service": "AzureDeviceManagementClient"
+      }
+    }
+  },
+  "DeviceProvisioningClient": {
+    "Title": "Device Provisioning Client",
+    "Description": "The Azure Device Provisioning client allows the device to dynamically acquire an IoT Hub connection string when it first connects to the internet after being provisioned.",
+    "HelpUrl": "https://github.com/ms-iot/iot-core-azure-dm-client"
+  }
+}

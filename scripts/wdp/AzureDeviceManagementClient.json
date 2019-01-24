@@ -1,0 +1,19 @@
+{
+  "textLogFilesPath": "c:\\dm",
+  "pluginManifestsPath": "manifests",
+  "sasExpiryInterval": 86400,
+  "sasRenewalGracePeriod": 3600,
+  "dpsUri": "global.azure-devices-provisioning.net",
+  "dpsScopeId": "",
+  "connectionStringSlotNumber": 0,
+  "debugConnectionString": "",
+  "moduleId": "dmModule",
+  "handlers": {
+    "deviceInfo": {
+      "reportOnConnect": true
+    },
+    "__deviceSchemas": {
+      "reportOnConnect": true
+    }
+  }
+}

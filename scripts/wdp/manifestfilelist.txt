@@ -1,0 +1,8 @@
+CertificateManagementPlugin\CertificateManagementManifest.json
+DeviceInfoPlugin\DeviceInfoManifest.json
+FactoryResetPlugin\FactoryResetManifest.json
+RebootPlugin\RebootManifest.json
+RemoteWipePlugin\RemoteWipeManifest.json
+TimePlugin\TimeManifest.json
+WindowsTelemetryPlugin\WindowsTelemetryManifest.json
+WindowsUpdatePlugin\WindowsUpdateManifest.json

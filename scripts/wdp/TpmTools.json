@@ -1,0 +1,37 @@
+{
+  "TPMTools": {
+    "Title": "TPM Tools",
+    "Description": "The TPM tools allow local processes to use the TPM to store connection strings and retrieve SAS tokens. For example, the Azure Device Provisioning client and the Azure Device Management client both rely on the TPM. You can configure both of them on the <a href=\"#Azure Clients\">Azure Clients</a> page.",
+    "HelpUrl": "https://github.com/ms-iot/iot-core-azure-dm-client",
+    "x86": {
+      "PreCommands": [],
+      "Payloads": [
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/Limpet.exe",
+          "Target": "c:\\windows\\system32\\Limpet.exe"
+        }
+      ],
+      "PostCommands": []
+    },
+    "arm": {
+      "PreCommands": [],
+      "Payloads": [
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/Limpet.exe",
+          "Target": "c:\\windows\\system32\\Limpet.exe"
+        }
+      ],
+      "PostCommands": []
+    },
+    "x64": {
+      "PreCommands": [],
+      "Payloads": [
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/Limpet.exe",
+          "Target": "c:\\windows\\system32\\Limpet.exe"
+        }
+      ],
+      "PostCommands": []
+    }
+  }
+}
