@@ -17,7 +17,7 @@ Below is a detailed description of each of these steps.
 ## Reading The Configuration File
 
 - The Azure Device Agent reads its configuration file.
-    - A sample can be found here: [AzureDeviceManagementClient.json](../../../code/tests/TestCases/All/AzureDeviceManagementClient.json).
+    - A sample can be found here: [AzureDeviceManagementClient.json](../../../code/AzureDeviceManagementClient/AzureDeviceManagementClient.json).
 - The configuration file determines where the plug-in manifests are, and what each handler static configuration is.
     - Static configuration is a json blob that is passed to the handler when it is loaded and started by the device agent (by calling `Start()`).
 
@@ -68,8 +68,8 @@ References
 
 ### Related Topics
 
-- [Extensibility and Discovery Model](extensibility-and-discovery-model.md).
-- [Debugging](debugging.md).
+- [Extensibility and Discovery Model](../extensibility-and-discovery-model.md).
+- [Debugging](../development-scenario/debugging.md).
 
 ----
 
