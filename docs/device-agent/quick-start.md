@@ -22,6 +22,12 @@ In this part, we harvest the information that identifies the device to the Azure
 
 - Make sure the test device supports TPM 2.0 (for example, a SnapDragon 410c).
 - Navigate to the device portal (WDP) using your browser (by typing http://&lt;ip&gt;:8080).
+- Make sure you can see both: `Azure Clients` and `TPM Configuration`. They might not show up if the browser connected to devices with older versions of Windows and is using a cached copy of the UI.
+    - If you do not see either one, clear the browser cache and refresh the page.
+    - Another way to make sure they are visible is to click the `Options menu` at the top left corner, and then `Add tools to workspace`, select both of them and then click `Add`.
+
+    <img src="wdp-menu.png" width="800"/>
+
 - On the left pane, click 'TPM Configuration'
     - The 'TPM Configuration' page shows whether the TPM Tools are Installed or not. Make sure the latest tools are installed by clicking "Install Latest". Limpet.exe will be installed to `c:\windows\system32`.
     - Once the TPM Tools are installed, make sure Slot 0 in the TPM is not provisioned (under "Logical Devices Setttings").
@@ -85,4 +91,4 @@ Note that the device client reports to the twin a list of all the available capa
 
 ----
 
-[Device Agent](device-agent.md) | [Home](../../README.md)
+[Home](../../README.md) | [Device Agent](device-agent.md)
