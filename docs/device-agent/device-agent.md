@@ -40,7 +40,7 @@ For the device agent, Microsoft provides a ready to build and package that:
 
 The device agent is an open source project that is share in this repo.
 
-- [Quick Start](quick-start.md)
+- [Quick Starts](quick-starts.md)
 - [Development Scenario Walk-through](development-scenario.md)
 - [Device Agent Reference](reference.md)
 
