@@ -27,8 +27,7 @@ set ROOT_FOLDER=%1
 set DEVICE_FOLDER=%ROOT_FOLDER%\Device
 
 for %%Z in (x86 arm x64) do (
-
-    md %DEVICE_FOLDER%\%%Z
+    echo Populating %%Z folder...
     call deploy.create-device-folder.cmd %%Z Debug %DEVICE_FOLDER%\%%Z
 
 )

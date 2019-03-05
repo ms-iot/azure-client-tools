@@ -6,10 +6,10 @@
 goto START
 
 :Usage
-echo Usage: deploy.create-device-folder.cmd x86^|ARM^|x64 Debug^|Release folder
+echo Usage: deploy.create-device-folder.cmd x86^|ARM^|x64 Debug^|Release folder [vs_bins_folder] [sdk_bins_folder]
 echo    [/?].................... Displays this usage string.
 echo    Example:
-echo        deploy.create-device-folder.cmd x64 Debug c:\deploy
+echo        deploy.create-device-folder.cmd x64 Debug c:\deploy "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Redist\MSVC\14.16.27012\onecore\debug_nonredist" "C:\Program Files (x86)\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.16299.0\Redist\Debug"
 endlocal
 exit /b 1
 
@@ -35,6 +35,18 @@ if [%3] == [] (
     set TARGETFOLDER=.
 ) else (
     set TARGETFOLDER=%3
+)
+
+if [%4] == [] ( 
+    set VS_DEBUG_BINS=C:\Program Files ^(x86^)\Microsoft Visual Studio\2017\Enterprise\VC\Redist\MSVC\14.16.27012\onecore\debug_nonredist
+) else (
+    set VS_DEBUG_BINS=%4
+)
+
+if [%5] == [] ( 
+    set SDK_DEBUG_BINS=C:\Program Files ^(x86^)\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.UniversalCRT.Debug\10.0.16299.0\Redist\Debug
+) else (
+    set SDK_DEBUG_BINS=%5
 )
 
 pushd %~dp0
@@ -63,10 +75,8 @@ if /I [%TARGETCONFIG%] == [Debug] (
       set CASABLANCALIBRARY=cpprest141_2_10
 )
 
-@echo on
-
 @REM Executables
-copy ..\code\Limpet\%LIMPET_TARGETARCH_FOLDER%\%TARGETCONFIG%\Limpet.exe %EXECUTABLES_FOLDER%
+copy ..\code\output\%TARGETARCH_FOLDER%%TARGETCONFIG%\Limpet.exe %EXECUTABLES_FOLDER%
 copy ..\code\output\%TARGETARCH_FOLDER%%TARGETCONFIG%\AzureDeviceManagementClient.exe %EXECUTABLES_FOLDER%
 copy ..\code\AzureDeviceManagementClient\AzureDeviceManagementClient.json %EXECUTABLES_FOLDER%
 
@@ -101,10 +111,15 @@ copy ..\code\AzureDeviceManagementPlugins\WindowsTelemetryPlugin\WindowsTelemetr
 copy ..\code\output\%TARGETARCH_FOLDER%%TARGETCONFIG%\WindowsUpdatePlugin.dll %EXECUTABLES_FOLDER%
 copy ..\code\AzureDeviceManagementPlugins\WindowsUpdatePlugin\WindowsUpdateManifest.json %PLUGIN_MANIFESTS_FOLDER%
 
+for %%Y in (vccorlib140d.dll msvcp140d.dll vcruntime140d.dll) do (
+    copy "%VS_DEBUG_BINS%\%TARGETARCH%\Microsoft.VC141.DebugCRT\%%Y" %EXECUTABLES_FOLDER%
+)
+copy "%SDK_DEBUG_BINS%\%TARGETARCH%\ucrtbased.dll" %EXECUTABLES_FOLDER%
+
 @REM -- Samples --
-@echo.
-@echo Copying Samples...
-@echo.
+@REM @echo.
+@REM @echo Copying Samples...
+@REM @echo.
 @REM -- DirectRebootManagement causes a conflict with the build-in Reboot Management handler.
 @REM copy ..\code\output\%TARGETARCH_FOLDER%%TARGETCONFIG%\DirectRebootManagementPlugin.dll %EXECUTABLES_FOLDER%
 @REM copy ..\code\Samples\Plugins\DirectRebootManagementPlugin\DirectRebootManagementManifest.json %PLUGIN_MANIFESTS_FOLDER%
