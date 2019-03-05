@@ -111,7 +111,7 @@ copy ..\code\AzureDeviceManagementPlugins\WindowsTelemetryPlugin\WindowsTelemetr
 copy ..\code\output\%TARGETARCH_FOLDER%%TARGETCONFIG%\WindowsUpdatePlugin.dll %EXECUTABLES_FOLDER%
 copy ..\code\AzureDeviceManagementPlugins\WindowsUpdatePlugin\WindowsUpdateManifest.json %PLUGIN_MANIFESTS_FOLDER%
 
-for %%Y in (vccorlib140d.dll msvcp140d.dll vcruntime140d.dll) do (
+for %%Y in (vccorlib140d.dll msvcp140d.dll vcruntime140d.dll concrt140d.dll) do (
     copy "%VS_DEBUG_BINS%\%TARGETARCH%\Microsoft.VC141.DebugCRT\%%Y" %EXECUTABLES_FOLDER%
 )
 copy "%SDK_DEBUG_BINS%\%TARGETARCH%\ucrtbased.dll" %EXECUTABLES_FOLDER%
