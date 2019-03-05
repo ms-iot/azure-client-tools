@@ -38,6 +38,12 @@ For the device agent, Microsoft provides a ready to build and package that:
 - Provides a plug-in model for platform components which allows easy onboarding to various Azure services. This model includes discovery, initialization, error reporting, and state aggregation.
 - Comes with a set of ready-to-ship plug-ins for very commonly used platform components.
 
+#### Support Skus
+
+The device agent can run on both the Windows IoT Core sku and the Windows IoT Enterprise sku. More information can be found on the [Supported Skus](supported-skus.md) page.
+
+#### Get Started!
+
 The device agent is an open source project that is share in this repo.
 
 - [Quick Starts](quick-starts.md)
