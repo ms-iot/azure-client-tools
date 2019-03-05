@@ -130,7 +130,10 @@ void PluginNamedPipeTransport::ClientInitialization()
     // Launch the plugin host 
     LaunchPluginHost();
 
+    TRACE(LoggingLevel::Verbose, "Connecting to client pipe...");
     ConnectNamedPipe(_hClientPipe, nullptr);
+
+    TRACE(LoggingLevel::Verbose, "Connecting to plugin pipe...");
     ConnectNamedPipe(_hPluginPipe, nullptr);
 
     // Reset the events
