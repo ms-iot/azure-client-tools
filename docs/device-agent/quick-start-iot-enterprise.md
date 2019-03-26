@@ -18,4 +18,4 @@ For a quick start on Windows IoT Core with Azure DPS, see this [page](quick-star
 
 ----
 
-[Home](../../README.md) | [Device Agent](device-agent.md) | [Quick Starts](quick-starts.md)
+[Home](../../README.md) | [Device Agent](device-agent.md) | [Quick Starts](quick-start.md)

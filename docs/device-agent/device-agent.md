@@ -46,7 +46,7 @@ The device agent can run on both the Windows IoT Core sku and the Windows IoT En
 
 The device agent is an open source project that is share in this repo.
 
-- [Quick Starts](quick-starts.md)
+- [Quick Starts](quick-start.md)
 - [Development Scenario Walk-through](development-scenario.md)
 - [Device Agent Reference](reference.md)
 

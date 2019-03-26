@@ -93,4 +93,4 @@ Note that the device client reports to the twin a list of all the available capa
 
 ----
 
-[Home](../../README.md) | [Device Agent](device-agent.md) | [Quick Starts](quick-starts.md)
+[Home](../../README.md) | [Device Agent](device-agent.md) | [Quick Starts](quick-start.md)
