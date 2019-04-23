@@ -21,16 +21,14 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
 
         void SetHandle(T&& handle)
         {
+            Close();
             _handle = handle;
             handle = NULL;
         }
 
         void SetHandle(T& handle)
         {
-            if (_handle != NULL)
-            {
-                Close();
-            }
+            Close();
             _handle = handle;
             handle = NULL;
         }

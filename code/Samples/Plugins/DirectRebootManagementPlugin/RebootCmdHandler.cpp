@@ -14,7 +14,7 @@ using namespace std;
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace RebootManagementPlugin {
 
     RebootCmdHandler::RebootCmdHandler() :
-        BaseHandler(RebootCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(RebootCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
     {
     }
 
@@ -44,7 +44,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
         Json::Value reportedObject(Json::objectValue);
         std::shared_ptr<ReportedErrorList> errorList = make_shared<ReportedErrorList>();
 
-        RunOperation(GetId(), errorList,
+        Operation::RunOperation(GetId(), errorList,
             [&]()
         {
             // Process Meta Data

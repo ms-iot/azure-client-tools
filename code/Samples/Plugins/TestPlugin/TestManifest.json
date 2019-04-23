@@ -1,0 +1,6 @@
+{
+  "codeFileName": "TestPlugin.dll",
+  "direct": false,
+  "outOfProc": false,
+  "keepAliveTime": 50000
+}

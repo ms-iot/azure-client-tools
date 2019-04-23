@@ -8,9 +8,9 @@
     - [DeviceExplorer](reference/device-explorer.md) - For IoT Hub device operations.
 - [Debugging](development-scenario/debugging.md).
 - Plugins and Handlers
-    - [Enabling Plug-ins](development-scenario/developer-plugins.md).
+    - [Enabling Plug-ins](development-scenario/plugin-enable.md).
     - [Authoring New Plug-ins](development-scenario/developer-plugin-creation.md).
 
 ----
 
-[Device Agent](device-agent.md)
+[Home](../../README.md) | [Device Agent](device-agent.md)

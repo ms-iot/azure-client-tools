@@ -1,0 +1,15 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "directMethod",
+      "directMethodName": "StartRebootCmd",
+      "description": "",
+      "input": {},
+      "output": {
+        "returnJson": {},
+        "returnCode": 200
+      }
+    }
+  ]
+}

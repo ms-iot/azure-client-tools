@@ -45,21 +45,25 @@ pushd %~dp0
 
 call build.azure-c-sdk.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER%
 if errorlevel 1 (
-    echo build.azure-c-sdk.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
+    echo XX build.azure-c-sdk.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
 ) else (
     echo OK build.azure-c-sdk.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
 )
 
-call build.azure-storage-cpp.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER%
-if errorlevel 1 (
-    echo build.azure-storage-cpp.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
-) else (
-    echo OK build.azure-storage-cpp.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
+if /I not [%TARGETARCH%] == [arm64] (
+
+    call build.azure-storage-cpp.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER%
+    if errorlevel 1 (
+        echo XX build.azure-storage-cpp.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
+    ) else (
+        echo OK build.azure-storage-cpp.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
+    )
+
 )
 
 call build.azure-dm.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER%
 if errorlevel 1 (
-    echo build.azure-dm.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
+    echo XX build.azure-dm.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
 ) else (
     echo OK build.azure-dm.cmd %TARGETARCH% %TARGETCONFIG% %TARGETPLATVER% >> %LOGFILE%
 )

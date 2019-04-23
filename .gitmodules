@@ -3,7 +3,7 @@
 	url = https://github.com/ms-iot/security.git
 [submodule "deps/azure-iot-sdk-c"]
 	path = deps/azure-iot-sdk-c
-	url = https://github.com/ms-iot/azure-iot-sdk-c
+	url = https://github.com/azure/azure-iot-sdk-c
 [submodule "deps/azure-storage-cpp"]
 	path = deps/azure-storage-cpp
 	url = https://github.com/ms-iot/azure-storage-cpp

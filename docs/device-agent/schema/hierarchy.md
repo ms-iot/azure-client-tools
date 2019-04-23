@@ -6,7 +6,8 @@
 The expected number of configurable/reported properties for Windows is in the range of 300~500 properties. Operators are not expected to directly manipulate the device twins. Instead, they will use a web portal or an app to manipulate them. Keeping them as a flat list of properties will not provide the best experience for the following reasons: 
 
 - There is increased likelihood of name collisions between different areas.
-  - For example, both WiFi configuration and application management require paths to file names to download. They canâ€™t be simply named â€˜fileNameâ€™ or else there will be a conflict. Instead, and to keep it a flat list, weâ€™ll have to prefix the name; i.e. wifiFileName and appFileNameâ€¦ Even then, this does not scale when we have multiple applications configured (app1FileName, app2FileName, etc). 
+  - For example, both WiFi configuration and application management require paths to file names to download. They can’t be simply named ‘fileName’ or else there will be a conflict. Instead, and to keep it a flat list, we’ll have to prefix the name; i.e. wifiFileName and appFileName… Even then, this does not scale when we have multiple applications configured (app1FileName, app2FileName, etc). 
+- **[gmileka]** Make sure they increase/remove the limit on the nesting level. 
 - While we are planning on implementing a web portal, 3rd parties or OEMs are also expected to build their own custom portals to manipulate this schema. A flat list does not communicate the relationship between the various properties and leads to a much more difficult programming experience when it comes to which properties need to be always set together, etc. 
 - Also for debugging, it is very convenient to inspect the device twin, and in some cases even modify it. A flat list makes this experience very hard and error prone. 
 

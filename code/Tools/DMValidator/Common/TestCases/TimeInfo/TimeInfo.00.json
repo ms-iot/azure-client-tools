@@ -4,6 +4,7 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "set time zone to mountain",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {
@@ -59,6 +60,7 @@
       "name": "01",
       "type": "deviceTwin",
       "description": "set time zone to pacific",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {

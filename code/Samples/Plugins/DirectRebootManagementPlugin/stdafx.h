@@ -10,8 +10,8 @@
 #include <windows.h>
 #include <memory>
 
-#include "..\..\..\Utilities\Utils.h"
+#include "../../../Utilities/Utils.h"
 namespace DMUtils = Microsoft::Azure::DeviceManagement::Utils;
 
-#include "..\..\..\AzureDeviceManagementCommon\DMCommon.h"
+#include "../../../device-agent/common/DMCommon.h"
 namespace DMCommon = Microsoft::Azure::DeviceManagement::Common;

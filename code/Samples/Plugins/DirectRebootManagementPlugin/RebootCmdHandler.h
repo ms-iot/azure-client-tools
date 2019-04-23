@@ -4,11 +4,11 @@
 #pragma once
 
 #include <string>
-#include "..\..\..\AzureDeviceManagementClient\IotHub\IoTHubInterfaces.h"
+#include "device-agent/common/MdmHandlerBase.h"
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace RebootManagementPlugin {
 
-    class RebootCmdHandler : public DMCommon::BaseHandler
+    class RebootCmdHandler : public DMCommon::MdmHandlerBase
     {
     public:
         RebootCmdHandler();

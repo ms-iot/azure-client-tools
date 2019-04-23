@@ -1000,8 +1000,8 @@ HRESULT ProcessAzureDpsEnrollmentInfoCommand()
     localEkPub.resize(cblocalEkPub);
     const std::wstring ek64{ MakePrintable(localEkPub, CRYPT_STRING_BASE64) };
 
-    // current azure docs(2017-08-21 preview) for enrollment REST api put the storage root key in tpm attestation structure 
-    // this appears to be an artifact of their doc generating process since the tpm type for registration(as opposed to enrollment) 
+    // current azure docs(2017-08-21 preview) for enrollment REST api put the storage root key in tpm attestation structure
+    // this appears to be an artifact of their doc generating process since the tpm type for registration(as opposed to enrollment)
     // does need the srk property.  there's no way to provide the srk in the enrollment gui and the azure sdk version of
     // the factory tool doesn't output that information
     std::wstring registrationId(LIMPET_STRING_SIZE, L'\0');
@@ -1011,6 +1011,8 @@ HRESULT ProcessAzureDpsEnrollmentInfoCommand()
         wprintf(L"Can't get registration Id. hr = %x\r\n", hr);
         return hr;
     }
+
+    std::wstring trimmedRegistrationId(registrationId.c_str(), cchregistrationId);
 
     if (IsSwitchActive(PARAMETER_SWITCH_FORMAT_CSV))
     {
@@ -1040,7 +1042,7 @@ HRESULT ProcessAzureDpsEnrollmentInfoCommand()
     {
         wprintf(L"\r\nProvisioning information\r\n\r\n");
         wprintf(L"\tRegistration Id:\r\n");
-        wprintf(L"\t%s\r\n\r\n", registrationId.c_str());
+        wprintf(L"\t%s\r\n\r\n", trimmedRegistrationId.c_str());
         wprintf(L"\tEndorsement Key:\r\n");
         wprintf(L"\t%s\r\n\r\n", ek64.c_str());
     }
@@ -1245,14 +1247,14 @@ wmain(
         try
         {
             // Cacluate the cert thumbprint so it can be looked up in the certificate store
-            AutoCloseCertificateContext signingCert = ReadEncodedCert(certFileName);
+            AutoCloseCertificateContext signingCert(ReadEncodedCert(certFileName));
             std::vector<BYTE> signingCertThumbprint(SHA1_DIGEST_SIZE, 0);
             DWORD cbCertThumbprint = (DWORD)signingCertThumbprint.size();
             if (!CryptHashCertificate2(BCRYPT_SHA1_ALGORITHM,
                 0,
                 NULL,
-                signingCert.Get()->pbCertEncoded,
-                signingCert.Get()->cbCertEncoded,
+                signingCert.get()->pbCertEncoded,
+                signingCert.get()->cbCertEncoded,
                 &signingCertThumbprint[0],
                 &cbCertThumbprint))
             {
@@ -1348,14 +1350,14 @@ wmain(
         try
         {
             // Cacluate the CA signing cert thumbprint so it can be looked up in the certificate store
-            AutoCloseCertificateContext caSigningCert = ReadEncodedCert(caCertFileName);
+            AutoCloseCertificateContext caSigningCert(ReadEncodedCert(caCertFileName));
             std::vector<BYTE> caSigningCertThumbprint(SHA1_DIGEST_SIZE, 0);
             DWORD cbCaSigningCertThumbprint = (DWORD)caSigningCertThumbprint.size();
             if (!CryptHashCertificate2(BCRYPT_SHA1_ALGORITHM,
                 0,
                 NULL,
-                caSigningCert.Get()->pbCertEncoded,
-                caSigningCert.Get()->cbCertEncoded,
+                caSigningCert.get()->pbCertEncoded,
+                caSigningCert.get()->cbCertEncoded,
                 &caSigningCertThumbprint[0],
                 &cbCaSigningCertThumbprint))
             {
@@ -1577,7 +1579,7 @@ wmain(
         {
             // Open the requested store
             AutoCloseHCertStore store(CertOpenStore(CERT_STORE_PROV_SYSTEM, PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE, &storeName[0]));
-            if (store.Get() == NULL)
+            if (store.get() == NULL)
             {
                 throw TPM_RC_FAILURE;
             }
@@ -1588,7 +1590,7 @@ wmain(
             for (;;)
             {
                 // this function closes all the certificate context, no AutoClose type needed here.
-                nextCert = CertEnumCertificatesInStore(store.Get(), nextCert);
+                nextCert = CertEnumCertificatesInStore(store.get(), nextCert);
                 if (nextCert == NULL)
                 {
                     break;
@@ -1623,18 +1625,18 @@ wmain(
         try
         {
             // Read the cert file and open it
-            AutoCloseCertificateContext newCert = ReadEncodedCert(certFileName);
+            AutoCloseCertificateContext newCert(ReadEncodedCert(certFileName));
 
             // Open the requested store
             AutoCloseHCertStore store(CertOpenStore(CERT_STORE_PROV_SYSTEM, PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE, &storeName[0]));
-            if (store.Get() == NULL)
+            if (store.get() == NULL)
             {
                 throw TPM_RC_FAILURE;
             }
 
             // Add the certificate to the store
             PCCERT_CONTEXT newCertInStore = NULL;
-            if (!CertAddCertificateContextToStore(store.Get(), newCert.Get(), CERT_STORE_ADD_ALWAYS, &newCertInStore))
+            if (!CertAddCertificateContextToStore(store.get(), newCert.get(), CERT_STORE_ADD_ALWAYS, &newCertInStore))
             {
                 throw TPM_RC_FAILURE;
             }
@@ -1814,14 +1816,13 @@ wmain(
             // Process the returned certificate table
             for (DWORD n = 0; n < numCerts; n++)
             {
-                AutoCloseCertificateContext context;
-                context = certTableOut[n];
-                DumpCertInfo(std::wstring(L"  "), context.Get());
+                AutoCloseCertificateContext context(certTableOut[n]);
+                DumpCertInfo(std::wstring(L"  "), context.get());
             }
 
         }
         catch (const UINT32 err)
-        { 
+        {
             result = err;
         }
         catch (...)
@@ -1925,7 +1926,7 @@ wmain(
             //HostName=SolarSystem.azure-devices.net;DeviceId=Limpet;SharedAccessKey=b49ia/Vx4JA/s4NHMluV5Is7YEp+EKlfCUHPp4zgau8=
 
             // Make a lower case copy of the string which we will use to look up the tokens.
-            // The base64 encoded data gets garbled up here so we have to make sure to only 
+            // The base64 encoded data gets garbled up here so we have to make sure to only
             // read the index locations from it and then transpose that on the original string.
             std::wstring connectionStringLC(connectionString);
             WStringToLower(connectionStringLC);

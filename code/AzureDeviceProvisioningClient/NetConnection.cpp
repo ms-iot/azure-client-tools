@@ -12,7 +12,7 @@ using namespace Microsoft::Azure::DeviceManagement::Utils;
 HRESULT CNetConnectionState::WaitForConnection() {
     HRESULT hr = S_OK;
     DWORD dwRc = 0;
-    if (WAIT_TIMEOUT != (dwRc = WaitForSingleObject(m_NetworkConnected.GetReference(), DEFAULT_NETWORK_CONNECTION_TIMEOUT)))
+    if (WAIT_TIMEOUT != (dwRc = WaitForSingleObject(m_NetworkConnected.Get(), DEFAULT_NETWORK_CONNECTION_TIMEOUT)))
     {
         if (WAIT_OBJECT_0 != dwRc)
         {
@@ -28,7 +28,7 @@ HRESULT CNetConnectionState::WaitForConnection() {
 
 STDMETHODIMP CNetConnectionState::ConnectivityChanged(_In_ NLM_CONNECTIVITY NewConnectivity) {
     if (NewConnectivity & (NLM_CONNECTIVITY_IPV4_INTERNET | NLM_CONNECTIVITY_IPV6_INTERNET)) {
-        (VOID)SetEvent(m_NetworkConnected.GetReference());
+        (VOID)SetEvent(m_NetworkConnected.Get());
         m_cp->Unadvise(m_cookie); // explicitly break circ ref
     }
     return S_OK;

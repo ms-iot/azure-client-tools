@@ -22,7 +22,7 @@ To build DMValidator, use `dotnet build` command in the DMValidator directory:
 
 ```bash
 #Assuming we are in the project root directory:
-cd code\tests\DMValidator\CLI
+cd code\tools\DMValidator\CLI
 dotnet build
 ```
 
@@ -30,7 +30,7 @@ You can also build the code from any other directory by providing a path to the 
 
 ```bash
 #Assuming we are in the project root directory:
-dotnet build code\tests\console\DMValidator\CLI\DMValidator.csproj
+dotnet build code\tools\DMValidator\CLI\DMConsoleValidator.csproj
 ```
 
 ## Running DMValidator
@@ -39,7 +39,7 @@ To run DMValidator, use `dotnet run` command in the DMValidator directory:
 
 ```bash
 #Assuming we are in the project root directory:
-cd code\tests\console\DMValidator\CLI\
+cd code\tools\DMValidator\CLI\
 dotnet run
 ```
 
@@ -47,7 +47,7 @@ You can also run the program from any other directory by providing a path to the
 
 ```bash
 #Assuming we are in the project root directory:
-dotnet run --project code\tests\console\DMValidator\CLI\DMValidator.csproj
+dotnet run --project code\tools\DMValidator\CLI\DMConsoleValidator.csproj
 ```
 
 *NOTE:** This does not change the current working directory, which is used by the project to access files!
@@ -100,13 +100,15 @@ have to be passed as an array (even if providing just one value).
 
 <pre>
 {
-    "connection-string" : "insert-your-string",
-    "tests" : "..\Common\",
-    "devices" : [
-        "myDevice1",
-        "myDevice2"
+    "connection-string" : "enter_iot_hub_connection_string",
+    "scenariosFolder" : "..\\Common\\TestCases\\TimeInfo\\",
+    "scenarioFiles": [
+        "..\\Common\\TestCases\\DeviceInfo\\DeviceInfo.MBM.00.json"
     ],
-    "log" : ".",
+    "devices" : [
+        "device_name"
+    ],
+    "log" : "e:\\temp\\dmtest"
 }
 </pre>
 
@@ -160,19 +162,9 @@ In this example we ignore a configuration file and pass arguments using command 
 
 ### Running DMValidator using a configuration file at non-standard location
 
-Assuming that a configuration file is stored in a current working directory:
-
-`dotnet run -- -C otherName.json`
-
-Assuming that a configuration file is stored as 'validator.config' in our dm directory:
-
-`dotnet run -- -C "c:\dm\validator.config"`
-
-or:
-
 <pre>
-cd code\tests\DMValidator\CLI\
-dotnet bin\Debug\netcoreapp2.1\DMConsoleValidator.dll -C validator.config
+cd code\Tools\DMValidator\CLI\
+dotnet bin\Debug\netcoreapp2.1\DMConsoleValidator.dll -C c:\tests\validator.config
 </pre>
 
 where validator.config has something like:
@@ -180,7 +172,11 @@ where validator.config has something like:
 <pre>
 {
     "connection-string" : "&lt;enter_iothub_owner_connection_string_here&gt;",
-    "tests" : "..\\Common\\TestCases\\TimeInfo\\",
+    "storage-connection-string": "&lt;enter_azure_storage_connection_string_here&gt;",
+    "scenariosFolder" : "..\\Common\\TestCases\\TimeInfo\\",
+    "scenarioFiles": [
+        "..\\Common\\TestCases\\DeviceInfo\\DeviceInfo.MBM.00.json"
+    ],
     "devices" : [
         "&lt;device_name&gt;"
     ],

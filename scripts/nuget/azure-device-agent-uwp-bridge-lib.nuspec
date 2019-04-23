@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>azure-device-agent-uwp-bridge-lib</id>
+    <version>$Version$</version>
+    <title>azure-device-agent-uwp-bridge-lib</title>
+    <authors>Microsoft Corporation</authors>
+    <description>The library allows a local UWP application access into some of the Device Agent functions.</description>
+    <releaseNotes>This is a preview build.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>UWP Device Management Azure IoTHub IoT Device Twin Windows Store Applications</tags>
+    <language>en-US</language>
+
+    <dependencies>
+      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.2.7" />
+      <dependency id="Newtonsoft.Json" version="10.0.3" />
+    </dependencies>
+
+  </metadata>
+  <files>
+    
+    <!-- Design-time -->
+    <file src="..\..\code\output\win32\$Flavor$\DMBridgeComponent.winmd" target="lib\uap10.0" />
+
+    <!-- Build-time -->
+    <file src="azure-device-agent-uwp-bridge-lib.targets" target="build\uap10.0" />
+
+    <!-- Run-time -->
+      
+    <!-- ARM -->
+    <file src="..\..\code\output\arm\$Flavor$\DMBridgeComponent.dll" target="runtimes\win10-arm\native" />
+
+    <!-- x64 -->
+    <file src="..\..\code\output\x64\$Flavor$\DMBridgeComponent.dll" target="runtimes\win10-x64\native" />
+
+    <!-- x86 -->
+    <file src="..\..\code\output\win32\$Flavor$\DMBridgeComponent.dll" target="runtimes\win10-x86\native" />
+
+  </files>
+</package>

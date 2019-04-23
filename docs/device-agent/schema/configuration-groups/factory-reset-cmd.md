@@ -6,7 +6,7 @@ Factory reset re-applies a factory-image on the device restoring all components 
 
 | Handler Identifier | Plug-in Binary
 |----|----|
-| factoryResetCmd | FactoryResetPlugin.dll |
+| StartFactoryResetCmd | FactoryResetPlugin.dll |
 
 ## Life Cycle and Start-up Configuration
 
@@ -69,12 +69,12 @@ Sample:
 {
     "properties": {
         "reported": {
-            "factoryResetCmd": {
+            "StartFactoryResetCmd": {
                 "__meta": {
                     &lt;meta data object content&gt;
                 },
                 "__errors": {
-                    "factoryResetCmd": {
+                    "StartFactoryResetCmd": {
                         &lt;error object content&gt;
                     }
                 }

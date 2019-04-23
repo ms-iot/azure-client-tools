@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{273A78A2-3672-412C-BDF8-227DB6832389}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>AzureDeviceManagementClient</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="CommonConfiguration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Release'">false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <AzurePlatform Condition="'$(Platform)'=='Win32'">x86</AzurePlatform>
+    <AzurePlatform Condition="'$(Platform)'!='Win32'">$(Platform)</AzurePlatform>
+    <LimpetApiRoot Condition="'$(LimpetApiRoot)'==''">..\LimpetApi</LimpetApiRoot>
+    <LimpetApiIncludePath Condition="'$(LimpetApiIncludePath)'==''">$(LimpetApiRoot)\inc</LimpetApiIncludePath>
+    <UrchinIncPath>..\..\..\deps\security\urchin\inc</UrchinIncPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)output\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)output\dmclient.intermediate\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization Condition="'$(Configuration)'=='Debug'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Release'">MaxSpeed</Optimization>
+      <FunctionLevelLinking Condition="'$(Configuration)'=='Release'">true</FunctionLevelLinking>
+      <IntrinsicFunctions Condition="'$(Configuration)'=='Release'">true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>USE_AZURE_DM_BRIDGE;WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Debug'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Release'">NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>.;..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc;$(SolutionDir);$(SolutionDir)\AzureDeviceManagementBridge\SharedUtilities;$(LimpetApiIncludePath);$(UrchinIncPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation Condition="'$(Configuration)'=='Release'">true</GenerateDebugInformation>
+      <GenerateDebugInformation Condition="'$(Configuration)'=='Debug'">DebugFull</GenerateDebugInformation>
+      <EnableCOMDATFolding Condition="'$(Configuration)'=='Release'">true</EnableCOMDATFolding>
+      <OptimizeReferences Condition="'$(Configuration)'=='Release'">true</OptimizeReferences>
+      <AdditionalDependencies>dmbridge.lib;iothub_service_client.lib;uhttp.lib;prov_http_transport.lib;prov_auth_client.lib;prov_device_ll_client.lib;aziotsharedutil.lib;parson.lib;hsm_security_client.lib;msr_riot.lib;utpm.lib;prov_auth_client.lib;platform.lib;urchin.lib;limpetapi.lib;AzureDeviceProvisioningClient.lib;aziotsharedutil.lib;uamqp.lib;iothub_client_amqp_transport.lib;iothub_client.lib;parson.lib;prov_auth_client.lib;hsm_security_client.lib;msr_riot.lib;utpm.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;advapi32.lib;tbs.lib;onecoreuap.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\iothub_service_client\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\deps\uhttp\$(Configuration);$(SolutionDir)$(Platform)\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\provisioning_client\deps\utpm\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\provisioning_client\deps\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\provisioning_client\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\iothub_client\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\c-utility\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\uamqp\$(Configuration);$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="AzureClientInterfaces.h" />
+    <ClInclude Include="AzureDMClient.h" />
+    <ClInclude Include="LocalDMClient.h" />
+    <ClInclude Include="DeviceClientInterfaces.h" />
+    <ClInclude Include="DMConstants.h" />
+    <ClInclude Include="DMService.h" />
+    <ClInclude Include="Handlers\ClearReportedCmdHandler.h" />
+    <ClInclude Include="Handlers\DeviceSchemasHandler.h" />
+    <ClInclude Include="Mdm\MdmServer.h" />
+    <ClInclude Include="Mdm\WinSDKRS2.h" />
+    <ClInclude Include="PluginManifest.h" />
+    <ClInclude Include="Plugins\AgentStub.h" />
+    <ClInclude Include="Plugins\DirectPluginProxy.h" />
+    <ClInclude Include="Plugins\OutOfProcPluginBinaryProxy.h" />
+    <ClInclude Include="Plugins\RawHandlerProxy.h" />
+    <ClInclude Include="Plugins\PluginBinaryProxy.h" />
+    <ClInclude Include="Plugins\PluginProxy.h" />
+    <ClInclude Include="Raw\AzureRawHost.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ServiceManager.h" />
+    <ClInclude Include="ServiceParameters.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LocalDMClient.cpp" />
+    <ClCompile Include="DMService.cpp" />
+    <ClCompile Include="Handlers\DeviceSchemasHandler.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="AzureDMClient.cpp" />
+    <ClCompile Include="Handlers\ClearReportedCmdHandler.cpp" />
+    <ClCompile Include="Mdm\MdmServer.cpp" />
+    <ClCompile Include="PluginManifest.cpp" />
+    <ClCompile Include="Plugins\AgentStub.cpp" />
+    <ClCompile Include="Plugins\DirectPluginProxy.cpp" />
+    <ClCompile Include="Plugins\OutOfProcPluginBinaryProxy.cpp" />
+    <ClCompile Include="Plugins\RawHandlerProxy.cpp" />
+    <ClCompile Include="Plugins\PluginBinaryProxy.cpp" />
+    <ClCompile Include="Plugins\PluginProxy.cpp" />
+    <ClCompile Include="Raw\AzureRawHost.cpp" />
+    <ClCompile Include="ServiceManager.cpp" />
+    <ClCompile Include="ServiceParameters.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

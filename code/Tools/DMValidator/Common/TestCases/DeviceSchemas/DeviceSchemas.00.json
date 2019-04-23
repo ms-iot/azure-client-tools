@@ -4,6 +4,7 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "our first test case!",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {
@@ -48,7 +49,7 @@
                   "tags": "",
                   "type": "raw"
                 },
-                "rebootCmd": {
+                "StartRebootCmd": {
                   "maxInputVersion": 1,
                   "outputVersion": 1,
                   "tags": "",
@@ -60,7 +61,13 @@
                   "tags": "",
                   "type": "raw"
                 },
-                "remoteWipeCmd": {
+                "StartFactoryResetCmd": {
+                  "maxInputVersion": 1,
+                  "outputVersion": 1,
+                  "tags": "",
+                  "type": "raw"
+                },
+                "StartRemoteWipeCmd": {
                   "maxInputVersion": 1,
                   "outputVersion": 1,
                   "tags": "",

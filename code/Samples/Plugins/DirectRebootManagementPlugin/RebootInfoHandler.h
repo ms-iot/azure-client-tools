@@ -3,12 +3,11 @@
 
 #pragma once
 
-#include <functional>
-#include "..\..\..\AzureDeviceManagementClient\IotHub\IoTHubInterfaces.h"
+#include "device-agent/common/MdmHandlerBase.h"
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace RebootManagementPlugin {
 
-    class RebootInfoHandler : public DMCommon::BaseHandler
+    class RebootInfoHandler : public DMCommon::MdmHandlerBase
     {
     public:
         RebootInfoHandler();

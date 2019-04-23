@@ -189,7 +189,7 @@ static HRESULT create_module(int slot, const string& hostUri, const string& devi
     memset(&moduleInfo, 0, sizeof(moduleInfo));
     moduleInfo.version = IOTHUB_MODULE_VERSION_1;
 
-    if ((service_auth_from_device_connection = IoTHubServiceClientAuth_CreateFromConnectionString(deviceConnectionString.c_str())) == NULL)
+    if ((service_auth_from_device_connection = IoTHubServiceClientAuth_CreateFromSharedAccessSignature(deviceConnectionString.c_str())) == NULL)
     {
         TRACEP(LoggingLevel::Error, "IoTHubServiceClientAuth_CreateFromConnectionString(%s) failed", deviceConnectionString.c_str());
         hr = E_FAIL;

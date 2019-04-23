@@ -4,6 +4,7 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "our windows update policy test case!",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {

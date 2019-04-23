@@ -2,17 +2,27 @@
 
 ## Installing on IoT Core
 
-- Create a file layout. Make sure *the architecture matches* the target OS. WoW support does not exist on all platforms.
+- Create a file layout.
+    - Make sure *the architecture matches* the target OS. WoW support does not exist on all platforms. For example, if the target device/OS is x64, run:
 
     <pre>
     scripts\deploy.create-device-folder.cmd x64 Debug c:\deploy
     </pre>
 
-- Insert your connection string in `c:\deploy\bin\AzureDeviceManagementClient.json`.
-    <pre>
-      "debugConnectionString": "<i>&lt;insert your connection string here&gt;</i>"
-    </pre>
-    **Note**: This will only work for debug builds by design. Retail images should not read the connection string from an unencrypted text file.
+- Insert connection information
+  There are two ways to provide connection information in `c:\deploy\bin\AzureDeviceManagementClient.json`
+    - Insert your IoT Hub connection string.
+
+        <pre>
+          "connectionString": "<i>&lt;insert your connection string here&gt;</i>"
+        </pre>
+        **Note**: Retail images should not read the connection string from an unencrypted text file.
+        
+    - Insert your [DPS](../dps-integration.md) scopeId (recommended way for retail images)
+
+        <pre>
+          "dpsScopeId": "<i>&lt;insert your DPS scopeId here&gt;</i>"
+        </pre>
 
 - Copy the generated layout to the test device  (i.e. copy c:\deploy to the device).
 - Register the service:
@@ -35,6 +45,7 @@
 ## Installing on IoT Enterprise
 
 - Enable [Embedded Mode](https://docs.microsoft.com/en-us/windows/iot-core/develop-your-app/embeddedmode).
+- AzureDeviceManagementClient.exe [Executable Commands](../executable-commands.md) list.
 - Follow the same steps as those for IoT Core.
 
 ----

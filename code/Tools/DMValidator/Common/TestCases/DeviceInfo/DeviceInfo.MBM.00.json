@@ -4,6 +4,7 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "trigger device info reporting for MBM",
+      "readBackPause": 15,
       "input": {
         "properties": {
           "desired": {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{b13c6fe3-317d-43af-a92d-c0826215be8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{703c94a7-7cb2-436f-aa0a-ed7b3056e2ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\API">
+      <UniqueIdentifier>{6db2e392-b269-4be0-a799-8dc203b43851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\API">
+      <UniqueIdentifier>{cc7a2e8f-773c-43fb-962b-c2659532e70e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="RpcUtilities.cpp" />
+    <ClCompile Include="DpsBridge.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="RebootBridge.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TpmBridge.cpp">
+      <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DMBridgeInterface\DMBridgeInterface_$(Platform)_c.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="RpcUtilities.h" />
+    <ClInclude Include="DpsBridge.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="RebootBridge.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="TpmBridge.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+</Project>

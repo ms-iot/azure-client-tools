@@ -1,0 +1,14 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+[
+    uuid (43BCDD94-770B-4178-BD4B-B1F3D32994F9),
+    version(1.0),
+    pointer_default(unique),
+]
+interface Tpm
+{
+    HRESULT GetEndorsementKeyRpc([out] int *size, [out, size_is(, *size)] wchar_t **endorsementKey);
+    HRESULT GetRegistrationIdRpc([out] int *size, [out, size_is(, *size)] wchar_t **registrationId);
+    HRESULT GetConnectionStringRpc([in] INT32 slot, [in] long long expiry, [out] int *size, [out, size_is(, *size)] wchar_t **connectionString);
+}

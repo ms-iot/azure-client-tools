@@ -1,0 +1,12 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+[
+    uuid (9E1EFDEC-484B-4A22-9FDA-88103F62C109),
+    version(1.0),
+    pointer_default(unique),
+]
+interface Reboot
+{
+    HRESULT InvokeRpc();
+}

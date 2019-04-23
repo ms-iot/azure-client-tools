@@ -27,14 +27,12 @@ wstring Guid::NewGuid()
         }
         else
         {
-            TRACELINE(LoggingLevel::Error, "Failed to create new GUID");
-            throw DMException(ret_val);
+            throw DMException(DMSubsystem::Windows, ret_val, "Failed to convert Uuid to string");
         }
     }
     else
     {
-        TRACELINE(LoggingLevel::Error, "Failed to create new GUID");
-        throw DMException(ret_val);
+        throw DMException(DMSubsystem::Windows, ret_val, "Failed to create new Uuid");
     }
 }
 }}}}

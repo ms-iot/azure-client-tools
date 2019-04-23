@@ -1,0 +1,47 @@
+﻿<Page
+    x:Class="UwpAppUsingDMBridge.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UwpAppUsingDMBridge"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="#2D2D30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="UWP Device Management Bridge Sample Application" Margin="10" FontSize="20" VerticalAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Margin="3" Click="GetRegIdButton_Click" HorizontalAlignment="Stretch">Get Registration Id</Button>
+            <TextBox Grid.Row="0" Grid.Column="1" Margin="3" x:Name="RegistrationIdText" IsReadOnly="True"/>
+
+            <Button Grid.Row="1" Grid.Column="0" Margin="3" Click="GetEkButton_Click" HorizontalAlignment="Stretch">Get Endorsement Key</Button>
+            <TextBox Grid.Row="1" Grid.Column="1" Margin="3" x:Name="EkText" IsReadOnly="True"/>
+
+            <Button Grid.Row="2" Grid.Column="0" Margin="3" Click="GetCxnStrButton_Click" HorizontalAlignment="Stretch">Get Connection String</Button>
+            <TextBox Grid.Row="2" Grid.Column="1" Margin="3" x:Name="SlotNumber" Text="&lt;enter slot number&gt;" />
+            <TextBox Grid.Row="2" Grid.Column="2" Margin="3" x:Name="CxnStringText"  IsReadOnly="True"/>
+
+            <Button Grid.Row="3" Grid.Column="0" Margin="3" Click="SetScopeIdButton_Click" HorizontalAlignment="Stretch">Set Scope Id</Button>
+            <TextBox Grid.Row="3" Grid.Column="1" Margin="3" x:Name="ScopeId" Text="" />
+
+            <Button Grid.Row="4" Grid.Column="0" Margin="3" Click="RebootButton_Click" HorizontalAlignment="Stretch">Invoke Reboot</Button>
+        </Grid>
+    </Grid>
+</Page>

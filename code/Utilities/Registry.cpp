@@ -26,14 +26,14 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         );
         if (status != ERROR_SUCCESS)
         {
-            throw DMException(status);
+            throw DMException(DMSubsystem::Windows, status, "Failed to open registry key");
         }
 
         status = RegSetValueEx(hKey, propName.c_str(), 0, REG_SZ, reinterpret_cast<const BYTE*>(propValue.c_str()), (static_cast<unsigned int>(propValue.size()) + 1) * sizeof(propValue[0]));
         if (status != ERROR_SUCCESS)
         {
             RegCloseKey(hKey);
-            throw DMException(status);
+            throw DMException(DMSubsystem::Windows, status, "Failed to set registry key value");
         }
 
         RegCloseKey(hKey);
@@ -55,14 +55,14 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         );
         if (status != ERROR_SUCCESS)
         {
-            throw DMException(status);
+            throw DMException(DMSubsystem::Windows, status, "Failed to open registry key");
         }
 
         status = RegSetValueEx(hKey, propName.c_str(), 0, REG_DWORD, reinterpret_cast<BYTE*>(&propValue), sizeof(propValue));
         if (status != ERROR_SUCCESS)
         {
             RegCloseKey(hKey);
-            throw DMException(status);
+            throw DMException(DMSubsystem::Windows, status, "Failed to set registry key value");
         }
 
         RegCloseKey(hKey);
@@ -110,7 +110,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         if (status != ERROR_SUCCESS)
         {
             TRACELINEP(LoggingLevel::Error, L"Error: Could not read registry value: ", (subKey + L"\\" + propName).c_str());
-            throw DMException(status);
+            throw DMException(DMSubsystem::Windows, status, "Failed to read registry value");
         }
         return propValue;
     }

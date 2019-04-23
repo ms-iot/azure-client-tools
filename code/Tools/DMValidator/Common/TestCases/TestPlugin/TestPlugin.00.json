@@ -1,0 +1,131 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "",
+      "readBackPause": 8,
+      "input": {
+        "properties": {
+          "desired": {
+            "testInfo": {
+              "__meta": {
+                "deploymentId": "test_info_v1"
+              },
+              "action": "succeed"
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "testInfo": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "test_info_v1",
+                  "time": "<ignore>"
+                },
+                "action": "succeed"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "deviceTwin",
+      "description": "",
+      "readBackPause": 8,
+      "input": {
+        "properties": {
+          "desired": {
+            "testInfo": {
+              "__meta": {
+                "deploymentId": "test_info_v2"
+              },
+              "action": "fail"
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "testInfo": {
+                "__meta": {
+                  "deploymentStatus": "failed",
+                  "deploymentId": "test_info_v2",
+                  "time": "<ignore>"
+                },
+                "action": "fail",
+                "__errors": {
+                  "action": {
+                    "code": 2,
+                    "context": "action",
+                    "message": "State setting failed as expected.",
+                    "parameters": {},
+                    "subsystem": "DeviceAgentPlugin"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "02",
+      "type": "directMethod",
+      "directMethodName": "testCmd",
+      "description": "",
+      "input": {
+        "action": "succeed",
+        "type": "object"
+      },
+      "output": {
+        "returnJson": {
+          "anInt": 5,
+          "aString": "abc"
+        },
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "03",
+      "type": "directMethod",
+      "directMethodName": "testCmd",
+      "description": "",
+      "input": {
+        "action": "succeed",
+        "type": "integer"
+      },
+      "output": {
+        "returnJson": 42,
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "04",
+      "type": "directMethod",
+      "directMethodName": "testCmd",
+      "description": "",
+      "input": {
+        "action": "fail"
+      },
+      "output": {
+        "returnJson": {
+          "code": 1,
+          "context": "testCmd",
+          "message": "Command failed as expected.",
+          "parameters": {},
+          "subsystem": "DeviceAgentPlugin"
+        },
+        "returnCode": 400
+      }
+    }
+  ]
+}

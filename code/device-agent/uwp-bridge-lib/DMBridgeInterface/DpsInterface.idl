@@ -1,0 +1,12 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+[
+    uuid (61F39B36-B502-4EB8-9FFF-586554A733EC),
+    version(1.0),
+    pointer_default(unique),
+]
+interface Dps
+{
+    HRESULT SetScopeIdRpc([in, string] const wchar_t *scopeId);
+}

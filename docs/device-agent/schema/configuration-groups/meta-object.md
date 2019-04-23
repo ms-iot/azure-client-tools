@@ -82,9 +82,9 @@ Below is a description of node schema and programming model.
         <td rowspan="4"><b>Reporting Mode</b><br/><br/>
             Desired: Optional<br/>
             Reported: Yes<br/><br/>
-            Indicates to the agent whether to report the current state of the group configuration or not.</td>
-        <td rowspan="4">`dependencies`</td>
-        <td>Type</td><td>boolean</td>
+            Indicates to the agent whether to report the current state of the group configuration (detailed|minimal) or not(none).</td>
+        <td rowspan="4">`reportingMode`</td>
+        <td>Type</td><td>String</td>
     </tr>
     <tr valign="top">
         <td>Desired</td><td>Required</td>
@@ -93,8 +93,9 @@ Below is a description of node schema and programming model.
         <td>Reported</td><td>Yes</td>
     </tr>
     <tr valign="top">
-        <td>Description</td><td>`true` indicates the current component status should be reported.<br/>
-        `false` indicates the current component status should not be reported to the device twin. If it has been reported in the past, it should be removed.</td>
+        <td>Description</td><td>`detailed` indicates the current component status should be reported in detail.<br/>
+        `minimal` indicates the current component status should be reported at minimal.<br/>
+        `none` indicates the current component status should not be reported to the device twin. If it has been reported in the past, it should be removed.</td>
     </tr>
     <!-- time -->
     <tr valign="top">
@@ -126,7 +127,7 @@ Below is a description of node schema and programming model.
                 "__meta" : {
                     "deploymentId": "unspecified",
                     "dependencies": "x;y",
-                    "reportingMode": "never|always",
+                    "reportingMode": "none|minimal|detailed",
                 }
             }
         },
@@ -135,7 +136,7 @@ Below is a description of node schema and programming model.
                 "__meta" : {
                     "deploymentId": "unspecified",
                     "dependencies": "x;y",
-                    "reportingMode": "never|always",
+                    "reportingMode": "none|minimal|detailed",
                     "deploymentStatus": "notStarted|succeeded|pending|failed",
                     "time": "&lt;time&gt;"
                 }
@@ -172,7 +173,7 @@ For example, below is a common pattern of using the _metaData:
             SetSubGroup(...);
 
             // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeAlways)
+            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
             {
                 BuildReported(reportedObject, errorList);
             }

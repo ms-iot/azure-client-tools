@@ -323,7 +323,7 @@ UINT32 LimpetDestroyURIFromTpm(
 static UINT32 GetLogicalDeviceCert(
     __in UINT32 logicalDeviceNumber,
     __in_z LPCWSTR wcAlgorithm,
-    __out PCCERT_CONTEXT* logicalDeviceCert,
+    __out AutoCloseCertificateContext* logicalDeviceCert,
     __out_ecount_z_opt(LIMPET_STRING_SIZE) WCHAR* wcName
 )
 {
@@ -359,7 +359,8 @@ static UINT32 GetLogicalDeviceCert(
         }
 
         // Open the cert and return the context
-        if ((*logicalDeviceCert = CertCreateCertificateContext(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, &cert[0], cbCert)) == NULL)
+        logicalDeviceCert->reset(CertCreateCertificateContext(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, &cert[0], cbCert));
+        if (logicalDeviceCert->get() == NULL)
         {
             throw TPM_RC_FAILURE;
         }
@@ -1254,7 +1255,7 @@ UINT32 LimpetReadURIFromTpm(
             ((result = GetLogicalDeviceCert(logicalDeviceNumber, BCRYPT_ECDSA_P256_ALGORITHM, &idkCert, NULL)) == TPM_RC_SUCCESS))
         {
             std::string subjectName(LIMPET_STRING_SIZE, '\0');
-            if (!CertNameToStrA(X509_ASN_ENCODING, &idkCert.Get()->pCertInfo->Subject, CERT_X500_NAME_STR, &subjectName[0], (DWORD)subjectName.capacity()))
+            if (!CertNameToStrA(X509_ASN_ENCODING, &idkCert.get()->pCertInfo->Subject, CERT_X500_NAME_STR, &subjectName[0], (DWORD)subjectName.capacity()))
             {
                 throw TPM_RC_FAILURE;
             }
@@ -2056,11 +2057,16 @@ UINT32 LimpetReadOrCreateIdentityKeyCert(
 #pragma prefast(disable: 33088, "This self signed certificate is used not for security or trust purposes, but as a vessel to carry the public key")
             AutoCloseCertificateContext idkCert(CertCreateSelfSignCertificate(hKey.Get(), &nameBlob, 0, &keyProvInfo, NULL, &startTime, &endTime, &certExtensions));
             AutoCloseHCertStore myStore(CertOpenStore(CERT_STORE_PROV_SYSTEM, PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE, L"My"));
-            AutoCloseCertificateContext idkCertInStore;
-            if ((idkCert.Get() == NULL) ||
-                (myStore.Get() == NULL) ||
-                (!CertAddCertificateContextToStore(myStore.Get(), idkCert.Get(), CERT_STORE_ADD_USE_EXISTING, &idkCertInStore)) ||
-                ((status = NCryptSetProperty(hKey.Get(), NCRYPT_CERTIFICATE_PROPERTY, idkCertInStore.Get()->pbCertEncoded, idkCertInStore.Get()->cbCertEncoded, 0)) != ERROR_SUCCESS))
+            PCCERT_CONTEXT rawIdkCertInStore = nullptr;
+            if ((idkCert.get() == NULL) ||
+                (myStore.get() == NULL) ||
+                (!CertAddCertificateContextToStore(myStore.get(), idkCert.get(), CERT_STORE_ADD_USE_EXISTING, &rawIdkCertInStore)))
+            {
+                throw TPM_RC_FAILURE;
+            }
+
+            AutoCloseCertificateContext idkCertInStore(rawIdkCertInStore);
+            if ((status = NCryptSetProperty(hKey.Get(), NCRYPT_CERTIFICATE_PROPERTY, idkCertInStore.get()->pbCertEncoded, idkCertInStore.get()->cbCertEncoded, 0)) != ERROR_SUCCESS)
             {
                 throw TPM_RC_FAILURE;
             }
@@ -2166,21 +2172,21 @@ UINT32 LimpetDestroyIdentityCert(
         // Open the store so we can look for certs with that same public key
         AutoCloseCertificateContext idkCert(CertCreateCertificateContext(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, &cert[0], cbCert));
         AutoCloseHCertStore myStore(CertOpenStore(CERT_STORE_PROV_SYSTEM, PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE, L"My"));
-        if ((idkCert.Get() == NULL) ||
-            (myStore.Get() == NULL))
+        if ((idkCert.get() == NULL) ||
+            (myStore.get() == NULL))
         {
             throw TPM_RC_FAILURE;
         }
 
         // Delete all certs with that public key from the store
-        AutoCloseCertificateContext findCert(CertFindCertificateInStore(myStore.Get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_PUBLIC_KEY, &idkCert.Get()->pCertInfo->SubjectPublicKeyInfo, nullptr));
-        while (findCert.Get() != NULL)
+        AutoCloseCertificateContext findCert(CertFindCertificateInStore(myStore.get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_PUBLIC_KEY, &idkCert.get()->pCertInfo->SubjectPublicKeyInfo, nullptr));
+        while (findCert.get() != NULL)
         {
-            if (!CertDeleteCertificateFromStore(findCert.Get()))
+            if (!CertDeleteCertificateFromStore(findCert.get()))
             {
                 throw TPM_RC_FAILURE;
             }
-            findCert = CertFindCertificateInStore(myStore.Get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_PUBLIC_KEY, &idkCert.Get()->pCertInfo->SubjectPublicKeyInfo, nullptr);
+            findCert.reset(CertFindCertificateInStore(myStore.get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_PUBLIC_KEY, &idkCert.get()->pCertInfo->SubjectPublicKeyInfo, nullptr));
         }
 
         // Finally delete the key from the machine
@@ -2221,13 +2227,13 @@ UINT32 LimpetImportIdentityCert(
         // Get the cert context for that cert
         AutoCloseCertificateContext newIdkCert(CertCreateCertificateContext(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, pbNewCert, cbNewCert));
         AutoCloseHCertStore myStore(CertOpenStore(CERT_STORE_PROV_SYSTEM, PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE, L"My"));
-        if ((newIdkCert.Get() == NULL) ||
-            (myStore.Get() == NULL))
+        if ((newIdkCert.get() == NULL) ||
+            (myStore.get() == NULL))
         {
             throw TPM_RC_FAILURE;
         }
-        AutoCloseCertificateContext idkCert(CertFindCertificateInStore(myStore.Get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_PUBLIC_KEY, &newIdkCert.Get()->pCertInfo->SubjectPublicKeyInfo, nullptr));
-        if (idkCert.Get() == NULL)
+        AutoCloseCertificateContext idkCert(CertFindCertificateInStore(myStore.get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_PUBLIC_KEY, &newIdkCert.get()->pCertInfo->SubjectPublicKeyInfo, nullptr));
+        if (idkCert.get() == NULL)
         {
             throw TPM_RC_FAILURE;
         }
@@ -2236,27 +2242,28 @@ UINT32 LimpetImportIdentityCert(
         DWORD dwKeySpec = 0;
         BOOL fCallerFreeProvOrNCryptKey = FALSE;
         AutoCloseNcryptKeyHandle hKey;
-        if (!CryptAcquireCertificatePrivateKey(idkCert.Get(), CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG, NULL, &hKey, &dwKeySpec, &fCallerFreeProvOrNCryptKey))
+        if (!CryptAcquireCertificatePrivateKey(idkCert.get(), CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG, NULL, &hKey, &dwKeySpec, &fCallerFreeProvOrNCryptKey))
         {
             throw TPM_RC_FAILURE;
         }
 
         // Copy the key info from old cert to the new and insert the cert into the store and set it on the key container
         DWORD cbKeyProvInfo = sizeof(CRYPT_KEY_PROV_INFO);
-        if (!CertGetCertificateContextProperty(idkCert.Get(), CERT_KEY_PROV_INFO_PROP_ID, NULL, &cbKeyProvInfo))
+        if (!CertGetCertificateContextProperty(idkCert.get(), CERT_KEY_PROV_INFO_PROP_ID, NULL, &cbKeyProvInfo))
         {
             throw TPM_RC_FAILURE;
         }
         std::vector<BYTE> keyProvInfo(cbKeyProvInfo);
-        AutoCloseCertificateContext idkCertInStore;
-        if ((!CertGetCertificateContextProperty(idkCert.Get(), CERT_KEY_PROV_INFO_PROP_ID, &keyProvInfo[0], &cbKeyProvInfo)) ||
-            (!CertSetCertificateContextProperty(newIdkCert.Get(), CERT_KEY_PROV_INFO_PROP_ID, 0, &keyProvInfo[0])) ||
-            (!CertAddCertificateContextToStore(myStore.Get(), newIdkCert.Get(), CERT_STORE_ADD_ALWAYS, &idkCertInStore)))
+        PCCERT_CONTEXT rawIdkCertInStore = nullptr;
+        if ((!CertGetCertificateContextProperty(idkCert.get(), CERT_KEY_PROV_INFO_PROP_ID, &keyProvInfo[0], &cbKeyProvInfo)) ||
+            (!CertSetCertificateContextProperty(newIdkCert.get(), CERT_KEY_PROV_INFO_PROP_ID, 0, &keyProvInfo[0])) ||
+            (!CertAddCertificateContextToStore(myStore.get(), newIdkCert.get(), CERT_STORE_ADD_ALWAYS, &rawIdkCertInStore)))
         {
             throw TPM_RC_FAILURE;
         }
-        if ((idkCertInStore.Get() == NULL) ||
-            (NCryptSetProperty(hKey.Get(), NCRYPT_CERTIFICATE_PROPERTY, idkCertInStore.Get()->pbCertEncoded, idkCertInStore.Get()->cbCertEncoded, 0) != ERROR_SUCCESS))
+        AutoCloseCertificateContext idkCertInStore(rawIdkCertInStore);
+        if ((idkCertInStore.get() == NULL) ||
+            (NCryptSetProperty(hKey.Get(), NCRYPT_CERTIFICATE_PROPERTY, idkCertInStore.get()->pbCertEncoded, idkCertInStore.get()->cbCertEncoded, 0) != ERROR_SUCCESS))
         {
             throw TPM_RC_FAILURE;
         }
@@ -2266,8 +2273,8 @@ UINT32 LimpetImportIdentityCert(
         if (!CryptHashCertificate2(BCRYPT_SHA1_ALGORITHM,
             0,
             NULL,
-            idkCertInStore.Get()->pbCertEncoded,
-            idkCertInStore.Get()->cbCertEncoded,
+            idkCertInStore.get()->pbCertEncoded,
+            idkCertInStore.get()->cbCertEncoded,
             certThumbPrint,
             &cbCertThumbprint))
         {
@@ -2326,18 +2333,18 @@ UINT32 LimpetSignWithIdentityCert(
 
         // Open the certificate that matches that thumbprint and get a private key handle for the key in the TPM
         AutoCloseHCertStore myStore(CertOpenStore(CERT_STORE_PROV_SYSTEM, PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_SYSTEM_STORE_LOCAL_MACHINE, L"My"));
-        if (myStore.Get() == NULL)
+        if (myStore.get() == NULL)
         {
             throw TPM_RC_FAILURE;
         }
 
-        AutoCloseCertificateContext idkCert(CertFindCertificateInStore(myStore.Get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_HASH, &thumbPrint, nullptr));
+        AutoCloseCertificateContext idkCert(CertFindCertificateInStore(myStore.get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_HASH, &thumbPrint, nullptr));
         AutoCloseNcryptKeyHandle hKey;
         DWORD dwKeySpec = 0;
         BOOL fCallerFreeProvOrNCryptKey = FALSE;
-        if ((idkCert.Get() == NULL) ||
-            (CertNameToStrW(X509_ASN_ENCODING, &idkCert.Get()->pCertInfo->Subject, CERT_X500_NAME_STR, subjectName, LIMPET_STRING_SIZE) <= 1) ||
-            (!CryptAcquireCertificatePrivateKey(idkCert.Get(), CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG, NULL, &hKey, &dwKeySpec, &fCallerFreeProvOrNCryptKey)))
+        if ((idkCert.get() == NULL) ||
+            (CertNameToStrW(X509_ASN_ENCODING, &idkCert.get()->pCertInfo->Subject, CERT_X500_NAME_STR, subjectName, LIMPET_STRING_SIZE) <= 1) ||
+            (!CryptAcquireCertificatePrivateKey(idkCert.get(), CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG, NULL, &hKey, &dwKeySpec, &fCallerFreeProvOrNCryptKey)))
         {
             throw TPM_RC_FAILURE;
         }
@@ -2726,7 +2733,7 @@ UINT32 LimpetGenerateSASToken(
         UINT32 cbUriData;
         if ((result = LimpetReadURI(logicalDeviceNumber, (PBYTE)&uriData[0], (UINT32)uriData.capacity(), &cbUriData)) != TPM_RC_SUCCESS)
         {
-            throw result;
+            return result;
         }
         uriData.resize(cbUriData);
 
@@ -2904,19 +2911,19 @@ UINT32 LimpetIssueCertificate(
     {
         // Find the CA Cert and get the private key handle
         AutoCloseHCertStore myStore(CertOpenStore(CERT_STORE_PROV_SYSTEM, PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, NULL, CERT_SYSTEM_STORE_CURRENT_USER | CERT_STORE_OPEN_EXISTING_FLAG | CERT_STORE_READONLY_FLAG, L"My"));
-        if (myStore.Get() == NULL)
+        if (myStore.get() == NULL)
         {
             throw TPM_RC_FAILURE;
         }
-        AutoCloseCertificateContext caCert(CertFindCertificateInStore(myStore.Get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_HASH, &thumbPrint, nullptr));
-        if (caCert.Get() == NULL)
+        AutoCloseCertificateContext caCert(CertFindCertificateInStore(myStore.get(), X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_HASH, &thumbPrint, nullptr));
+        if (caCert.get() == NULL)
         {
             throw TPM_RC_FAILURE;
         }
         AutoCloseNcryptKeyHandle hKey;
         DWORD dwKeySpec = 0;
         BOOL fCallerFreeProvOrNCryptKey = FALSE;
-        if ((!CryptAcquireCertificatePrivateKey(caCert.Get(), CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG, NULL, &hKey, &dwKeySpec, &fCallerFreeProvOrNCryptKey)) ||
+        if ((!CryptAcquireCertificatePrivateKey(caCert.get(), CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG, NULL, &hKey, &dwKeySpec, &fCallerFreeProvOrNCryptKey)) ||
             (hKey.Get() == NULL))
         {
             throw TPM_RC_FAILURE;
@@ -2924,27 +2931,27 @@ UINT32 LimpetIssueCertificate(
 
         // Open the self signed cert from the client so we can copy things out
         AutoCloseCertificateContext selfSignedCert(CertCreateCertificateContext(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, pbCertReq, cbCertReq));
-        if (selfSignedCert.Get() == NULL)
+        if (selfSignedCert.get() == NULL)
         {
             throw TPM_RC_FAILURE;
         }
 
         // Iterate through the extensions and find the TPM public key in the cert request, not having that is fatal.
-        for (UINT32 n = 0; n < selfSignedCert.Get()->pCertInfo->cExtension; n++)
+        for (UINT32 n = 0; n < selfSignedCert.get()->pCertInfo->cExtension; n++)
         {
-            if ((!strcmp(selfSignedCert.Get()->pCertInfo->rgExtension[n].pszObjId, szOID_SUBJECT_KEY_IDENTIFIER)) &&
-                (selfSignedCert.Get()->pCertInfo->rgExtension[0].fCritical == FALSE) &&
+            if ((!strcmp(selfSignedCert.get()->pCertInfo->rgExtension[n].pszObjId, szOID_SUBJECT_KEY_IDENTIFIER)) &&
+                (selfSignedCert.get()->pCertInfo->rgExtension[0].fCritical == FALSE) &&
                 (CryptDecodeObjectEx(X509_ASN_ENCODING,
                     szOID_SUBJECT_KEY_IDENTIFIER,
-                    selfSignedCert.Get()->pCertInfo->rgExtension[0].Value.pbData,
-                    selfSignedCert.Get()->pCertInfo->rgExtension[0].Value.cbData,
+                    selfSignedCert.get()->pCertInfo->rgExtension[0].Value.pbData,
+                    selfSignedCert.get()->pCertInfo->rgExtension[0].Value.cbData,
                     CRYPT_DECODE_ALLOC_FLAG,
                     NULL,
                     &pTpmPublic,
                     &cbTpmPublic)))
             {
                 // Copy the TPM key extension to the cert to be issued
-                certExtensions[0] = selfSignedCert.Get()->pCertInfo->rgExtension[n];
+                certExtensions[0] = selfSignedCert.get()->pCertInfo->rgExtension[n];
                 break;
             }
         }
@@ -2962,15 +2969,19 @@ UINT32 LimpetIssueCertificate(
         }
 
         // Re-hydrate the certificate public key
-        AutoCloseBcryptKeyHandle hCertKey;
+        BCRYPT_KEY_HANDLE rawCertKey = nullptr;
         DWORD cbProperty;
-        if ((!CryptImportPublicKeyInfoEx2(X509_ASN_ENCODING, &selfSignedCert.Get()->pCertInfo->SubjectPublicKeyInfo, 0, NULL, &hCertKey)) ||
-            (BCryptGetProperty(hCertKey.Get(), BCRYPT_ALGORITHM_NAME, NULL, 0, &cbProperty, 0) != ERROR_SUCCESS))
+        if (!CryptImportPublicKeyInfoEx2(X509_ASN_ENCODING, &selfSignedCert.get()->pCertInfo->SubjectPublicKeyInfo, 0, NULL, &rawCertKey))
+        {
+            throw TPM_RC_FAILURE;
+        }
+        AutoCloseBcryptKeyHandle hCertKey(rawCertKey);
+        if ((BCryptGetProperty(hCertKey.get(), BCRYPT_ALGORITHM_NAME, NULL, 0, &cbProperty, 0) != ERROR_SUCCESS))
         {
             throw TPM_RC_FAILURE;
         }
         std::vector<BYTE> property(cbProperty);
-        if (BCryptGetProperty(hCertKey.Get(), BCRYPT_ALGORITHM_NAME, &property[0], (DWORD)property.size(), &cbProperty, 0) != ERROR_SUCCESS)
+        if (BCryptGetProperty(hCertKey.get(), BCRYPT_ALGORITHM_NAME, &property[0], (DWORD)property.size(), &cbProperty, 0) != ERROR_SUCCESS)
         {
             throw TPM_RC_FAILURE;
         }
@@ -2979,12 +2990,12 @@ UINT32 LimpetIssueCertificate(
         if (!wcscmp((WCHAR*)&property[0], BCRYPT_RSA_ALGORITHM))
         {
             // RSA public key verification
-            if (BCryptExportKey(hCertKey.Get(), NULL, BCRYPT_RSAPUBLIC_BLOB, NULL, 0, &cbProperty, 0) != ERROR_SUCCESS)
+            if (BCryptExportKey(hCertKey.get(), NULL, BCRYPT_RSAPUBLIC_BLOB, NULL, 0, &cbProperty, 0) != ERROR_SUCCESS)
             {
                 throw TPM_RC_FAILURE;
             }
             std::vector<BYTE> pubkey(cbProperty);
-            if (BCryptExportKey(hCertKey.Get(), NULL, BCRYPT_RSAPUBLIC_BLOB, &pubkey[0], (DWORD)pubkey.size(), &cbProperty, 0) != ERROR_SUCCESS)
+            if (BCryptExportKey(hCertKey.get(), NULL, BCRYPT_RSAPUBLIC_BLOB, &pubkey[0], (DWORD)pubkey.size(), &cbProperty, 0) != ERROR_SUCCESS)
             {
                 throw TPM_RC_FAILURE;
             }
@@ -2999,12 +3010,12 @@ UINT32 LimpetIssueCertificate(
         else if (!wcscmp((WCHAR*)&property[0], BCRYPT_ECDSA_P256_ALGORITHM))
         {
             // ECC public key verification
-            if (BCryptExportKey(hCertKey.Get(), NULL, BCRYPT_ECCPUBLIC_BLOB, NULL, 0, &cbProperty, 0) != ERROR_SUCCESS)
+            if (BCryptExportKey(hCertKey.get(), NULL, BCRYPT_ECCPUBLIC_BLOB, NULL, 0, &cbProperty, 0) != ERROR_SUCCESS)
             {
                 throw TPM_RC_FAILURE;
             }
             std::vector<BYTE> pubkey(cbProperty);
-            if (BCryptExportKey(hCertKey.Get(), NULL, BCRYPT_ECCPUBLIC_BLOB, &pubkey[0], (DWORD)pubkey.size(), &cbProperty, 0) != ERROR_SUCCESS)
+            if (BCryptExportKey(hCertKey.get(), NULL, BCRYPT_ECCPUBLIC_BLOB, &pubkey[0], (DWORD)pubkey.size(), &cbProperty, 0) != ERROR_SUCCESS)
             {
                 throw TPM_RC_FAILURE;
             }
@@ -3045,17 +3056,17 @@ UINT32 LimpetIssueCertificate(
         certInfo.SerialNumber.pbData = &certSerial[0];
         std::string oidRsaSha256Rsa{ szOID_RSA_SHA256RSA };
         certInfo.SignatureAlgorithm.pszObjId = &oidRsaSha256Rsa[0];
-        certInfo.Issuer.cbData = caCert.Get()->pCertInfo->Issuer.cbData;
-        certInfo.Issuer.pbData = caCert.Get()->pCertInfo->Issuer.pbData;
+        certInfo.Issuer.cbData = caCert.get()->pCertInfo->Issuer.cbData;
+        certInfo.Issuer.pbData = caCert.get()->pCertInfo->Issuer.pbData;
         GetSystemTime(&systemTime);
         SystemTimeToFileTime(&systemTime, &certInfo.NotBefore);
         systemTime.wYear += 10;
         SystemTimeToFileTime(&systemTime, &certInfo.NotAfter);
-        certInfo.SubjectPublicKeyInfo = selfSignedCert.Get()->pCertInfo->SubjectPublicKeyInfo;
+        certInfo.SubjectPublicKeyInfo = selfSignedCert.get()->pCertInfo->SubjectPublicKeyInfo;
 
         // Create the subject name
         std::wstring selfSignedSubjectName(LIMPET_STRING_SIZE, L'\0');
-        if (!CertNameToStr(X509_ASN_ENCODING, &selfSignedCert.Get()->pCertInfo->Subject, CERT_X500_NAME_STR, &selfSignedSubjectName[0], (DWORD)selfSignedSubjectName.capacity()))
+        if (!CertNameToStr(X509_ASN_ENCODING, &selfSignedCert.get()->pCertInfo->Subject, CERT_X500_NAME_STR, &selfSignedSubjectName[0], (DWORD)selfSignedSubjectName.capacity()))
         {
             throw TPM_RC_FAILURE;
         }
@@ -3095,7 +3106,7 @@ UINT32 LimpetIssueCertificate(
         // Encode the authority public key info
         if (!CryptEncodeObjectEx(X509_ASN_ENCODING,
             X509_PUBLIC_KEY_INFO,
-            &caCert.Get()->pCertInfo->SubjectPublicKeyInfo,
+            &caCert.get()->pCertInfo->SubjectPublicKeyInfo,
             CRYPT_ENCODE_ALLOC_FLAG,
             NULL,
             &pbEncAuthorityKeyInfo,
@@ -3113,8 +3124,8 @@ UINT32 LimpetIssueCertificate(
         {
             throw TPM_RC_FAILURE;
         }
-        keyIdInfo.AuthorityCertSerialNumber.cbData = caCert.Get()->pCertInfo->SerialNumber.cbData;
-        keyIdInfo.AuthorityCertSerialNumber.pbData = caCert.Get()->pCertInfo->SerialNumber.pbData;
+        keyIdInfo.AuthorityCertSerialNumber.cbData = caCert.get()->pCertInfo->SerialNumber.cbData;
+        keyIdInfo.AuthorityCertSerialNumber.pbData = caCert.get()->pCertInfo->SerialNumber.pbData;
         if (!CryptEncodeObjectEx(X509_ASN_ENCODING,
             X509_AUTHORITY_KEY_ID2,
             &keyIdInfo,
@@ -4085,4 +4096,188 @@ UINT32 LimpetForceClearTpm()
     }
 
     return result;
+}
+
+static std::wstring Azure_EncodeBase32(std::vector<unsigned char> &pData)
+{
+    size_t cbData = pData.size();
+    const wchar_t BASE32_VALUES[] = { L"abcdefghijklmnopqrstuvwxyz234567=" };
+    const int encodingBlockSize = 5;
+    size_t encodedDataLength = (((cbData + encodingBlockSize - 1) / encodingBlockSize) * 8);
+    std::vector<wchar_t> bEncodedData(encodedDataLength, 0);
+
+    if (pData.size() == 0)
+    {
+        return L"";
+    }
+
+    auto iterator{ pData.begin() };
+    size_t cbBlockLength = 0;
+    size_t result_len = 0;
+    unsigned char pos1 = 0;
+    unsigned char pos2 = 0;
+    unsigned char pos3 = 0;
+    unsigned char pos4 = 0;
+    unsigned char pos5 = 0;
+    unsigned char pos6 = 0;
+    unsigned char pos7 = 0;
+    unsigned char pos8 = 0;
+
+    // Go through the source buffer sectioning off blocks of 5
+    while (cbData >= 1)
+    {
+        pos1 = pos2 = pos3 = pos4 = pos5 = pos6 = pos7 = pos8 = 0;
+        cbBlockLength = cbData > encodingBlockSize ? encodingBlockSize : cbData;
+        // Fall through switch block to process the 5 (or smaller) block
+        switch (cbBlockLength)
+        {
+        case 5:
+            pos8 = (iterator[4] & 0x1f);
+            pos7 = ((iterator[4] & 0xe0) >> 5);
+#if 0
+            // TODO: figure out proper predefined macro
+            [[fallthrough]]
+#else
+            __fallthrough;
+#endif
+        case 4:
+            pos7 |= ((iterator[3] & 0x03) << 3);
+            pos6 = ((iterator[3] & 0x7c) >> 2);
+            pos5 = ((iterator[3] & 0x80) >> 7);
+#if 0
+            // TODO: figure out proper predefined macro
+            [[fallthrough]]
+#else
+            __fallthrough;
+#endif
+        case 3:
+            pos5 |= ((iterator[2] & 0x0f) << 1);
+            pos4 = ((iterator[2] & 0xf0) >> 4);
+#if 0
+            // TODO: figure out proper predefined macro
+            [[fallthrough]]
+#else
+            __fallthrough;
+#endif
+        case 2:
+            pos4 |= ((iterator[1] & 0x01) << 4);
+            pos3 = ((iterator[1] & 0x3e) >> 1);
+            pos2 = ((iterator[1] & 0xc0) >> 6);
+#if 0
+            // TODO: figure out proper predefined macro
+            [[fallthrough]]
+#else
+            __fallthrough;
+#endif
+        case 1:
+            pos2 |= ((iterator[0] & 0x07) << 2);
+            pos1 = ((iterator[0] & 0xf8) >> 3);
+            break;
+        }
+        // Move the iterator the block size
+        iterator += cbBlockLength;
+        // and decrement the src_size;
+        cbData -= cbBlockLength;
+
+        // If the src_size is not divisible by 8, base32_encode_impl shall pad the remaining places with =.
+        switch (cbBlockLength)
+        {
+        case 1: pos3 = pos4 = 32;
+        case 2: pos5 = 32;
+        case 3: pos6 = pos7 = 32;
+        case 4: pos8 = 32;
+        case 5:
+            break;
+        }
+
+        // Map the 5 bit chunks into one of the BASE32 values (a-z,2,3,4,5,6,7) values. ] */
+        bEncodedData[result_len++] = BASE32_VALUES[pos1];
+        bEncodedData[result_len++] = BASE32_VALUES[pos2];
+        bEncodedData[result_len++] = BASE32_VALUES[pos3];
+        bEncodedData[result_len++] = BASE32_VALUES[pos4];
+        bEncodedData[result_len++] = BASE32_VALUES[pos5];
+        bEncodedData[result_len++] = BASE32_VALUES[pos6];
+        bEncodedData[result_len++] = BASE32_VALUES[pos7];
+        bEncodedData[result_len++] = BASE32_VALUES[pos8];
+    }
+
+    // Sanitize the result
+    size_t iResultLength = 0;
+    for (auto it = bEncodedData.begin(); it != bEncodedData.end(); ++it)
+    {
+        if (*it == '=')
+            break;
+        iResultLength++;
+    }
+
+    if (cbData != iResultLength)
+    {
+        bEncodedData.resize(iResultLength);
+    }
+    return std::wstring(bEncodedData.begin(), bEncodedData.end());
+}
+
+UINT32 LimpetGetRegistrationId(
+    std::wstring& registrationId
+    )
+{
+    TPM_RC result = TPM_RC_SUCCESS;
+    BCRYPT_ALG_HANDLE       algHandle = INVALID_HANDLE_VALUE;
+    BCRYPT_HASH_HANDLE      hHash = INVALID_HANDLE_VALUE;
+    DWORD                   digestSize = 0, cbData = 0;
+    std::vector<unsigned char>   digest(64, 0);
+
+    std::vector<BYTE> ek(1024);
+    UINT32 cbKeyBuffer = (UINT32)ek.size();
+
+    // Get the public key blob
+    if ((result = LimpetGetTpmKey2BPub(LIMPET_TPM20_ERK_HANDLE, &ek[0], (UINT32)ek.size(), &cbKeyBuffer, NULL)) != TPM_RC_SUCCESS)
+    {
+        //TODO: Add trace logging event.
+    }
+    else if ((result = BCryptOpenAlgorithmProvider(&algHandle, BCRYPT_SHA256_ALGORITHM, NULL, 0)) != 0)
+    {
+        //TODO: Add trace loggint event.
+    }
+    //calculate the length of the hash
+    else if ((result = BCryptGetProperty(
+        algHandle,
+        BCRYPT_HASH_LENGTH,
+        (PBYTE)&digestSize,
+        sizeof(DWORD),
+        &cbData,
+        0)) != 0)
+    {
+        //TODO: Add trace logging event.
+    }
+    else if ((result = BCryptCreateHash(algHandle, &hHash, NULL, 0, NULL, 0, 0)) != 0)
+    {
+        //TODO: Add trace logging event.
+    }
+    else if ((result = BCryptHashData(hHash, &ek[0], from_sizet<ULONG>(cbKeyBuffer), 0)) != 0)
+    {
+        //TODO: Add trace logging event.
+    }
+    else if ((result = BCryptFinishHash(hHash, &digest[0], (ULONG)digestSize, 0)) != 0)
+    {
+        //TODO: Add trace logging event.
+    }
+    else
+    {
+        digest.resize(digestSize);
+        // Encode the digest and return it as string.
+        registrationId = Azure_EncodeBase32(digest);
+    }
+
+    if (algHandle != INVALID_HANDLE_VALUE)
+    {
+        BCryptCloseAlgorithmProvider(algHandle, 0);
+    }
+
+    if (hHash != INVALID_HANDLE_VALUE)
+    {
+        BCryptDestroyHash(hHash);
+    }
+
+    return HRESULT_FROM_TPM(result);
 }

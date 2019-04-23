@@ -4,6 +4,7 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "set Windows telemetry level",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {

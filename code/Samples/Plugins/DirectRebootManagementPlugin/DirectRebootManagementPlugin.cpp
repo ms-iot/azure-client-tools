@@ -6,9 +6,9 @@
 
 #include "stdafx.h"
 #include "PluginJsonConstants.h"
-#include "..\..\..\AzureDeviceManagementCommon\Plugins\PluginConstants.h"
-#include "..\..\..\AzureDeviceManagementCommon\Plugins\PluginJsonConstants.h"
-#include "..\..\..\AzureDeviceManagementCommon\Plugins\PluginInterfaces.h"
+#include "../../../device-agent/common/plugins/PluginConstants.h"
+#include "../../../device-agent/common/plugins/PluginJsonConstants.h"
+#include "../../../device-agent/common/plugins/PluginInterfaces.h"
 #include "RebootInfoHandler.h"
 #include "RebootCmdHandler.h"
 
@@ -20,7 +20,7 @@ using namespace Microsoft::Azure::DeviceManagement::RebootManagementPlugin;
 
 int __stdcall PluginCreate()
 {
-    return PLUGIN_ERR_SUCCESS;
+    return DM_ERROR_SUCCESS;
 }
 
 vector<HandlerInfo> __stdcall PluginGetHandlersInfo()
@@ -56,7 +56,7 @@ shared_ptr<IRawHandler> __stdcall PluginCreateRawHandler(const string& id)
     }
     else
     {
-        throw DMException(PLUGIN_ERR_INVALID_RAW_HANDLER, "Unknown raw configuration handler.");
+        throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_RAW_HANDLER, "Unknown raw configuration handler.");
     }
 
     return rawHandler;
@@ -66,4 +66,3 @@ void __stdcall PluginDestroyRawHandler(const std::string&)
 {
     // no-op
 }
-

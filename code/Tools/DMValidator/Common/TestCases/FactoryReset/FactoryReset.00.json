@@ -1,0 +1,18 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "directMethod",
+      "directMethodName": "StartFactoryResetCmd",
+      "description": "",
+      "input": {
+        "clearTpm": true,
+        "partitionGuid": "81A918F1-9262-4412-9EAF-7EE02155FFFE"
+      },
+      "output": {
+        "returnJson": {},
+        "returnCode": 200
+      }
+    }
+  ]
+}

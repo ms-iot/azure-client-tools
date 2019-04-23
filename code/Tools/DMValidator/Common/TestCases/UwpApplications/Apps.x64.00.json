@@ -1,0 +1,96 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "trigger application install.",
+      "readBackPause": 30,
+      "input": {
+        "properties": {
+          "desired": {
+            "uwpApps": {
+              "__meta": {
+                "deploymentId": "app_install1"
+              },
+              "connectionString" : "<storage connection string>",
+              "apps": {
+                "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                  "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                  "version": "1.0.0.0",
+                  "appxSource": "dmtest\\UwpApps\\x64\\UwpApp1_1.0.0.0_x64.appx",
+                  "depsSources": "dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Framework.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Runtime.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.VCLibs.x64.14.00.appx"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "uwpApps": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "app_install1",
+                  "time": "<ignore>"
+                },
+                "apps": {
+                  "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                    "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                    "version": "1.0.0.0"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "trigger application uninstall.",
+      "readBackPause": 30,
+      "input": {
+        "properties": {
+          "desired": {
+            "uwpApps": {
+              "__meta": {
+                "deploymentId": "apps_uninstall1"
+              },
+              "connectionString" : "<storage connection string>",
+              "apps": {
+                "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                  "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                  "version": "not installed"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "uwpApps": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "apps_uninstall1",
+                  "time": "<ignore>"
+                },
+                "apps": {
+                  "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                    "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                    "version": "not installed"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }    
+  ]
+}

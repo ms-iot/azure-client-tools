@@ -3,24 +3,22 @@
 The DPS Client APIs are a set of C APIs that allow a device client to provision a device with an Azure IoT Hub identity through the use of the Azure Device Provisioning Service.
 
 #### InitializeDpsClient
+This API initializes the DPS client. Internally, this initializes the Urchin objects to work with TPM. Note that this API must be called before using the DPS Client APIs.
+
 <pre>HRESULT InitializeDpsClient()</pre>
 
-This initializes the DPS Client. Internally, this initializes the Urchin objects to work with TPM.
-  Note that this API must be called before using the DPS Client APIs.
-
 #### GetEndorsementKeyPub
+This API deinitializes the DPS client. Internally, this deinitializes the Urchin objects that were created as part of InitializeDpsClient(). Note that this API must be called in the clean-up portion when using DPS Client APIs.
+
 <pre>HRESULT DeinitializeDpsClient()</pre>
 
-This deinitialization of the DPS Client. Internally, this deinitializes the Urchin objects that were created as part InitializeDpsClient().
-    Note that this API must be called in clean up portion of using dps client api's.
-
 #### GetEndorsementKeyPub
+This API reads the TPM endorsement key public value.
+
 <pre>HRESULT GetEndorsementKeyPub(
     _Out_writes_bytes_all_(*pcbekPub) PBYTE ekPub,
     _Inout_ UINT32 *pcbekPub
 )</pre>
-
-This reads the TPM endorsement key public value.
 
 | Parameter | Description |
 |----|----|
@@ -29,13 +27,14 @@ This reads the TPM endorsement key public value.
 |  returns | S_OK on successful reading and other relavant error code for failure.|
 
 #### GetRegistrationId
+This API gets the device registration ID by reading the TPM. This is needed in order to upload the device information to Azure's DPS.
+
 <pre>HRESULT GetRegistrationId(
     __out_ecount_z(*pcchregistrationId) PWSTR registrationId,
     _Inout_ size_t *pcchRegistrationId
 )
 </pre>
 
-This gets the device registration ID by reading the TPM. This is needed to upload the device information to azure dps service.
 
 | Parameter | Description |
 |----|----|
@@ -44,14 +43,14 @@ This gets the device registration ID by reading the TPM. This is needed to uploa
 |    returns | S_OK on successful reading and other relavant error code for failure.|
 
 #### IsDeviceProvisionedInAzure
+
+This API reads the TPM logical slot and checks whether the Azure connection string is already provisioned or not. Note that this API does not validate by communicating with Azure services.
+
 <pre>HRESULT IsDeviceProvisionedInAzure(
     UINT32 tpmSlotNumber,
     _Out_ bool *provisioned
 )
 </pre>
-
-This reads the TPM logical slot and checks whether the Azure connection string is already provisioned in it or not.
-Note that it does not validate by communicating with Azure services.
 
 | Parameter | Description |
 |----|----|
@@ -60,8 +59,9 @@ Note that it does not validate by communicating with Azure services.
 |    returns | S_OK on successful reading and other relavant error code for failure.|
 
 #### EmptyTpmSlot
+This API erases data stored in the specified TPM logical slot.
+
 <pre>HRESULT EmptyTpmSlot(UINT32 tpmSlotNumber)</pre>
-This erases data stored in the specified TPM logical slot.
 
 | Parameter | Description |
 |----|----|
@@ -69,6 +69,8 @@ This erases data stored in the specified TPM logical slot.
 |    returns | S_OK on successful reading and other relavant error code for failure.|
 
 #### GetAzureConnectionString
+This API gets the Azure connection string (SAS token-based) by reading the hostage key and service URL stored in TPM.
+
 <pre>HRESULT GetAzureConnectionString(
     __in UINT32 tpmSlotNumber,
     __in DWORD expiryDurationInSeconds,
@@ -77,8 +79,6 @@ This erases data stored in the specified TPM logical slot.
     _Inout_ size_t *pcchConnectionString
 )
 </pre>
-
-This gets the Azure connection string (SAS token-based) by reading the hostage key and service url stored in TPM.
 
 | Parameter | Description |
 |----|----|
@@ -90,18 +90,16 @@ This gets the Azure connection string (SAS token-based) by reading the hostage k
 |    returns | S_OK on successful reading and other relavant error code for failure.|
 
 #### AzureDpsRegisterDevice
+This API registers the device with IoT Hub by using Azure DPS.
+
+Before using this API, you will need to sign up with Azure and subscribe to IoT Hub and DPS then upload the device information to DPS. Please see this repo's readme.md for more details.
+
 <pre>HRESULT AzureDpsRegisterDevice(
     UINT32 tpmSlotNumber,
     const std::wstring dpsUri,
     const std::wstring dpsScopeId
 )
 </pre>
-
-This registers the device with IoT Hub by using the Azure dps service.
-
-Pre-requisite:
-Before using this API, you need to sign up with azure and subscribe to IotHub & DPS and upload the device information to DPS service. Please see ReadMe of the repo for more details.
-
 
 | Parameter | Description |
 |----|----|

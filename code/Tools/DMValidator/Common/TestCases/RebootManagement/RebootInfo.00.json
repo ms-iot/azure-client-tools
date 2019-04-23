@@ -1,0 +1,78 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "our first test case!",
+      "readBackPause": 8,
+      "input": {
+        "properties": {
+          "desired": {
+            "rebootInfo": {
+              "__meta": {
+                "deploymentId": "reboot_schedule_v1"
+              },
+              "singleRebootTime": "2016-10-10T17:00:00Z",
+              "dailyRebootTime": "2016-10-10T17:00:00Z"
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "rebootInfo": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "reboot_schedule_v1",
+                  "time": "<ignore>"
+                },
+                "lastBootTime": "<ignore>",
+                "singleRebootTime": "2016-10-10T17:00:00Z",
+                "dailyRebootTime": "2016-10-10T17:00:00Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "deviceTwin",
+      "description": "remove all schedule reboots",
+      "readBackPause": 8,
+      "input": {
+        "properties": {
+          "desired": {
+            "rebootInfo": {
+              "__meta": {
+                "deploymentId": "reboot_schedule_v2"
+              },
+              "singleRebootTime": "",
+              "dailyRebootTime": ""
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "rebootInfo": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "reboot_schedule_v2",
+                  "time": "<ignore>"
+                },
+                "lastBootTime": "<ignore>",
+                "singleRebootTime": "",
+                "dailyRebootTime": ""
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

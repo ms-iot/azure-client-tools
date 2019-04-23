@@ -17,7 +17,7 @@ using namespace std;
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace RebootManagementPlugin {
 
     RebootInfoHandler::RebootInfoHandler() :
-        BaseHandler(RebootInfoHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(RebootInfoHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
     {
         // ToDo: This is the last re-start of DM Client - not necessarily the last reboot time.
         _lastRebootTime = Utils::WideToMultibyte(DateTime::GetCurrentDateTimeString().c_str());
@@ -29,10 +29,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
         const string& operationId,
         shared_ptr<DMCommon::ReportedErrorList> errorList)
     {
-        RunOperation(operationId, errorList,
+        Operation::RunOperation(operationId, errorList,
             [&]()
         {
-            OperationModelT<string> operationModel = TryGetOptionalSinglePropertyOpStringParameter(desiredConfig, operationId);
+            OperationModelT<string> operationModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(desiredConfig, operationId);
 
             if (operationModel.present)
             {
@@ -53,7 +53,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
         Json::Value& reportedObject,
         shared_ptr<DMCommon::ReportedErrorList> errorList)
     {
-        RunOperation(operationId, errorList,
+        Operation::RunOperation(operationId, errorList,
             [&]()
         {
             string path = string(CSPPath) + cspNodeId;
@@ -110,11 +110,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
         Json::Value reportedObject(Json::objectValue);
         std::shared_ptr<ReportedErrorList> errorList = make_shared<ReportedErrorList>();
 
-        RunOperation(GetId(), errorList,
+        Operation::RunOperation(GetId(), errorList,
             [&]()
         {
             // Make sure this is not a transient state
-            if (IsRefreshing(groupDesiredConfigJson))
+            if (Operation::IsRefreshing(groupDesiredConfigJson))
             {
                 return;
             }
@@ -127,7 +127,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
             SetSubGroup(groupDesiredConfigJson, CSPDaily, JsonDailyRebootTime, errorList);
 
             // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeAlways)
+            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
             {
                 BuildReported(reportedObject, errorList);
             }
