@@ -7,3 +7,6 @@
 [submodule "deps/cpprestsdk"]
 	path = deps/cpprestsdk
 	url = https://github.com/ms-iot/cpprestsdk
+[submodule "deps/azure-iot-sdk-c"]
+	path = deps/azure-iot-sdk-c
+	url = https://github.com/Azure/azure-iot-sdk-c
