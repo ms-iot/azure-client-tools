@@ -87,19 +87,22 @@ To get the list of all the installed applications on a device, operator needs to
 ### Method Name 
 `GetInstalledUwpAppsCmd`
 
-### Parameters
+This method returns all the installed application on the system in following format 
 
 <pre>
-{
-  "store" : true,
-  "nonStore" : true
-}
+"installedApps" :
+  [
+    {
+      "pkgFamilyName" : "App1",
+      "version" : "App1 version"
+    },
+    {
+      "pkgFamilyName" : "App2",
+       "version" : "App2 version"
+    },
+    ...
+  ]
 </pre>
-
-- `"store"`: If this value is specified to `true`, the direct method call will return list of installed applications which will include application installed through Windows store. 
-- `"nonStore"`: If this value is specified to `true`, direct method call will return list of installed applications which will include applications side-loaded on the device. 
-
-<b>Note</b> If both these values are set to false, the call will return an empty list.
 
 ## Managing application lifecycle
 

@@ -6,10 +6,10 @@
 #include "device-agent/common/plugins/PluginJsonConstants.h"
 #include "device-agent/plugin-common/PluginStub.h"
 #include "PluginJsonConstants.h"
-#include "EnumerateLogFolders.h"
-#include "EnumerateLogFiles.h"
-#include "DeleteLogFile.h"
-#include "UploadLogFile.h"
+#include "EnumerateLogFoldersCmdHandler.h"
+#include "EnumerateLogFilesCmdHandler.h"
+#include "DeleteLogFileCmdHandler.h"
+#include "UploadLogFileCmdHandler.h"
 #include "DiagnosticLogsManagementStateHandler.h"
 
 using namespace std;
@@ -74,10 +74,10 @@ std::shared_ptr<IRawHandler> CreateDiagnosticLogsManagementStateHandler()
 int __stdcall PluginCreate()
 {
     gPluginStub.Initialize();
-    gPluginStub.RegisterRawHandler(EnumerateLogFoldersId, CreateEnumerateLogFoldersHandler);
-    gPluginStub.RegisterRawHandler(EnumerateLogFilesId, CreateEnumerateLogFilesHandler);
-    gPluginStub.RegisterRawHandler(DeleteLogFileId, CreateDeleteLogFileHandler);
-    gPluginStub.RegisterRawHandler(UploadLogFileId, CreateUploadLogFileHandler);
+    gPluginStub.RegisterRawHandler(EnumerateLogFoldersCmdHandlerId, CreateEnumerateLogFoldersHandler);
+    gPluginStub.RegisterRawHandler(EnumerateLogFilesCmdHandlerId, CreateEnumerateLogFilesHandler);
+    gPluginStub.RegisterRawHandler(DeleteLogFileCmdHandlerId, CreateDeleteLogFileHandler);
+    gPluginStub.RegisterRawHandler(UploadLogFileCmdHandlerId, CreateUploadLogFileHandler);
     gPluginStub.RegisterRawHandler(DiagnosticLogsManagementStateHandlerId, CreateDiagnosticLogsManagementStateHandler);
     return DM_ERROR_SUCCESS;
 }

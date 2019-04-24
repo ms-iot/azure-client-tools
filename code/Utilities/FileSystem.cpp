@@ -123,19 +123,32 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         TRACELINEP(LoggingLevel::Verbose, "Scanning: ", WideToMultibyte(path.c_str()).c_str());
 
         vector<string> vector;
-        for (const directory_entry& dirEntry : directory_iterator(path))
+        DWORD pathType = GetFileAttributes(path.c_str());
+        if (pathType == INVALID_FILE_ATTRIBUTES)
         {
-            TRACELINEP(LoggingLevel::Verbose, "Found: ", WideToMultibyte(dirEntry.path().c_str()).c_str());
-            if (dirEntry.status().type() != type)
-            {
-                continue;
-            }
-
-            string folderName = WideToMultibyte(dirEntry.path().filename().c_str());
-            vector.push_back(folderName);
-
-            TRACELINEP(LoggingLevel::Verbose, "  Picked: ", folderName.c_str());
+            throw DMException(DMSubsystem::Windows, GetLastError(), "Incorrect file/folder path.");
         }
+        if (pathType == FILE_ATTRIBUTE_DIRECTORY)
+        {
+            for (const directory_entry& dirEntry : directory_iterator(path))
+            {
+                TRACELINEP(LoggingLevel::Verbose, "Found: ", WideToMultibyte(dirEntry.path().c_str()).c_str());
+                if (dirEntry.status().type() != type)
+                {
+                    continue;
+                }
+
+                string folderName = WideToMultibyte(dirEntry.path().filename().c_str());
+                vector.push_back(folderName);
+
+                TRACELINEP(LoggingLevel::Verbose, "  Picked: ", folderName.c_str());
+            }
+        }
+        else
+        {
+            throw DMException(DMSubsystem::Windows, GetLastError(), "Folder path is incorrect.");
+        }
+
         return vector;
     }
 }}}}

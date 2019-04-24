@@ -60,7 +60,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
         std::shared_ptr<DMCommon::IPluginTransport> _transport;
 
-        // We keep raw and pnp separate to avoid name collisions (though very unlikely).
         std::map<std::string, HandlerState> _rawHandlersStates;
     };
 }}}}

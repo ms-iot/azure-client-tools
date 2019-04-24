@@ -88,6 +88,31 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         RunSyncML(requestSyncML, resultSyncML);
     }
 
+    void MdmProxy::RunSet(const string& path, bool value)
+    {
+        string requestSyncML = R"(
+        <SyncBody>
+            <Replace>
+              <CmdID>1</CmdID>
+              <Item>
+                <Target>
+                  <LocURI>)";
+        requestSyncML += path;
+        requestSyncML += R"(</LocURI>
+                </Target>
+                <Meta><Format xmlns="syncml:metinf">bool</Format></Meta>
+                <Data>)";
+        requestSyncML += value ? "True" : "False";
+        requestSyncML += R"(</Data>
+              </Item>
+            </Replace>
+        </SyncBody>
+        )";
+
+        string resultSyncML;
+        RunSyncML(requestSyncML, resultSyncML);
+    }
+
     string MdmProxy::RunGetString(const string& path)
     {
         string requestSyncML = R"(

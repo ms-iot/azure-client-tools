@@ -3,11 +3,11 @@
 
 #pragma once
 
-#define EnumerateLogFoldersId "EnumerateLogFoldersCmd"
-#define EnumerateLogFilesId "EnumerateLogFilesCmd"
+#define EnumerateLogFoldersCmdHandlerId "EnumerateLogFoldersCmd"
+#define EnumerateLogFilesCmdHandlerId "EnumerateLogFilesCmd"
 #define DiagnosticLogsManagementStateHandlerId "eventTracingCollectors"
-#define DeleteLogFileId "DeleteLogFileCmd"
-#define UploadLogFileId "UploadLogFileCmd"
+#define DeleteLogFileCmdHandlerId "DeleteLogFileCmd"
+#define UploadLogFileCmdHandlerId "UploadLogFileCmd"
 
 #define PayloadList "list"
 #define PayloadFolderName "folderName"

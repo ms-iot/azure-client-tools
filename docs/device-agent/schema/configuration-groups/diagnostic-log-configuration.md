@@ -69,7 +69,7 @@ Here are the steps to upload a log file:
 
 Example:
 
-In the [device agent configuration file](../reference/device-agent-configuration-file.md), add the following snippet :
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet :
 
 <pre>
 {
@@ -372,8 +372,8 @@ The configuration of a given provider is identified by its GUID in the map.
             "collector00": {
                   "traceLogFileMode": "sequential",
                   "logFileSizeLimitMB": 500,
-                  "logFileFolder": "collectorFolderName1",
-                  "logFileName": "logFileName1",
+                  "logFileFolder": "collectorFolderName",
+                  "logFileName": "logFileName",
                   "started": false,
                   "providers": {
                       "guid00": {
@@ -382,10 +382,9 @@ The configuration of a given provider is identified by its GUID in the map.
                           "enabled": true
                       }
                     }
-                },
-                "__meta": {
+                  "__meta": {
                     "reportingMode": "detailed"
-                }
+                  }
             },
             "collector01": {
                 "__meta": {
@@ -407,10 +406,9 @@ The configuration of a given provider is identified by its GUID in the map.
             {
                 &lt;meta data object content&gt;
             },
-            "collector00" :
-                {
-                    "logFileFolder" : "collectorFolderName1",
-                    "logFileName": "logFileName1",
+            "collector00" :{
+                    "logFileFolder" : "collectorFolderName",
+                    "logFileName": "logFileName",
                     "logFileSizeLimitMB" : 500,
                     "providers" :
                     {
@@ -424,8 +422,8 @@ The configuration of a given provider is identified by its GUID in the map.
                     "started" : true,
                     "traceLogFileMode" : "sequential"
                 }
-        },
-         "collector01": ""
+            },
+            "collector01": ""
     }
   }
 }

@@ -30,16 +30,16 @@
     <ClInclude Include="EventTracingConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnumerateLogFolders.h">
+    <ClInclude Include="EnumerateLogFilesCmdHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnumerateLogFiles.h">
+    <ClInclude Include="EnumerateLogFoldersCmdHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DeleteLogFile.h">
+    <ClInclude Include="DeleteLogFileCmdHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UploadLogFile.h">
+    <ClInclude Include="UploadLogFileCmdHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -59,19 +59,19 @@
     <ClCompile Include="DiagnosticLogsManagementStateHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EnumerateLogFilesCmdHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnumerateLogFoldersCmdHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="EventTracingConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnumerateLogFolders.cpp">
+    <ClCompile Include="UploadLogFileCmdHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnumerateLogFiles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DeleteLogFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UploadLogFile.cpp">
+    <ClCompile Include="DeleteLogFileCmdHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

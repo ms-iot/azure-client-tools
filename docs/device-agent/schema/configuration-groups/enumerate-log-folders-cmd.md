@@ -22,7 +22,7 @@ The enumerate log folders get command lists all the folders present in the path 
 
 Example:
 
-In the [device agent configuration file](../reference/device-agent-configuration-file.md), add the following snippet :
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet :
 
 <pre>
 {

@@ -1,0 +1,121 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "start diagnostic log collection",
+      "readBackPause": 20,
+      "input": {
+        "properties": {
+          "desired": {
+            "eventTracingCollectors": {
+              "collector00": {
+                "traceLogFileMode": "sequential",
+                "logFileSizeLimitMB": 500,
+                "logFileFolder": "collectorFolderName",
+                "logFileName": "logFileName",
+                "started": false,
+                "providers": {
+                  "guid00": {
+                    "traceLevel": "verbose",
+                    "keywords": "",
+                    "enabled": true
+                  }
+                },
+                "__meta": {
+                  "reportingMode": "detailed"
+                }
+              },
+              "collector01": {
+                "__meta": {
+                  "reportingMode": "minimal"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "eventTracingCollectors": {
+                "collector00": {
+                  "logFileFolder": "collectorFolderName",
+                  "logFileName": "logFileName",
+                  "logFileSizeLimitMB": 500,
+                  "providers": {
+                    "guid00": {
+                      "enabled": true,
+                      "keywords": "0",
+                      "traceLevel": "verbose"
+                    }
+                  },
+                  "started": true,
+                  "traceLogFileMode": "sequential"
+                },
+                "collector01": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "directMethod",
+      "directMethodName": "EnumerateLogFoldersCmd",
+      "description": "list all files in the folder",
+      "input": {},
+      "output": {
+        "returnJson": {
+          "list": []
+        },
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "02",
+      "type": "directMethod",
+      "directMethodName": "EnumerateLogFilesCmd",
+      "description": "list all files in the folder",
+      "input": { "folderName": "collectorFolderName" },
+      "output": {
+        "returnJson": {
+          "list": []
+        },
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "03",
+      "type": "directMethod",
+      "directMethodName": "DeleteLogFileCmd",
+      "description": "delete a file in the folder",
+      "input": {
+        "folderName": "collectorFolderName",
+        "fileName": "logFileName"
+      },
+      "output": {
+        "returnJson": {},
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "04",
+      "type": "directMethod",
+      "directMethodName": "UploadLogFileCmd",
+      "description": "upload a file should fail",
+      "input": {
+        "folderName": "collectorFolderName",
+        "fileName": "logFileName",
+        "connectionString": "<AzureStorageConnectionString>",
+        "container": "AzureStorageContainerName"
+      },
+      "output": {
+        "returnJson": {},
+        "returnCode": 400
+      }
+    }
+  ]
+}

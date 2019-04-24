@@ -265,7 +265,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AppDesiredState.h" />
-    <ClInclude Include="AppInfo.h" />
     <ClInclude Include="PluginJsonConstants.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />

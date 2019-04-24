@@ -22,7 +22,7 @@ The Upload logs command enables the operator to upload a log file to the Azure S
 
 Example:
 
-In the [device agent configuration file](../reference/device-agent-configuration-file.md), add the following snippet :
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet :
 
 <pre>
 {

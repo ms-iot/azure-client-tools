@@ -5,13 +5,6 @@
 #include "PluginJsonConstants.h"
 #include "UwpGetInstalledAppsHandler.h"
 
-#define CSPAppManagementPath "./Device/Vendor/MSFT/EnterpriseModernAppManagement/AppManagement/"
-#define CSPStoreTypeAppStore "AppStore"
-#define CSPStoreTypeNonStore "NonStore"
-#define CSPAppName L"Name"
-#define CSPAppVersion L"Version"
-#define CSPAppInstallDate L"InstallDate"
-
 using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
@@ -80,25 +73,9 @@ InvokeResult UwpGetInstalledAppsHandler::Invoke(
         // Processing Meta Data
         _metaData->FromJsonParentObject(jsonParameters);
 
-        bool appStore = false;
-        bool nonStore = false;
 
-        OperationModelT<bool> appSourceStore = Operation::TryGetOptionalSinglePropertyOpBoolParameter(jsonParameters, JsonAppSourceStore);
-        if (appSourceStore.present)
-        {
-            appStore = appSourceStore.value;
-        }
-
-        OperationModelT<bool> appSourceNonStore = Operation::TryGetOptionalSinglePropertyOpBoolParameter(jsonParameters, JsonAppSourceNonStore);
-        if (appSourceNonStore.present)
-        {
-            nonStore = appSourceNonStore.value;
-        }
-
-        BuildReported(reportedObject, appStore, nonStore, errorList);
+        GetInstalledApps(reportedObject, errorList);
     });
-
-    FinalizeAndReport(reportedObject, errorList);
 
     // Pack return payload
     if (errorList->Count() != 0)
@@ -117,78 +94,28 @@ InvokeResult UwpGetInstalledAppsHandler::Invoke(
     return invokeResult;
 }
 
-void UwpGetInstalledAppsHandler::GetInstalledApps(const std::string store, ApplicationsMap &installedAppsList, shared_ptr<DMCommon::ReportedErrorList> errorList)
-{
-    TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
-
-    std::function<void(std::vector<std::wstring>&, std::wstring&)> valueHandler =
-        [&installedAppsList](vector<wstring>& wideUriTokens, wstring& wideValue)
-    {
-        // 0/__1___/__2___/__3_/______________4______________/______5______/___6____/_________7_______/_______8_______/______9_____
-        // ./Device/Vendor/MSFT/EnterpriseModernAppManagement/AppManagement/AppStore/PackageFamilyName/PackageFullName/PropertyName
-
-        if (wideUriTokens.size() == 10)
-        {
-            string appPackageFamilyName = WideToMultibyte(wideUriTokens[7].c_str());
-            string appStore = WideToMultibyte(wideUriTokens[6].c_str());
-            auto appEntry = installedAppsList.find(appPackageFamilyName);
-            // If app is not present in the map, create a new entry
-            if (appEntry == installedAppsList.end())
-            {
-                shared_ptr<ApplicationInfo> appInfo = make_shared<ApplicationInfo>(appPackageFamilyName, appStore);
-                installedAppsList.insert(ApplicationsMap::value_type(appPackageFamilyName, appInfo));
-            }
-            else
-            {
-                // add values 
-                if (wideUriTokens[9].compare(CSPAppName) == 0)
-                {
-                    appEntry->second->name = WideToMultibyte(wideValue.c_str());
-                }
-                if (wideUriTokens[9].compare(CSPAppVersion) == 0)
-                {
-                    appEntry->second->version = WideToMultibyte(wideValue.c_str());
-                }
-                else if (wideUriTokens[9].compare(CSPAppInstallDate) == 0)
-                {
-                    appEntry->second->installDate = WideToMultibyte(wideValue.c_str());
-                }
-            }
-        }
-    };
-    Operation::RunOperation(InstalledAppsInfo, errorList,
-        [&]()
-    {
-        string path = CSPAppManagementPath + store + "?list=StructData";
-        _mdmProxy.RunGetStructData(path, valueHandler);
-    });
-}
-
-
-void UwpGetInstalledAppsHandler::BuildReported(
+void UwpGetInstalledAppsHandler::GetInstalledApps(
     Json::Value& reportedObject,
-    bool store, 
-    bool nonStore,
     std::shared_ptr<DMCommon::ReportedErrorList> errorList)
 {
-    ApplicationsMap installedApps;
-    if (store)
-    {
-        GetInstalledApps(CSPStoreTypeAppStore, installedApps, errorList);
-    }
-    if (nonStore)
-    {
-        GetInstalledApps(CSPStoreTypeNonStore, installedApps, errorList);
-    }
+     TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
 
-    for (auto app : installedApps)
-    {
-        Json::Value appInfo;
-        appInfo[JsonPkgFamilyName] = Json::Value(app.second->packageFamilyName);
-        appInfo[JsonVersion] = Json::Value(app.second->version);
-        appInfo[JsonInstallDate] = Json::Value(app.second->installDate);
-        replace(app.second->packageFamilyName.begin(), app.second->packageFamilyName.end(), '.', '_');
-        reportedObject[app.second->packageFamilyName] = Json::Value(appInfo);
-    }
+     PackageManager^ packageManager = ref new PackageManager;
+     IIterable<Package^>^ packages = packageManager->FindPackages();
+     IIterator<Package^>^ it = packages->First();
+     Json::Value appList;
+     while (it->HasCurrent)
+     {
+         Package^ package = it->Current;
+         std::string pkgFamilyName = Utils::WideToMultibyte(package->Id->FamilyName->Data()).c_str();
+         Json::Value appInfo;
+         
+         appInfo[JsonPkgFamilyName] = Json::Value(pkgFamilyName);
+         appInfo[JsonVersion] = Json::Value(PackageVersion(package));
+         appList.append(appInfo);
+         it->MoveNext();
+     }
+
+     reportedObject[JsonInstalledApps] = Json::Value(appList);
 }
 }}}}

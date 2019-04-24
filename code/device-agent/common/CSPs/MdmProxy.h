@@ -19,6 +19,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
         void RunSet(const std::string& cspPath, int value);
 
+        void RunSet(const std::string& path, bool value);
+
         std::string RunGetString(const std::string& path);
 
         std::string RunGetBase64(const std::string& path);

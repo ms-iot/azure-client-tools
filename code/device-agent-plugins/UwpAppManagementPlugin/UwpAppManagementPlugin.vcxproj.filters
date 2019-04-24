@@ -24,9 +24,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PluginJsonConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>

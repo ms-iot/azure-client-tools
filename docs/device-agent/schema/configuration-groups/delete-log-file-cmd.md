@@ -6,7 +6,7 @@ The delete log files command deletes the specified diagnostic log file from the 
 
 | Handler Identifier | Plug-in Binary |
 |----|----|
-| `EnumerateLogFilesCmd` | DiagnosticLogsManagementPlugin.dll<br/>cpprest141[d]_2_10.dll<br/>wastorage.dll |
+| `DeleteLogFilesCmd` | DiagnosticLogsManagementPlugin.dll<br/>cpprest141[d]_2_10.dll<br/>wastorage.dll |
 
 ## Life Cycle and Start-up Configuration
 
@@ -22,7 +22,7 @@ The delete log files command deletes the specified diagnostic log file from the 
 
 Example:
 
-In the [device agent configuration file](../reference/device-agent-configuration-file.md), add the following snippet :
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet :
 
 <pre>
 {

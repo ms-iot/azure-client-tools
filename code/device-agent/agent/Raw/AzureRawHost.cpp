@@ -504,10 +504,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
         // Go through the "desired" children and apply the desired changes...
         vector<string> keys = desiredProperties.getMemberNames();
-        if(_rawHandlerSequence.size() == 0)
+        if(_rawHandlerSequence.size() == 0 && _rawHandlerMap.size() != 0)
         {
             MarkStatus(desiredProperties, DeploymentStatus::eFailed);
-            TRACELINE(LoggingLevel::Verbose, "Handlers have not been sequenced.");
+            TRACELINE(LoggingLevel::Verbose, "Failed to sort the handlers based on their dependency.");
         }
         else
         {

@@ -13,7 +13,7 @@
 #define JsonAppSourceNonStore "nonStore"
 #define JsonConnectionString "connectionString"
 
-#define InstalledApps "installedApps"
+#define JsonInstalledApps "installedApps"
 #define JsonApps "apps"
 #define JsonPkgFamilyName "pkgFamilyName"
 #define JsonAppName "name"

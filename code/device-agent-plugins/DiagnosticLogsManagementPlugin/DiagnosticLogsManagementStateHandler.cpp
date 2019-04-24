@@ -303,109 +303,119 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
         Operation::RunOperation(GetId(), errorList,
             [&]()
         {
-            if (collector._cspConfiguration->_logFileFolderName.length() == 0)
-            {
-                TRACELINE(LoggingLevel::Verbose, "Warning: LogFileFolder is empty. Using collector name as the LogFileFolder.");
-                collector._cspConfiguration->_logFileFolderName = collector._name;
-            }
-
-            // Make sure the user is not trying to access any files outside the IoTDM folder.
-            if (nullptr != strstr(collector._cspConfiguration->_logFileFolderName.data(), "..") ||
-                nullptr != strstr(collector._cspConfiguration->_logFileFolderName.data(), "\\") ||
-                nullptr != strstr(collector._cspConfiguration->_logFileFolderName.data(), "/"))
-            {
-                TRACELINE(LoggingLevel::Verbose, "Error: LogFileFolder cannot contain '/', '\\', or '..'.");//remove later
-                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "LogFileFolder cannot contain '/', '\\', or '..'.");
-            }
-
-            if (collector._cspConfiguration->_logFileName.length() != 0)
-            {
-                if (nullptr != strstr(collector._cspConfiguration->_logFileName.data(), "..") ||
-                    nullptr != strstr(collector._cspConfiguration->_logFileName.data(), "\\") ||
-                    nullptr != strstr(collector._cspConfiguration->_logFileName.data(), "/"))
-                {
-                    TRACELINE(LoggingLevel::Verbose, "Error: LogFileName cannot contain '/', '\\', or '..'.");//remove later
-                    throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "LogFileName cannot contain '/', '\\', or '..'.");
-                }
-            }
-
             // Build paths...
             string collectorCSPPath = CSPCollectorsRootPath;
             collectorCSPPath += "/" + collector._name;
-            const string providersCSPPath = collectorCSPPath + "/" + CSPProvidersNode;
 
-            //do we need to write reg value??
             wstring collectorRegistryPath = RegEventTracing;
             collectorRegistryPath += L"\\";
             collectorRegistryPath += MultibyteToWide(collector._name.c_str());
 
-            // Add CSP node and set its properties...
-            _mdmProxy.RunAdd(CSPCollectorsRootPath, collector._name);
             Registry::WriteRegistryValue(collectorRegistryPath, RegReportToDeviceTwin, MultibyteToWide(collector._subMetaData->GetReportingMode().c_str()));
-            Registry::WriteRegistryValue(collectorRegistryPath, RegEventTracingLogFileFolder, MultibyteToWide(collector._cspConfiguration->_logFileFolderName.c_str()));
-            Registry::WriteRegistryValue(collectorRegistryPath, RegEventTracingLogFileName, MultibyteToWide(collector._cspConfiguration->_logFileName.c_str()));
-            _mdmProxy.RunSet(collectorCSPPath + "/" + CSPLogFileSizeLimitMB, collector._cspConfiguration->_logFileSizeLimitMB);
-            _mdmProxy.RunSet(collectorCSPPath + "/" + CSPTraceLogFileMode, collector._cspConfiguration->_traceLogFileMode == JsonFileModeSequential ? 1 : 2);
 
-            // Capture which providers are already part of this CSP collector configuration...
-            string providersString = _mdmProxy.RunGetString(providersCSPPath);
-
-            // Iterate though each desired provider and add/apply its settings...
-            for (shared_ptr<ProviderConfiguration> provider : collector._cspConfiguration->_providers)
+            if(collector._cspConfiguration)
             {
-                string providerCSPPath = collectorCSPPath + "/" + CSPProvidersNode + "/" + provider->_guid;
-
-                // Is the provider already part of this CSP collector configuration?
-                if (string::npos == providersString.find(provider->_guid))
+                if (collector._cspConfiguration->_logFileFolderName.length() == 0)
                 {
-                    _mdmProxy.RunAddTyped(providerCSPPath, CSPNodeType);
+                    TRACELINE(LoggingLevel::Verbose, "Warning: LogFileFolder is empty. Using collector name as the LogFileFolder.");
+                    collector._cspConfiguration->_logFileFolderName = collector._name;
                 }
 
-                int traceLevel = 0;
-                if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelCritical))
+                // Make sure the user is not trying to access any files outside the IoTDM folder.
+                if (nullptr != strstr(collector._cspConfiguration->_logFileFolderName.data(), "..") ||
+                    nullptr != strstr(collector._cspConfiguration->_logFileFolderName.data(), "\\") ||
+                    nullptr != strstr(collector._cspConfiguration->_logFileFolderName.data(), "/"))
                 {
-                    traceLevel = 1;
-                }
-                else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelError))
-                {
-                    traceLevel = 2;
-                }
-                else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelWarning))
-                {
-                    traceLevel = 3;
-                }
-                else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelInformation))
-                {
-                    traceLevel = 4;
-                }
-                else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelVerbose))
-                {
-                    traceLevel = 5;
+                    TRACELINE(LoggingLevel::Verbose, "Error: LogFileFolder cannot contain '/', '\\', or '..'.");//remove later
+                    throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "LogFileFolder cannot contain '/', '\\', or '..'.");
                 }
 
-                _mdmProxy.RunSet(providerCSPPath + "/" + CSPState, provider->_enabled);
-                _mdmProxy.RunSet(providerCSPPath + "/" + CSPKeywords, provider->_keywords);
-                _mdmProxy.RunSet(providerCSPPath + "/" + CSPTraceLevel, traceLevel);
-            }
-
-            // Finally process the started/stopped status...
-            unsigned int traceStatus = _mdmProxy.RunGetUInt(collectorCSPPath + "/" + CSPTraceStatus);
-            if (collector._cspConfiguration->_started)
-            {
-                if (traceStatus == 0 /*stopped*/)
+                if (collector._cspConfiguration->_logFileName.length() != 0)
                 {
-                    TRACELINEP(LoggingLevel::Verbose, "Starting logging for : ", collector._name.c_str());
-                    _mdmProxy.RunExecWithParameters(collectorCSPPath + "/" + CSPTraceControl, CSPTraceControlStart);
+                    if (nullptr != strstr(collector._cspConfiguration->_logFileName.data(), "..") ||
+                        nullptr != strstr(collector._cspConfiguration->_logFileName.data(), "\\") ||
+                        nullptr != strstr(collector._cspConfiguration->_logFileName.data(), "/"))
+                    {
+                        TRACELINE(LoggingLevel::Verbose, "Error: LogFileName cannot contain '/', '\\', or '..'.");//remove later
+                        throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "LogFileName cannot contain '/', '\\', or '..'.");
+                    }
                 }
-            }
-            else
-            {
-                if (traceStatus == 1 /*started*/)
-                {
-                    TRACELINEP(LoggingLevel::Verbose, "Stopping logging for : ", collector._name.c_str());
-                    _mdmProxy.RunExecWithParameters(collectorCSPPath + "/" + CSPTraceControl, CSPTraceControlStop);
 
-                    CreateEtlFile(collector);
+                const string providersCSPPath = collectorCSPPath + "/" + CSPProvidersNode;
+
+                // Capture if collector is already part of this CSP configuration...
+                string collectorString = _mdmProxy.RunGetString(CSPCollectorsRootPath);
+                // Is the collector already part of this CSP configuration?
+                if (string::npos == collectorString.find(collector._name))
+                {
+                    _mdmProxy.RunAdd(CSPCollectorsRootPath, collector._name);;
+                }
+
+                Registry::WriteRegistryValue(collectorRegistryPath, RegEventTracingLogFileFolder, MultibyteToWide(collector._cspConfiguration->_logFileFolderName.c_str()));
+                Registry::WriteRegistryValue(collectorRegistryPath, RegEventTracingLogFileName, MultibyteToWide(collector._cspConfiguration->_logFileName.c_str()));
+                _mdmProxy.RunSet(collectorCSPPath + "/" + CSPLogFileSizeLimitMB, collector._cspConfiguration->_logFileSizeLimitMB);
+                _mdmProxy.RunSet(collectorCSPPath + "/" + CSPTraceLogFileMode, collector._cspConfiguration->_traceLogFileMode == JsonFileModeSequential ? 1 : 2);
+
+                // Capture which providers are already part of this CSP collector configuration...
+                string providersString = _mdmProxy.RunGetString(providersCSPPath);
+
+                // Iterate though each desired provider and add/apply its settings...
+                for (shared_ptr<ProviderConfiguration> provider : collector._cspConfiguration->_providers)
+                {
+                    string providerCSPPath = collectorCSPPath + "/" + CSPProvidersNode + "/" + provider->_guid;
+
+                    // Is the provider already part of this CSP collector configuration?
+                    if (string::npos == providersString.find(provider->_guid))
+                    {
+                        _mdmProxy.RunAddTyped(providerCSPPath, CSPNodeType);
+                    }
+
+                    int traceLevel = 0;
+                    if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelCritical))
+                    {
+                        traceLevel = 1;
+                    }
+                    else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelError))
+                    {
+                        traceLevel = 2;
+                    }
+                    else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelWarning))
+                    {
+                        traceLevel = 3;
+                    }
+                    else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelInformation))
+                    {
+                        traceLevel = 4;
+                    }
+                    else if (0 == _stricmp(provider->_traceLevel.c_str(), JsonTraceLevelVerbose))
+                    {
+                        traceLevel = 5;
+                    }
+
+                    _mdmProxy.RunSet(providerCSPPath + "/" + CSPState, provider->_enabled);
+                    _mdmProxy.RunSet(providerCSPPath + "/" + CSPKeywords, provider->_keywords);
+                    _mdmProxy.RunSet(providerCSPPath + "/" + CSPTraceLevel, traceLevel);
+                }
+
+                // Finally process the started/stopped status...
+                unsigned int traceStatus = _mdmProxy.RunGetUInt(collectorCSPPath + "/" + CSPTraceStatus);
+                if (collector._cspConfiguration->_started)
+                {
+                    if (traceStatus == 0 /*stopped*/)
+                    {
+                        TRACELINEP(LoggingLevel::Verbose, "Starting logging for : ", collector._name.c_str());
+                        _mdmProxy.RunExecWithParameters(collectorCSPPath + "/" + CSPTraceControl, CSPTraceControlStart);
+                    }
+                }
+                else
+                {
+                    if (traceStatus == 1 /*started*/)
+                    {
+                        TRACELINEP(LoggingLevel::Verbose, "Stopping logging for : ", collector._name.c_str());
+                        _mdmProxy.RunExecWithParameters(collectorCSPPath + "/" + CSPTraceControl, CSPTraceControlStop);
+
+                        CreateEtlFile(collector);
+                    }
                 }
             }
         });
@@ -455,27 +465,29 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
                 if (fieldCount == 0)
                 {
                     TRACELINE(LoggingLevel::Verbose, "No collector fields are defined. Returning.");
-                    return;
-                }
 
-                //get the provider config for the collector
-                for (Json::Value::const_iterator provider = providers.value.begin(); provider != providers.value.end(); provider++)
+                }
+                else
                 {
-                    string guid = provider.key().asString();
-                    OperationModelT<bool> enabled = Operation::TryGetOptionalSinglePropertyOpBoolParameter(*provider, JsonProviderEnabled);
-                    OperationModelT<string> traceLevel = Operation::TryGetOptionalSinglePropertyOpStringParameter(*provider, JsonProviderTraceLevel);
-                    OperationModelT<string> keywords = Operation::TryGetOptionalSinglePropertyOpStringParameter(*provider, JsonProviderKeywords); // optional parameter
-
-                    if (!enabled.present || !traceLevel.present)
+                    //get the provider config for the collector
+                    for (Json::Value::const_iterator provider = providers.value.begin(); provider != providers.value.end(); provider++)
                     {
-                        throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "Missing provider properties in JSON");
-                    }
+                        string guid = provider.key().asString();
+                        OperationModelT<bool> enabled = Operation::TryGetOptionalSinglePropertyOpBoolParameter(*provider, JsonProviderEnabled);
+                        OperationModelT<string> traceLevel = Operation::TryGetOptionalSinglePropertyOpStringParameter(*provider, JsonProviderTraceLevel);
+                        OperationModelT<string> keywords = Operation::TryGetOptionalSinglePropertyOpStringParameter(*provider, JsonProviderKeywords); // optional parameter
 
-                    shared_ptr<ProviderConfiguration> providerConfig(new ProviderConfiguration(guid, traceLevel.value, keywords.value, enabled.value));
-                    providersConfigList.push_back(providerConfig);
+                        if (!enabled.present || !traceLevel.present)
+                        {
+                            throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "Missing provider properties in JSON");
+                        }
+
+                        shared_ptr<ProviderConfiguration> providerConfig(new ProviderConfiguration(guid, traceLevel.value, keywords.value, enabled.value));
+                        providersConfigList.push_back(providerConfig);
+                    }
+                    collectorCSPConfig = shared_ptr<CollectorCSPConfiguration>(new CollectorCSPConfiguration(traceLogFileMode.value, logFileSizeLimitMB.value, logFileFolderName.value, logFileName.value, started.value, providersConfigList));
                 }
 
-                collectorCSPConfig = shared_ptr<CollectorCSPConfiguration>(new CollectorCSPConfiguration(traceLogFileMode.value, logFileSizeLimitMB.value, logFileFolderName.value, logFileName.value, started.value, providersConfigList));
                 collectorDesiredConfiguration = CollectorConfiguration(collectorName, _subMetaData, collectorCSPConfig);
                 collectorConfigurations.push_back(collectorDesiredConfiguration);
             });
@@ -552,8 +564,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
             {
                 return;
             }
-            // Processing Meta Data
-            _metaData->FromJsonParentObject(groupDesiredConfigJson);
 
             // Report refreshing
             ReportRefreshing();

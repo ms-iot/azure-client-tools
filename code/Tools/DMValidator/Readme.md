@@ -2,6 +2,32 @@
 
 DMValidator is a CLI tool that tests DM Client running on the devices connected to Azure IoT Hub.
 
+## Quick Start
+
+1. Setup the Device Agent on the device where the testing will take place.
+2. On the dev box, construct a configuration file with the tests you want to run.
+    <pre>
+    {
+        "connection-string" : "&lt;enter_iothub_owner_connection_string_here&gt;",
+        "storage-connection-string": "&lt;enter_azure_storage_connection_string_here&gt;",
+        "scenarioFiles": [
+            "..\\Common\\TestCases\\DeviceInfo\\DeviceInfo.MBM.00.json"
+        ],
+        "devices" : [
+            "&lt;device_name&gt;"
+        ],
+        "log" : "e:\\temp\\dmtest"
+    }
+    </pre>
+
+    - Replace everything in angle brackets with the actual values that apply to your Azure services.
+3. Start a Visual Studio command prompt and run the following:
+    <pre>
+    cd code\Tools\DMValidator\CLI\
+    dotnet bin\Debug\netcoreapp2.1\DMConsoleValidator.dll -C c:\tests\validator.config
+    </pre>
+
+
 ## Prerequisites
 
 To run the tool, you need to download .NET Core (SDK + CLI)

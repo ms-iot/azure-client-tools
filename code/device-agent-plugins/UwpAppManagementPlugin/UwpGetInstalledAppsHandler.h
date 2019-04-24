@@ -5,9 +5,6 @@
 
 #include <windows.h>
 #include "device-agent/common/MdmHandlerBase.h"
-#include "AppInfo.h"
-
-typedef std::map<std::string, std::shared_ptr<ApplicationInfo>> ApplicationsMap;
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace UwpAppManagementPlugin {
 
@@ -29,15 +26,18 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
 
     private:
         void GetInstalledApps(
-            const std::string store,
-            ApplicationsMap &installedAppsList,
+            Json::Value& reportedObject,
             std::shared_ptr<DMCommon::ReportedErrorList> errorList);
 
-        void BuildReported(
-            Json::Value& reportedObject,
-            bool store,
-            bool nonStore,
-            std::shared_ptr<DMCommon::ReportedErrorList> errorList);
+        std::string PackageVersion(Windows::ApplicationModel::Package^ package)
+        {
+            std::wstring wideVersion = std::to_wstring(package->Id->Version.Major) + L"." +
+                std::to_wstring(package->Id->Version.Minor) + L"." +
+                std::to_wstring(package->Id->Version.Build) + L"." +
+                std::to_wstring(package->Id->Version.Revision);
+
+            return Utils::WideToMultibyte(wideVersion.c_str());
+        }
     };
 
 }}}}

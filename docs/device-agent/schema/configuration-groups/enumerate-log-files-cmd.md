@@ -22,7 +22,7 @@ The enumerate log files command lists all the files under the specified folder. 
 
 Example:
 
-In the [device agent configuration file](../reference/device-agent-configuration-file.md), add the following snippet :
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet :
 
 <pre>
 {

@@ -246,21 +246,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DeleteLogFile.h" />
-    <ClInclude Include="EnumerateLogFiles.h" />
+    <ClInclude Include="DeleteLogFileCmdHandler.h" />
+    <ClInclude Include="EnumerateLogFilesCmdHandler.h" />
     <ClInclude Include="EventTracingConfig.h" />
     <ClInclude Include="PluginJsonConstants.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="EnumerateLogFolders.h" />
+    <ClInclude Include="EnumerateLogFoldersCmdHandler.h" />
     <ClInclude Include="DiagnosticLogsManagementStateHandler.h" />
-    <ClInclude Include="UploadLogFile.h" />
+    <ClInclude Include="UploadLogFileCmdHandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DeleteLogFile.cpp" />
+    <ClCompile Include="DeleteLogFileCmdHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="EnumerateLogFiles.cpp" />
+    <ClCompile Include="EnumerateLogFilesCmdHandler.cpp" />
     <ClCompile Include="EventTracingConfig.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -270,10 +270,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="EnumerateLogFolders.cpp" />
+    <ClCompile Include="EnumerateLogFoldersCmdHandler.cpp" />
     <ClCompile Include="DiagnosticLogsManagementStateHandler.cpp" />
     <ClCompile Include="DiagnosticLogsManagementPlugin.cpp" />
-    <ClCompile Include="UploadLogFile.cpp" />
+    <ClCompile Include="UploadLogFileCmdHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DiagnosticLogsManagementPlugin.def" />

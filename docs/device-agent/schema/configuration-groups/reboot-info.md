@@ -21,7 +21,7 @@ The Reboot Information configuration group enables the operator to schedule rebo
 
 Example:
 
-In the [agent configuration file](../../service-configuration-file.md), add the following snippet under `handlers`:
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet under `handlers`:
 
 <pre>
 {

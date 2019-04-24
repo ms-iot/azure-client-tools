@@ -6,7 +6,7 @@
 goto START
 
 :Usage
-echo Usage: build.wdp.layout.cmd <folder>
+echo Usage: build.wdp.layout.cmd folder
 echo    WinSDKVer............... Default is 10.0.14393.0, specify another version if necessary
 echo    [/?].................... Displays this usage string.
 echo    Example:
@@ -55,3 +55,5 @@ for %%Z in (x86 arm x64) do (
 
 copy wdp\AzureClients.json %TARGETFOLDER%
 copy wdp\TpmTools.json %TARGETFOLDER%
+
+popd
