@@ -6,8 +6,10 @@ using namespace DMUtils;
 using namespace DMCommon;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 $safeprojectname$StateHandler::$safeprojectname$StateHandler() :
-    HandlerBase($safeprojectname$StateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+    BaseHandler($safeprojectname$StateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
 {
 }
 
@@ -71,14 +73,25 @@ InvokeResult $safeprojectname$StateHandler::Invoke(
         // Processing Meta Data
         _metaData->FromJsonParentObject(groupDesiredConfigJson);
 
-        // Apply new state
+        string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-        // Report current state
-        if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+        //Compare interface version with the interface version sent by service
+        if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
         {
+            // Apply new state
+
+            // Report current state
+            if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+            {
+            }
+            else
+            {
+            }
+            _metaData->SetOutputInterfaceVersion(InterfaceVersion);
         }
         else
         {
+            throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
         }
     });
 
@@ -87,4 +100,3 @@ InvokeResult $safeprojectname$StateHandler::Invoke(
 
     return invokeResult;
 }
-

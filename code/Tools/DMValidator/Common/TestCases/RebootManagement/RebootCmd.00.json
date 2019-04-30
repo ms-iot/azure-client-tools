@@ -5,7 +5,11 @@
       "type": "directMethod",
       "directMethodName": "StartRebootCmd",
       "description": "",
-      "input": {},
+      "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        }
+      },
       "output": {
         "returnJson": {},
         "returnCode": 200

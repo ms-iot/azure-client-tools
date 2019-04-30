@@ -10,7 +10,8 @@
           "desired": {
             "testInfo": {
               "__meta": {
-                "deploymentId": "test_info_v1"
+                "deploymentId": "test_info_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "action": "succeed"
             }
@@ -25,7 +26,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "test_info_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "action": "succeed"
               }
@@ -44,7 +46,8 @@
           "desired": {
             "testInfo": {
               "__meta": {
-                "deploymentId": "test_info_v2"
+                "deploymentId": "test_info_v2",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "action": "fail"
             }
@@ -59,7 +62,8 @@
                 "__meta": {
                   "deploymentStatus": "failed",
                   "deploymentId": "test_info_v2",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "action": "fail",
                 "__errors": {
@@ -82,11 +86,17 @@
       "type": "directMethod",
       "directMethodName": "testCmd",
       "description": "",
-      "input": {
+      "input": { 
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
         "action": "succeed",
         "type": "object"
       },
       "output": {
+        "__meta": {
+          "deviceInterfaceVersion": "1.0.0"
+        },
         "returnJson": {
           "anInt": 5,
           "aString": "abc"
@@ -100,10 +110,16 @@
       "directMethodName": "testCmd",
       "description": "",
       "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
         "action": "succeed",
         "type": "integer"
       },
       "output": {
+        "__meta": {
+          "deviceInterfaceVersion": "1.0.0"
+        },
         "returnJson": 42,
         "returnCode": 200
       }
@@ -114,9 +130,15 @@
       "directMethodName": "testCmd",
       "description": "",
       "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
         "action": "fail"
       },
       "output": {
+        "__meta": {
+          "deviceInterfaceVersion": "1.0.0"
+        },
         "returnJson": {
           "code": 1,
           "context": "testCmd",

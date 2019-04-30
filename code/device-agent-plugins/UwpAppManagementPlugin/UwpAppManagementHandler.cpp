@@ -26,6 +26,8 @@ using namespace Windows::Foundation::Collections;
 using namespace Windows::Management::Deployment;
 using namespace Windows::Globalization::DateTimeFormatting;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace UwpAppManagementPlugin {
 
     class InitializeWinRT
@@ -52,7 +54,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
     };
 
     UwpAppManagementHandler::UwpAppManagementHandler() :
-        MdmHandlerBase(UwpAppManagementHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(UwpAppManagementHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -120,22 +122,33 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
             // Report refreshing
             ReportRefreshing();
 
-            // Apply new state
-            OperationModelT<string> connectionString = Operation::TryGetOptionalSinglePropertyOpStringParameter(desiredConfig, JsonConnectionString);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            std::vector<std::pair<Package^, StartupType>> installedApps;
-            std::vector<std::string> uninstalledApps;
-
-            ModifyApplicationHandler(desiredConfig, connectionString, installedApps, uninstalledApps, errorList);
-
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, installedApps, uninstalledApps);
+                // Apply new state
+                OperationModelT<string> connectionString = Operation::TryGetStringJsonValue(desiredConfig, JsonConnectionString);
+
+                std::vector<std::pair<Package^, StartupType>> installedApps;
+                std::vector<std::string> uninstalledApps;
+
+                ModifyApplicationHandler(desiredConfig, connectionString, installedApps, uninstalledApps, errorList);
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, installedApps, uninstalledApps);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
             else
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 
@@ -252,10 +265,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         {
             AppDesiredState desiredState(itr.key().asString());
 
-            desiredState.packageFamilyName = Operation::GetSinglePropertyOpStringParameter(*itr, JsonPkgFamilyName); // Required parameter.
+            desiredState.packageFamilyName = Operation::GetStringJsonValue(*itr, JsonPkgFamilyName); // Required parameter.
 
             // Get the desired version
-            string desiredVersion = Operation::GetSinglePropertyOpStringParameter(*itr, JsonVersion);  // Required parameter.
+            string desiredVersion = Operation::GetStringJsonValue(*itr, JsonVersion);  // Required parameter.
             if (desiredVersion.compare(JsonNotInstalled) == 0)
             {
                 desiredState.action = AppDesiredAction::eUninstall;
@@ -268,7 +281,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
                 desiredState.version = Version(desiredVersion);
             }
 
-            OperationModelT<string> startup = Operation::TryGetOptionalSinglePropertyOpStringParameter(*itr, JsonStartup);
+            OperationModelT<string> startup = Operation::TryGetStringJsonValue(*itr, JsonStartup);
             if (startup.present)
             {
                 if (startup.value.compare(JsonForeground) == 0)
@@ -320,7 +333,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
                 || desiredState.action == AppDesiredAction::eUpgrade
                 || desiredState.action == AppDesiredAction::eDowngrade)
             {
-                OperationModelT<string>  appxSource = Operation::TryGetOptionalSinglePropertyOpStringParameter(*itr, JsonAppxSource);
+                OperationModelT<string>  appxSource = Operation::TryGetStringJsonValue(*itr, JsonAppxSource);
                 if (!appxSource.present)
                 {
                     throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_JSON, "App package source is missing");
@@ -330,13 +343,13 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
                     desiredState.appxSource = appxSource.value;
                 }
 
-                OperationModelT<string>  depsSource = Operation::TryGetOptionalSinglePropertyOpStringParameter(*itr, JsonDepsSource);
+                OperationModelT<string>  depsSource = Operation::TryGetStringJsonValue(*itr, JsonDepsSource);
                 if (depsSource.present)
                 {
                     desiredState.depsSources = depsSource.value;
                 }
 
-                OperationModelT<bool>  launchAfterInstall = Operation::TryGetOptionalSinglePropertyOpBoolParameter(*itr, JsonLaunchAfterInstall);
+                OperationModelT<bool>  launchAfterInstall = Operation::TryGetBoolJsonValue(*itr, JsonLaunchAfterInstall);
                 if (launchAfterInstall.present)
                 {
                     desiredState.launchAfterInstall = launchAfterInstall.value;

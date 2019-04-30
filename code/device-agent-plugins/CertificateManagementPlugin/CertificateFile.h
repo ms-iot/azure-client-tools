@@ -11,8 +11,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     public:
         CertificateFile(const std::string& certFileName);
 
-        std::string FullFileName() const;
-        std::string ThumbPrint() const;
+        std::string GetFullFileName() const;
+        std::string GetThumbPrint() const;
 
     private:
         std::string _fullFileName;

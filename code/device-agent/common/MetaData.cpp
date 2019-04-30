@@ -14,12 +14,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     MetaData::MetaData() :
         _deploymentStatus(DeploymentStatus::eNotStarted)
     {
-        _dependencies = JsonDependenciesDefault;
         _deploymentId = JsonDeploymentIdDefault;
         _reportingMode = JsonReportingModeDefault;
     }
 
-    void MetaData::SetDeploymentId(const std::string& deploymentId)
+    void MetaData::SetDeploymentId(const string& deploymentId)
     {
         _deploymentId = deploymentId;
         _timeStamp = Utils::WideToMultibyte(DateTime::GetCurrentDateTimeString().c_str());
@@ -31,17 +30,23 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         _timeStamp = Utils::WideToMultibyte(DateTime::GetCurrentDateTimeString().c_str());
     }
 
-    DeploymentStatus MetaData::GetDeploymentStatus() const
+    void MetaData::SetReportingMode(const string& reportingMode)
     {
-        return _deploymentStatus;
+        _reportingMode = reportingMode;
+    }
+
+    void MetaData::SetDeviceInterfaceVersion(const string& deviceInterfaceVersion)
+    {
+        VersionFormatCheck(deviceInterfaceVersion);
+        _deviceInterfaceVersion = deviceInterfaceVersion;
     }
 
     void MetaData::FromJsonObject(
         const Json::Value& metaObject)
     {
-        _dependencies = JsonHelpers::GetNamedString(metaObject, JsonDependencies, _dependencies /*default*/);
         _deploymentId = JsonHelpers::GetNamedString(metaObject, JsonDeploymentId, _deploymentId /*default*/);
         _reportingMode = JsonHelpers::GetNamedString(metaObject, JsonReportingMode, _reportingMode /*default*/);
+        _serviceInterfaceVersion = JsonHelpers::GetNamedString(metaObject, JsonServiceInterfaceVersion);
     }
 
     void MetaData::FromJsonParentObject(
@@ -56,16 +61,36 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         FromJsonObject(metaObject);
     }
 
+    void MetaData::FromJsonObjectSubMeta(
+        const Json::Value& metaObject)
+    {
+        _reportingMode = JsonHelpers::GetNamedString(metaObject, JsonReportingMode, _reportingMode /*default*/);
+    }
+
+    void MetaData::FromJsonParentObjectSubMeta(
+        const Json::Value& metaParentObject)
+    {
+        const Json::Value& metaObject = metaParentObject[JsonMeta];
+        if (metaObject.isNull() || !metaObject.isObject())
+        {
+            return;
+        }
+
+        FromJsonObjectSubMeta(metaObject);
+    }
+
     Json::Value MetaData::ToJsonObject() const
     {
         Json::Value metaObject(Json::objectValue);
         metaObject[JsonDeploymentId] = Json::Value(_deploymentId);
         metaObject[JsonDeploymentStatus] = Json::Value(JsonHelpers::DeploymentStatusToString(_deploymentStatus));
         metaObject[JsonTime] = Json::Value(_timeStamp);
+        metaObject[JsonDeviceInterfaceVersion] = Json::Value(_deviceInterfaceVersion);
+
         return metaObject;
     }
 
-    std::string MetaData::ToJsonString() const
+    string MetaData::ToJsonString() const
     {
         Json::Value metaObject = ToJsonObject();
 
@@ -73,7 +98,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     }
 
     Json::Value MetaData::ToJsonObject(
-        const std::string& propertyName) const
+        const string& propertyName) const
     {
         Json::Value metaObject(Json::objectValue);
         if (propertyName == JsonDeploymentId)
@@ -88,6 +113,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         {
             metaObject[JsonTime] = Json::Value(_timeStamp);
         }
+        else if (propertyName == JsonDeviceInterfaceVersion)
+        {
+            metaObject[JsonDeviceInterfaceVersion] = Json::Value(_deviceInterfaceVersion);
+        }
 
         return metaObject;
     }
@@ -100,32 +129,32 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         return metaObject;
     }
 
-    std::string MetaData::ToJsonString(
-        const std::string& propertyName) const
+    string MetaData::ToJsonString(
+        const string& propertyName) const
     {
         Json::Value metaObject = ToJsonObject(propertyName);
 
         return metaObject.toStyledString();
     }
 
-    std::string MetaData::GetDependencies() const
-    {
-        return _dependencies;
-    }
-
-    std::string MetaData::GetDeploymentId() const
+    string MetaData::GetDeploymentId() const
     {
         return _deploymentId;
     }
 
-    void MetaData::SetReportingMode(const std::string& reportingMode)
+    DeploymentStatus MetaData::GetDeploymentStatus() const
     {
-        _reportingMode = reportingMode;
+        return _deploymentStatus;
     }
 
-    std::string MetaData::GetReportingMode() const
+    string MetaData::GetReportingMode() const
     {
         return _reportingMode;
+    }
+
+    string MetaData::GetServiceInterfaceVersion() const
+    {
+        return _serviceInterfaceVersion;
     }
 
 }}}}

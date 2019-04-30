@@ -1,6 +1,6 @@
 # Quick start with Azure DPS
 
-**Steps below apply only to Windows IoT Core on a device with TPM 2.0/HMAC support**. If the target device is different, you can follow the instructions on [Quick Start without Azure DPS](quick-start-without-dps.md) walk-through.
+**Steps below apply only to Windows IoT Core on a device with TPM 2.0/HMAC support**. If the target device does not have this support, you can follow the instructions on [Quick Start without Azure DPS](quick-start-without-dps.md) walk-through.
 
 In this tutorial, we will walk the reader through the minimal steps to get a debug version of the Device Agent running on a Windows IoT Core device.
 

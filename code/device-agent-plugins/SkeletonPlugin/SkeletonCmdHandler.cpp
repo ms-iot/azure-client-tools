@@ -11,10 +11,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace SkeletonPlugin {
 
     SkeletonCmdHandler::SkeletonCmdHandler() :
-        BaseHandler(SkeletonCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        BaseHandler(SkeletonCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -91,19 +93,33 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace S
         RunOperation(GetId(), errorList,
             [&]()
         {
-            // Get required parameters first...
-            // string param0 = GetSinglePropertyOpStringParameter(desiredConfig, "param0");
+            // Processing Meta Data
+            _metaData->FromJsonParentObject(desiredConfig);
 
-            // Get optional parameters...
-            // OperationModelT<bool> param1 = TryGetOptionalSinglePropertyOpBoolParameter(desiredConfig, "param1");
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            // Start processing...
-            // Do the actual work here.
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
+            {
+                // Get required parameters first...
+                // string param0 = GetSinglePropertyOpStringParameter(desiredConfig, "param0");
 
-            // if (returnCode != 0)
-            // {
-            //    throw DMException(returnCode, "Error: ApplyUpdate.exe returned an error code.");
-            // }
+                // Get optional parameters...
+                // OperationModelT<bool> param1 = TryGetOptionalSinglePropertyOpBoolParameter(desiredConfig, "param1");
+
+                // Start processing...
+                // Do the actual work here.
+
+                // if (returnCode != 0)
+                // {
+                //    throw DMException(returnCode, "Error: ApplyUpdate.exe returned an error code.");
+                // }
+                _metaData->SetOutputInterfaceVersion(InterfaceVersion);
+            }
+            else
+            {
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
+            }
         });
 
         // Update device twin

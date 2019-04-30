@@ -31,33 +31,31 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const std::string& containerAndBlob,
             std::shared_ptr<DMCommon::ReportedErrorList> errorList);
 
-        std::string GetInstalledCertificatesHandler(
-            const std::string& cspPath,
-            std::shared_ptr<DMCommon::ReportedErrorList> errorList);
-
         void UninstallCertificateHandler(
             const std::string& cspPath,
             const std::string& hash,
             std::shared_ptr<DMCommon::ReportedErrorList> errorList);
 
-        void InstallCertificateHandler(
+        bool InstallCertificateHandler(
             const std::string& cspPath,
             const std::string& hash,
             const std::string& certificateInBase64,
             std::shared_ptr<DMCommon::ReportedErrorList> errorList);
 
-        Json::Value CreateCertificateJsonList(
-            const std::string& hashesList);
+        Json::Value CreateInstalledCertificateJsonList(
+            std::vector<std::string>& installedCertificates);
 
         void ModifyCertificatesHandler(
             const std::string& operationId,
             const std::string& cspPath,
             const Json::Value& desiredConfig,
             const DMCommon::OperationModelT<std::string>& connectionString,
+            std::map<std::string, std::vector<std::string>>& installedCertificates,
             std::shared_ptr<DMCommon::ReportedErrorList> errorList);
 
         void BuildReported(
             Json::Value& reportedObject,
+            std::map<std::string, std::vector<std::string>>& installedCertificates,
             std::shared_ptr<DMCommon::ReportedErrorList> errorList);
 
         void EmptyReported(

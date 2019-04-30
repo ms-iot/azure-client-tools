@@ -55,6 +55,9 @@
     <ClCompile Include="DependencySort.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Version.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoCloseBase.h">
@@ -139,9 +142,12 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="DependencySort.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-  </ItemGroup>
+      <Filter>Sources</Filter>
+      </ClCompile>
+      <ClInclude Include="Version.h">
+        <Filter>Headers</Filter>
+      </ClInclude>
+    </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
       <UniqueIdentifier>{e46fe9c9-2ee6-48e8-b97e-7f8becefdb1b}</UniqueIdentifier>

@@ -10,11 +10,13 @@ using namespace Microsoft::Azure::DeviceManagement::Common;
 using namespace Microsoft::Azure::DeviceManagement::Utils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Client {
 
     DeviceSchemasHandler::DeviceSchemasHandler(
         const RawHandlerMapType* rawHandlerMap) :
-        HandlerBase(JsonDeviceSchemas, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1)),
+        HandlerBase(JsonDeviceSchemas, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion)),
         _rawHandlerMap(rawHandlerMap)
     {
         assert(_rawHandlerMap);
@@ -303,17 +305,28 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             // Processing Meta Data
             _metaData->FromJsonParentObject(groupDesiredConfigJson);
 
-            // Apply new state
-            SetSubGroup(_groupDesiredConfigJson);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, errorList);
+                // Apply new state
+                SetSubGroup(_groupDesiredConfigJson);
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, errorList);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
             else
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

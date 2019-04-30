@@ -56,11 +56,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         _fullFileName = certFileName;
     }
 
-    std::string CertificateFile::FullFileName() const
+    std::string CertificateFile::GetFullFileName() const
     {
         return _fullFileName;
     }
-    std::string CertificateFile::ThumbPrint() const
+    std::string CertificateFile::GetThumbPrint() const
     {
         return _thumbPrint;
     }

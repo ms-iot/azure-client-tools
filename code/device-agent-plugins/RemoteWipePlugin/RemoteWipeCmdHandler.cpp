@@ -13,10 +13,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace RemoteWipePlugin {
 
     RemoteWipeCmdHandler::RemoteWipeCmdHandler() :
-        MdmHandlerBase(RemoteWipeCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1)),
+        MdmHandlerBase(RemoteWipeCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion)),
         _testModeEnabled(false)
     {
     }
@@ -86,19 +88,32 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
         Operation::RunOperation(GetId(), errorList,
             [&]()
         {
-            OperationModelT<bool> operationDataModel = Operation::TryGetOptionalSinglePropertyOpBoolParameter(desiredConfig, JsonRemoteWipeClearTpm);
-            if (operationDataModel.present && operationDataModel.value)
+            // Process Meta Data
+            _metaData->FromJsonParentObject(desiredConfig);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
+
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
+                OperationModelT<bool> operationDataModel = Operation::TryGetBoolJsonValue(desiredConfig, JsonRemoteWipeClearTpm);
+                if (operationDataModel.present && operationDataModel.value)
+                {
+                    if (!_testModeEnabled)
+                    {
+                        TpmSupport::ClearTpm();
+                    }
+                }
+
                 if (!_testModeEnabled)
                 {
-                    TpmSupport::ClearTpm();
+                    _mdmProxy.RunExec(RemoteWipeCSPPath);
+                    _mdmProxy.RunExec(ImmediateRebootCSPPath);
                 }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
-
-            if (!_testModeEnabled)
+            else
             {
-                _mdmProxy.RunExec(RemoteWipeCSPPath);
-                _mdmProxy.RunExec(ImmediateRebootCSPPath);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

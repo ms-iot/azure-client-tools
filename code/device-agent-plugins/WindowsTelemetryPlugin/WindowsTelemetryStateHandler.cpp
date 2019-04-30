@@ -14,13 +14,15 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace WindowsTelemetryPlugin {
 
     const wchar_t* RegWindowsTelemetrySubKey = L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection";
     const wchar_t* RegAllowTelemetry = L"AllowTelemetry";
 
     WindowsTelemetryStateHandler::WindowsTelemetryStateHandler() :
-        HandlerBase(WindowsTelemetryStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        HandlerBase(WindowsTelemetryStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -141,7 +143,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace W
         Operation::RunOperation(JsonWindowsTelemetryLevel, errorList,
             [&]()
         {
-            string levelString = Operation::GetSinglePropertyOpStringParameter(groupDesiredConfigJson, JsonWindowsTelemetryLevel);
+            string levelString = Operation::GetStringJsonValue(groupDesiredConfigJson, JsonWindowsTelemetryLevel);
             Registry::WriteRegistryValue(RegWindowsTelemetrySubKey, RegAllowTelemetry, StringToLevel(levelString));
 
             // Is configured?
@@ -187,18 +189,31 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace W
 
             // Processing Meta Data
             _metaData->FromJsonParentObject(groupDesiredConfigJson);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            // Apply new state
-            SetSubGroupLevel(groupDesiredConfigJson, errorList);
+            // Report refreshing
+            ReportRefreshing();
 
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, errorList);
+                // Apply new state
+                SetSubGroupLevel(groupDesiredConfigJson, errorList);
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, errorList);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
             else
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

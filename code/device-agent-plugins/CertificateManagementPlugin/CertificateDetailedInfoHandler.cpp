@@ -18,10 +18,12 @@ const string certInfoValidTo = "/ValidTo";
 const string certEncodedCertificate = "/EncodedCertificate";
 const string certInfoTemplateName = "/TemplateName";
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace CertificateManagementPlugin {
 
     CertificateDetailedInfoHandler::CertificateDetailedInfoHandler() :
-        MdmHandlerBase(CertificateDetailedInfoHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(CertificateDetailedInfoHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -35,8 +37,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         Operation::RunOperation("certDetail", errorList,
             [&]()
         {
-            string cspPath = Operation::GetSinglePropertyOpStringParameter(desiredConfig, "path");
-            string hash = Operation::GetSinglePropertyOpStringParameter(desiredConfig, "hash");
+            string cspPath = Operation::GetStringJsonValue(desiredConfig, "path");
+            string hash = Operation::GetStringJsonValue(desiredConfig, "hash");
 
             string certPath = cspPath + "/" + hash;
             // Merge...
@@ -113,8 +115,19 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             // Process Meta Data
             _metaData->FromJsonParentObject(jsonParameters);
 
-            // Apply
-            GetCertificateDetailHandler(jsonParameters, reportedObject, errorList);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
+
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
+            {
+                // Apply
+                GetCertificateDetailHandler(jsonParameters, reportedObject, errorList);
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
+            }
+            else
+            {
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
+            }
         });
 
         // Update device twin

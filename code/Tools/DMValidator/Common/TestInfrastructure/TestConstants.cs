@@ -9,9 +9,8 @@ namespace DMValidator
         public const string JsonDesiredRoot = "desired";
         public const string JsonReportedRoot = "reported";
         public const string JsonDeviceTwin = "deviceTwin";
-        public const string JsonDirectMethodEmptyParams = "{}";
+        public const string JsonDirectMethodEmptyParams = "{'__meta':{'serviceInterfaceVersion':'1.0.0'}}";
         public const string JsonClearReportedCmd = "clearReportedCmd";
-
         public const string JsonScenario = "scenario";
 
         public const string JsonDirectMethodName = "directMethodName";

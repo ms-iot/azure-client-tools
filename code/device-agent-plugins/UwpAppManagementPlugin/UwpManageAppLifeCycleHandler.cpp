@@ -16,10 +16,12 @@ using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Management::Deployment;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace UwpAppManagementPlugin {
 
 UwpManageAppLifeCycleHandler::UwpManageAppLifeCycleHandler() :
-    MdmHandlerBase(UwpManageAppLifeCycleHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+    MdmHandlerBase(UwpManageAppLifeCycleHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
 {
 }
 
@@ -72,27 +74,36 @@ InvokeResult UwpManageAppLifeCycleHandler::Invoke(
     {
         // Processing Meta Data
         _metaData->FromJsonParentObject(jsonParameters);
+        string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-        bool start = true;
+        //Compare interface version with the interface version sent by service
+        if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
+        {
+            bool start = true;
 
-        string action = Operation::GetSinglePropertyOpStringParameter(jsonParameters, JsonAppAction);
-        if (_stricmp(action.c_str(), JsonStartAction) == 0)
-        {
-            start = true;
-        }
-        else if (_stricmp(action.c_str(), JsonStopAction) == 0)
-        {
-            start = false;
+            string action = Operation::GetStringJsonValue(jsonParameters, JsonAppAction);
+            if (_stricmp(action.c_str(), JsonStartAction) == 0)
+            {
+                start = true;
+            }
+            else if (_stricmp(action.c_str(), JsonStopAction) == 0)
+            {
+                start = false;
+            }
+            else
+            {
+                throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_JSON, "Invalid action type");
+            }
+
+            string pkgFamilyName = Operation::GetStringJsonValue(jsonParameters, JsonPkgFamilyName);
+
+            UwpHelpers::StartStopApp(pkgFamilyName, start);
+            _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
         }
         else
         {
-            throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_JSON, "Invalid action type");
+            throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
         }
-
-        string pkgFamilyName = Operation::GetSinglePropertyOpStringParameter(jsonParameters, JsonPkgFamilyName);
-
-        UwpHelpers::StartStopApp(pkgFamilyName, start);
-
     });
 
     // Pack return payload

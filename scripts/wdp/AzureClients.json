@@ -51,6 +51,14 @@
           "Target": "c:\\dm\\manifests\\DeviceInfoManifest.json"
         },
         {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/DiagnosticLogsManagementPlugin.dll",
+          "Target": "c:\\dm\\DiagnosticLogsManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/DiagnosticLogsManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\DiagnosticLogsManagementManifest.json"
+        },
+        {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/FactoryResetPlugin.dll",
           "Target": "c:\\dm\\FactoryResetPlugin.dll"
         },
@@ -81,6 +89,14 @@
         {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/TimeManifest.json",
           "Target": "c:\\dm\\manifests\\TimeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/UwpAppManagementPlugin.dll",
+          "Target": "c:\\dm\\UwpAppManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/UwpAppManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\UwpAppManagementManifest.json"
         },
         {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/x86/WindowsTelemetryPlugin.dll",
@@ -160,6 +176,14 @@
           "Target": "c:\\dm\\manifests\\DeviceInfoManifest.json"
         },
         {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/DiagnosticLogsManagementPlugin.dll",
+          "Target": "c:\\dm\\DiagnosticLogsManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/DiagnosticLogsManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\DiagnosticLogsManagementManifest.json"
+        },
+        {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/FactoryResetPlugin.dll",
           "Target": "c:\\dm\\FactoryResetPlugin.dll"
         },
@@ -190,6 +214,14 @@
         {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/TimeManifest.json",
           "Target": "c:\\dm\\manifests\\TimeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/UwpAppManagementPlugin.dll",
+          "Target": "c:\\dm\\UwpAppManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/UwpAppManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\UwpAppManagementManifest.json"
         },
         {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/arm/WindowsTelemetryPlugin.dll",
@@ -269,6 +301,14 @@
           "Target": "c:\\dm\\manifests\\DeviceInfoManifest.json"
         },
         {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/DiagnosticLogsManagementPlugin.dll",
+          "Target": "c:\\dm\\DiagnosticLogsManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/DiagnosticLogsManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\DiagnosticLogsManagementManifest.json"
+        },
+        {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/FactoryResetPlugin.dll",
           "Target": "c:\\dm\\FactoryResetPlugin.dll"
         },
@@ -299,6 +339,14 @@
         {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/TimeManifest.json",
           "Target": "c:\\dm\\manifests\\TimeManifest.json"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/UwpAppManagementPlugin.dll",
+          "Target": "c:\\dm\\UwpAppManagementPlugin.dll"
+        },
+        {
+          "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/UwpAppManagementManifest.json",
+          "Target": "c:\\dm\\manifests\\UwpAppManagementManifest.json"
         },
         {
           "Source": "https://iottools.blob.core.windows.net/tools/rs5/x64/WindowsTelemetryPlugin.dll",

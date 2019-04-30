@@ -12,98 +12,105 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
-namespace Microsoft {
-    namespace Azure {
-        namespace DeviceManagement {
-            namespace DiagnosticLogsManagementPlugin {
+constexpr char InterfaceVersion[] = "1.0.0";
 
-                DeleteLogFile::DeleteLogFile() :
-                    HandlerBase(DeleteLogFileCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
-                {
-                }
+namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace DiagnosticLogsManagementPlugin {
 
-                void DeleteLogFile::Start(
-                    const Json::Value& handlerConfig,
-                    bool& active)
-                {
-                    TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+    DeleteLogFile::DeleteLogFile() :
+        HandlerBase(DeleteLogFileCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
+    {
+    }
 
-                    SetConfig(handlerConfig);
+    void DeleteLogFile::Start(
+        const Json::Value& handlerConfig,
+        bool& active)
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
 
-                    Json::Value logFilesPath = handlerConfig[JsonTextLogFilesPath];
-                    Json::Value dataFilesPath = handlerConfig[JsonPluginsDataPath];
-                    _dataFolder = dataFilesPath.asString();
+        SetConfig(handlerConfig);
 
-                    if (!logFilesPath.isNull() && logFilesPath.isString())
-                    {
-                        wstring wideLogFileName = MultibyteToWide(logFilesPath.asString().c_str());
-                        wstring wideLogFileNamePrefix = MultibyteToWide(GetId().c_str());
-                        gLogger.SetLogFilePath(wideLogFileName.c_str(), wideLogFileNamePrefix.c_str());
-                        gLogger.EnableConsole(true);
+        Json::Value logFilesPath = handlerConfig[JsonTextLogFilesPath];
+        Json::Value dataFilesPath = handlerConfig[JsonPluginsDataPath];
+        _dataFolder = dataFilesPath.asString();
 
-                        TRACELINE(LoggingLevel::Verbose, "Logging configured.");
-                    }
+        if (!logFilesPath.isNull() && logFilesPath.isString())
+        {
+            wstring wideLogFileName = MultibyteToWide(logFilesPath.asString().c_str());
+            wstring wideLogFileNamePrefix = MultibyteToWide(GetId().c_str());
+            gLogger.SetLogFilePath(wideLogFileName.c_str(), wideLogFileNamePrefix.c_str());
+            gLogger.EnableConsole(true);
 
-                    active = true;
-                }
+            TRACELINE(LoggingLevel::Verbose, "Logging configured.");
+        }
 
-                void DeleteLogFile::OnConnectionStatusChanged(
-                    DMCommon::ConnectionStatus status)
-                {
-                    TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
-                    if (status == ConnectionStatus::eOffline)
-                    {
-                        TRACELINE(LoggingLevel::Verbose, "Connection Status: Offline.");
-                    }
-                    else
-                    {
-                        TRACELINE(LoggingLevel::Verbose, "Connection Status: Online.");
-                    }
-                }
+        active = true;
+    }
 
-                InvokeResult DeleteLogFile::Invoke(
-                    const Json::Value& jsonParameters) noexcept
-                {
-                    TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
-
-                    // Returned objects (if InvokeContext::eDirectMethod, it is returned to the cloud direct method caller).
-                    InvokeResult invokeResult(InvokeContext::eDirectMethod, JsonDirectMethodSuccessCode, JsonDirectMethodEmptyPayload);
-
-                    // Twin reported object
-                    //no object is reported on success
-                    std::shared_ptr<ReportedErrorList> errorList = make_shared<ReportedErrorList>();
-
-                    Operation::RunOperation(GetId(), errorList,
-                        [&]()
-                    {
-                        // Process Meta Data
-                        _metaData->FromJsonParentObject(jsonParameters);
-                        string folderName = Operation::GetSinglePropertyOpStringParameter(jsonParameters, PayloadFolderName);
-                        string fileName = Operation::GetSinglePropertyOpStringParameter(jsonParameters, PayloadFileName);
-                        string fullFileName = _dataFolder + "\\" + folderName + "\\" + fileName;
-                        TRACELINEP(LoggingLevel::Verbose, "Deleting: ", fullFileName.c_str());
-
-                        DWORD pathType = GetFileAttributesA(fullFileName.c_str());
-                        if (pathType == INVALID_FILE_ATTRIBUTES)
-                        {
-                            throw DMException(DMSubsystem::Windows, GetLastError(), "Incorrect file path.");
-                        }
-
-                        DeleteFileA(fullFileName.c_str());
-                    });
-                    // Update device twin
-                   // This direct method doesn't update the twin.
-
-                   // Pack return payload
-                    if (errorList->Count() != 0)
-                    {
-                        invokeResult.code = JsonDirectMethodFailureCode;
-                        invokeResult.payload = errorList->ToJsonObject()[GetId()].toStyledString();
-                    }
-                    return invokeResult;
-                }
-
-            }
+    void DeleteLogFile::OnConnectionStatusChanged(
+        DMCommon::ConnectionStatus status)
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+        if (status == ConnectionStatus::eOffline)
+        {
+            TRACELINE(LoggingLevel::Verbose, "Connection Status: Offline.");
+        }
+        else
+        {
+            TRACELINE(LoggingLevel::Verbose, "Connection Status: Online.");
         }
     }
-}
+
+    InvokeResult DeleteLogFile::Invoke(
+        const Json::Value& jsonParameters) noexcept
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+
+        // Returned objects (if InvokeContext::eDirectMethod, it is returned to the cloud direct method caller).
+        InvokeResult invokeResult(InvokeContext::eDirectMethod, JsonDirectMethodSuccessCode, JsonDirectMethodEmptyPayload);
+
+        // Twin reported object
+        //no object is reported on success
+        std::shared_ptr<ReportedErrorList> errorList = make_shared<ReportedErrorList>();
+
+        Operation::RunOperation(GetId(), errorList,
+            [&]()
+        {
+            // Process Meta Data
+            _metaData->FromJsonParentObject(jsonParameters);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
+
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
+            {
+                string folderName = Operation::GetStringJsonValue(jsonParameters, PayloadFolderName);
+                string fileName = Operation::GetStringJsonValue(jsonParameters, PayloadFileName);
+                string fullFileName = _dataFolder + "\\" + folderName + "\\" + fileName;
+                TRACELINEP(LoggingLevel::Verbose, "Deleting: ", fullFileName.c_str());
+
+                DWORD pathType = GetFileAttributesA(fullFileName.c_str());
+                if (pathType == INVALID_FILE_ATTRIBUTES)
+                {
+                    throw DMException(DMSubsystem::Windows, GetLastError(), "Incorrect file path.");
+                }
+
+                DeleteFileA(fullFileName.c_str());
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
+            }
+            else
+            {
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
+            }
+        });
+        // Update device twin
+        // This direct method doesn't update the twin.
+
+        // Pack return payload
+        if (errorList->Count() != 0)
+        {
+            invokeResult.code = JsonDirectMethodFailureCode;
+            invokeResult.payload = errorList->ToJsonObject()[GetId()].toStyledString();
+        }
+        return invokeResult;
+    }
+
+ }}}}

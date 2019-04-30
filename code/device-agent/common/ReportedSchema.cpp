@@ -14,13 +14,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     {}
 
     ReportedSchema::ReportedSchema(
-            std::string interfaceType,
-            std::string tags,
-            unsigned int maxInputVersion,
-            unsigned int outputVersion) :
+            string interfaceType,
+            string tags,
+            string interfaceVersion) :
             _interfaceType(interfaceType),
-            _maxInputVersion(maxInputVersion),
-            _outputVersion(outputVersion)
+            _interfaceVersion(interfaceVersion)
     {
         vector<string> tagsVector;
         Utils::SplitString(tags, ';', tagsVector);
@@ -30,7 +28,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         }
     }
 
-    bool ReportedSchema::HasTag(const std::string& tag) const
+    bool ReportedSchema::HasTag(const string& tag) const
     {
         return _tags.find(tag) != _tags.cend();
     }
@@ -65,8 +63,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         }
         object[JsonDeviceSchemasTags] = Json::Value(tags);
 
-        object[JsonDeviceSchemaMaxInputVersion] = Json::Value(_maxInputVersion);
-        object[JsonDeviceSchemaOutputVersion] = Json::Value(_outputVersion);
+        object[JsonDeviceSchemasInterfaceVersion] = Json::Value(_interfaceVersion);
 
         return object;
     }
@@ -75,8 +72,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     {
         _interfaceType = jsonValueObject[JsonDeviceSchemaType].asString();
         string tags = jsonValueObject[JsonDeviceSchemasTags].asString();
-        _maxInputVersion = jsonValueObject[JsonDeviceSchemaMaxInputVersion].asInt();
-        _outputVersion = jsonValueObject[JsonDeviceSchemaOutputVersion].asInt();
+        _interfaceVersion = jsonValueObject[JsonDeviceSchemasInterfaceVersion].asString();
     }
 
 }}}}

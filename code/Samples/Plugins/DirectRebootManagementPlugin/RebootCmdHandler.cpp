@@ -11,10 +11,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace RebootManagementPlugin {
 
     RebootCmdHandler::RebootCmdHandler() :
-        MdmHandlerBase(RebootCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(RebootCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -49,8 +51,18 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
         {
             // Process Meta Data
             _metaData->FromJsonParentObject(jsonParameters);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            _mdmProxy.RunExec(CSPPath);
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
+            {
+                 _mdmProxy.RunExec(CSPPath);
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
+            }
+            else
+            {
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
+            }
         });
 
         // Update device twin

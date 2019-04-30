@@ -42,21 +42,21 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const Json::Value& jsonObject,
             const std::string& propertyName);
 
-        static OperationModelT<int> TryGetOptionalSinglePropertyOpIntParameter(
+        static OperationModelT<int> TryGetIntJsonValue(
             const Json::Value& groupRoot,
-            const std::string& operationId);
+            const std::string& propertyName);
 
-        static OperationModelT<bool> TryGetOptionalSinglePropertyOpBoolParameter(
+        static OperationModelT<bool> TryGetBoolJsonValue(
             const Json::Value& groupRoot,
-            const std::string& operationId);
+            const std::string& propertyName);
 
-        static OperationModelT<std::string> TryGetOptionalSinglePropertyOpStringParameter(
+        static OperationModelT<std::string> TryGetStringJsonValue(
             const Json::Value& groupRoot,
-            const std::string& operationId);
+            const std::string& propertyName);
 
-        static std::string GetSinglePropertyOpStringParameter(
+        static std::string GetStringJsonValue(
             const Json::Value& groupRoot,
-            const std::string& operationId);
+            const std::string& propertyName);
 
         static bool IsRefreshing(
             const Json::Value& desiredConfig);

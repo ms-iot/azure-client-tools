@@ -2,5 +2,11 @@
   "codeFileName": "WindowsUpdatePlugin.dll",
   "direct": false,
   "outOfProc": true,
-  "keepAliveTime": 50000
+  "keepAliveTime": 50000,
+  "agentPluginProtocolVersion": "1.0.0",
+  "handlers": [
+    {
+      "id": "windowsUpdate"
+    }
+  ]
 }

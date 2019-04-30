@@ -10,7 +10,8 @@
           "desired": {
             "rebootInfo": {
               "__meta": {
-                "deploymentId": "reboot_schedule_v1"
+                "deploymentId": "reboot_schedule_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "singleRebootTime": "2016-10-10T17:00:00Z",
               "dailyRebootTime": "2016-10-10T17:00:00Z"
@@ -26,7 +27,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "reboot_schedule_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "lastBootTime": "<ignore>",
                 "singleRebootTime": "2016-10-10T17:00:00Z",
@@ -47,7 +49,8 @@
           "desired": {
             "rebootInfo": {
               "__meta": {
-                "deploymentId": "reboot_schedule_v2"
+                "deploymentId": "reboot_schedule_v2",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "singleRebootTime": "",
               "dailyRebootTime": ""
@@ -63,7 +66,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "reboot_schedule_v2",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "lastBootTime": "<ignore>",
                 "singleRebootTime": "",

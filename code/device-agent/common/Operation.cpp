@@ -50,12 +50,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         return operationDataModel;
     }
 
-    OperationModelT<int> Operation::TryGetOptionalSinglePropertyOpIntParameter(
+    OperationModelT<int> Operation::TryGetIntJsonValue(
         const Json::Value& groupRoot,
-        const std::string& operationId)
+        const std::string& propertyName)
     {
         OperationModelT<int> typedModel;
-        OperationModel model = TryGetJsonValue(groupRoot, operationId);
+        OperationModel model = TryGetJsonValue(groupRoot, propertyName);
 
         typedModel.present = model.present;
         if (model.present)
@@ -71,12 +71,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         return typedModel;
     }
 
-    OperationModelT<bool> Operation::TryGetOptionalSinglePropertyOpBoolParameter(
+    OperationModelT<bool> Operation::TryGetBoolJsonValue(
         const Json::Value& groupRoot,
-        const std::string& operationId)
+        const std::string& propertyName)
     {
         OperationModelT<bool> typedModel;
-        OperationModel model = TryGetJsonValue(groupRoot, operationId);
+        OperationModel model = TryGetJsonValue(groupRoot, propertyName);
 
         typedModel.present = model.present;
         if (model.present)
@@ -92,12 +92,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         return typedModel;
     }
 
-    OperationModelT<std::string> Operation::TryGetOptionalSinglePropertyOpStringParameter(
+    OperationModelT<std::string> Operation::TryGetStringJsonValue(
         const Json::Value& groupRoot,
-        const std::string& operationId)
+        const std::string& propertyName)
     {
         OperationModelT<std::string> typedModel;
-        OperationModel model = TryGetJsonValue(groupRoot, operationId);
+        OperationModel model = TryGetJsonValue(groupRoot, propertyName);
 
         typedModel.present = model.present;
         if (model.present)
@@ -113,11 +113,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         return typedModel;
     }
 
-    string Operation::GetSinglePropertyOpStringParameter(
+    string Operation::GetStringJsonValue(
         const Json::Value& groupRoot,
-        const string& operationId)
+        const string& propertyName)
     {
-        OperationModelT<string> model = TryGetOptionalSinglePropertyOpStringParameter(groupRoot, operationId);
+        OperationModelT<string> model = TryGetStringJsonValue(groupRoot, propertyName);
         if (!model.present)
         {
             throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_JSON_FORMAT, "Property not found");

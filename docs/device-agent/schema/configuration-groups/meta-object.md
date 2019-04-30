@@ -59,24 +59,6 @@ Below is a description of node schema and programming model.
             - failed
             </td>
     </tr>
-    <!-- dependencies -->
-    <tr valign="top">
-        <td rowspan="4"><b>Dependencies</b><br/><br/>
-            Desired: Optional<br/>
-            Reported: Yes<br/><br/>
-            Lists the group configuration identifiers the meta data group configuration depends on.</td>
-        <td rowspan="4">`dependencies`</td>
-        <td>Type</td><td>string</td>
-    </tr>
-    <tr valign="top">
-        <td>Desired</td><td>Required</td>
-    </tr>
-    <tr valign="top">
-        <td>Reported</td><td>Yes</td>
-    </tr>
-    <tr valign="top">
-        <td>Description</td><td>A semicolon separate list of group configuration identifiers.</td>
-    </tr>
     <!-- reporting mode -->
     <tr valign="top">
         <td rowspan="4"><b>Reporting Mode</b><br/><br/>
@@ -115,6 +97,42 @@ Below is a description of node schema and programming model.
     <tr valign="top">
         <td>Description</td><td>time in ISO 8601 format (i.e. 2016-10-10T17:00:00Z).</td>
     </tr>
+    <!-- service interface version -->
+    <tr valign="top">
+        <td rowspan="4"><b>Service Interface Version</b><br/><br/>
+            Desired: Always<br/>
+            Reported: n/a<br/><br/>
+            Indicates the interface version the service tries to communicate to the device handlers with.</td>
+        <td rowspan="4">`serviceInterfaceVersion`</td>
+        <td>Type</td><td>string</td>
+    </tr>
+    <tr valign="top">
+        <td>Desired</td><td>Required</td>
+    </tr>
+    <tr valign="top">
+        <td>Reported</td><td>n/a</td>
+    </tr>
+    <tr valign="top">
+        <td>Description</td><td>Indicates the interface version the service tries to communicate to the device handlers with.</td>
+    </tr>
+    <!-- device interface version -->
+    <tr valign="top">
+        <td rowspan="4"><b>Device Interface Version</b><br/><br/>
+            Desired: n/a<br/>
+            Reported: Always<br/><br/>
+        </td>
+        <td rowspan="4">`deviceInterfaceVersion`</td>
+        <td>Type</td><td>string</td>
+    </tr>
+    <tr valign="top">
+        <td>Desired</td><td>n/a</td>
+    </tr>
+    <tr valign="top">
+        <td>Reported</td><td>Yes</td>
+    </tr>
+    <tr valign="top">
+        <td>Description</td><td>Indicates the version of the interface the handler reports back to the cloud.</td>
+    </tr>
 </table>
 
 ### Sample
@@ -126,8 +144,8 @@ Below is a description of node schema and programming model.
             "&lt;config-group-id&gt;": {
                 "__meta" : {
                     "deploymentId": "unspecified",
-                    "dependencies": "x;y",
                     "reportingMode": "none|minimal|detailed",
+                    "serviceInterfaceVersion": "1.0.0"
                 }
             }
         },
@@ -135,9 +153,9 @@ Below is a description of node schema and programming model.
             "&lt;config-group-id&gt;": {
                 "__meta" : {
                     "deploymentId": "unspecified",
-                    "dependencies": "x;y",
                     "reportingMode": "none|minimal|detailed",
                     "deploymentStatus": "notStarted|succeeded|pending|failed",
+                    "deviceInterfaceVersion": "1.0.0",
                     "time": "&lt;time&gt;"
                 }
             }

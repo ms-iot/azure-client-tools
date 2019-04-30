@@ -15,22 +15,23 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         MetaData();
 
         // Setters
-
         void SetDeploymentId(const std::string& deploymentId);
 
         void SetDeploymentStatus(DeploymentStatus deploymentState);
 
         void SetReportingMode(const std::string& reportingMode);
 
+        void SetDeviceInterfaceVersion(const std::string& deviceInterfaceVersion);
+
         // Getters
 
         DeploymentStatus GetDeploymentStatus() const;
 
-        std::string GetDependencies() const;
-
         std::string GetDeploymentId() const;
 
         std::string GetReportingMode() const;
+
+        std::string GetServiceInterfaceVersion() const;
 
         // Json Conversions
 
@@ -38,6 +39,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const Json::Value& metaObject);
 
         void FromJsonParentObject(
+            const Json::Value& metaParentObject);
+
+        void FromJsonObjectSubMeta(
+            const Json::Value& metaObject);
+
+        void FromJsonParentObjectSubMeta(
             const Json::Value& metaParentObject);
 
         Json::Value ToJsonObject() const;
@@ -57,8 +64,9 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
     private:
         std::string _deploymentId;          // desired/reported
-        std::string _dependencies;          // desired/reported
         std::string _reportingMode;         // desired/reported
+        std::string _serviceInterfaceVersion; // desired
+        std::string _deviceInterfaceVersion;         // reported
         DeploymentStatus _deploymentStatus; // reported
         std::string _timeStamp;             // reported
     };

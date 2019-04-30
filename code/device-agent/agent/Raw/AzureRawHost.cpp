@@ -373,8 +373,9 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
     void AzureRawHost::OnReportedStateSent(int statusCode)
     {
-        (void)statusCode;
         TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+
+        TRACELINEP(LoggingLevel::Verbose, "OnReportedStateSent() - statusCode: ", statusCode);
     }
 
     void AzureRawHost::MarkStatus(const Json::Value& desiredProperties, DeploymentStatus status)

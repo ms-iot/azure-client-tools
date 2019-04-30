@@ -28,11 +28,12 @@ const char CertificateSeparator = '/';
 const char FileConfigurationSeparator = '\\';
 const string addEncodedCertificate = "/EncodedCertificate";
 
+constexpr char InterfaceVersion[] = "1.0.0";
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace CertificateManagementPlugin {
 
     CertificateManagementHandler::CertificateManagementHandler() :
-        MdmHandlerBase(CertificateManagementHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(CertificateManagementHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -75,26 +76,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         return fullFileName;
     }
 
-    string CertificateManagementHandler::GetInstalledCertificatesHandler(
-        const string& cspPath,
-        shared_ptr<DMCommon::ReportedErrorList> errorList)
-    {
-        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
-
-        string currentCertInfo = "<error>";
-
-        Operation::RunOperation(InstalledCertificateInfo, errorList,
-            [&]()
-        {
-            // Merge...
-            // n/a because this operation is a single-field operation.
-
-            // Parse...
-            currentCertInfo = _mdmProxy.RunGetString(cspPath);
-        });
-        return currentCertInfo;
-    }
-
     void CertificateManagementHandler::UninstallCertificateHandler(
         const string& cspPath,
         const string& hash,
@@ -116,7 +97,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         });
     }
 
-    void CertificateManagementHandler::InstallCertificateHandler(
+    bool CertificateManagementHandler::InstallCertificateHandler(
         const string& cspPath,
         const string& hash,
         const string& certificateInBase64,
@@ -124,7 +105,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     {
         TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
 
-        Operation::RunOperation(InstallCertificate, errorList,
+        return Operation::RunOperation(InstallCertificate, errorList,
             [&]()
         {
             string path = cspPath + '/' + hash + addEncodedCertificate;
@@ -135,6 +116,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
             // Set configured
             _isConfigured = true;
+
         });
     }
 
@@ -143,6 +125,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         const string& cspPath,
         const Json::Value& desiredConfig,
         const OperationModelT<string>& connectionString,
+        map<string, vector<string>>& installedCertificates,
         shared_ptr<ReportedErrorList> errorList)
     {
         vector<CertificateFile> certificatesToInstall;
@@ -169,7 +152,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
                     Operation::RunOperation(thumbprint, errorList, [&]() {
 
                         // retrieve the desired state
-                        string certDesiredState = Operation::GetSinglePropertyOpStringParameter(*itr, JsonCertificateState);  // Required parameter.
+                        string certDesiredState = Operation::GetStringJsonValue(*itr, JsonCertificateState);  // Required parameter.
 
                         // is currently installed?
                         bool isCurrentlyInstalled = false;
@@ -194,7 +177,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
                                     throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "An Azure Storage connection string is missing. It is required to install certificates.");
                                 }
 
-                                OperationModelT<string> containerAndBlob = Operation::TryGetOptionalSinglePropertyOpStringParameter(*itr, JsonCertificateFileName);
+                                OperationModelT<string> containerAndBlob = Operation::TryGetStringJsonValue(*itr, JsonCertificateFileName);
                                 if (!containerAndBlob.present)
                                 {
                                     throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "The container/blob string is missing. It is required to install certificates.");
@@ -247,28 +230,31 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         // Install certificates
         for (const CertificateFile& certificateToInstall : certificatesToInstall)
         {
-            TRACELINEP(LoggingLevel::Verbose, "Installing: ", certificateToInstall.FullFileName().c_str());
-            string certificateInBase64 = FileToBase64(certificateToInstall.FullFileName());
-            InstallCertificateHandler(cspPath, certificateToInstall.ThumbPrint(), certificateInBase64, errorList);
+            TRACELINEP(LoggingLevel::Verbose, "Installing: ", certificateToInstall.GetFullFileName().c_str());
+            string certificateInBase64 = FileToBase64(certificateToInstall.GetFullFileName());
+            if (InstallCertificateHandler(cspPath, certificateToInstall.GetThumbPrint(), certificateInBase64, errorList))
+            {
+                installedCertificates[subGroupId].push_back(certificateToInstall.GetThumbPrint());
+            }
 
             // Delete temp file when out of scope
-            remove(certificateToInstall.FullFileName().c_str());
+            remove(certificateToInstall.GetFullFileName().c_str());
         }
     }
 
-    Json::Value CertificateManagementHandler::CreateCertificateJsonList(
-        const string& hashesList)
+    Json::Value CertificateManagementHandler::CreateInstalledCertificateJsonList(
+        std::vector<std::string>& installedCertificates)
     {
-        // Parse the list
-        vector<string> currentHashesVector;
-        SplitString(hashesList, CertificateSeparator, currentHashesVector);
-
-        // Populate the json object
-        string emptyString = "";
         Json::Value reportedObject(Json::objectValue);
-        for (const string& currentHash : currentHashesVector)
-        {
-            reportedObject[currentHash] = Json::Value(emptyString.c_str());
+        if(!installedCertificates.empty())
+        { 
+            // Populate the json object
+            string emptyString = "";
+
+            for (const string& cert : installedCertificates)
+            {
+                reportedObject[cert] = Json::Value(emptyString.c_str());
+            }
         }
         return reportedObject;
     }
@@ -312,16 +298,17 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
     void CertificateManagementHandler::BuildReported(
         Json::Value& reportedObject,
+        std::map<std::string, std::vector<std::string>>& installedCertificates,
         std::shared_ptr<DMCommon::ReportedErrorList> errorList)
     {
-        reportedObject[JsonCACertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPCAPath, errorList));
-        reportedObject[JsonRootCertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPRootPath, errorList));
-        reportedObject[JsonMyUserCertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPMyUserPath, errorList));
-        reportedObject[JsonMySystemCertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPMySystemPath, errorList));
-        reportedObject[JsonRootSystemCertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPRootSystemPath, errorList));
-        reportedObject[JsonCASystemCertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPCASystemPath, errorList));
-        reportedObject[JsonTrustedPublisherCertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPTrustedPublisherPath, errorList));
-        reportedObject[JsonTrustedPeopleCertificateInfo] = CreateCertificateJsonList(GetInstalledCertificatesHandler(CSPTrustedPeoplePath, errorList));
+        reportedObject[JsonCACertificateInfo] = CreateInstalledCertificateJsonList(installedCertificates[JsonCACertificateInfo]);
+        reportedObject[JsonRootCertificateInfo] = CreateInstalledCertificateJsonList( installedCertificates[JsonRootCertificateInfo]);
+        reportedObject[JsonMyUserCertificateInfo] = CreateInstalledCertificateJsonList( installedCertificates[JsonMyUserCertificateInfo]);
+        reportedObject[JsonMySystemCertificateInfo] = CreateInstalledCertificateJsonList( installedCertificates[JsonMyUserCertificateInfo]);
+        reportedObject[JsonRootSystemCertificateInfo] = CreateInstalledCertificateJsonList( installedCertificates[JsonRootSystemCertificateInfo]);
+        reportedObject[JsonCASystemCertificateInfo] = CreateInstalledCertificateJsonList( installedCertificates[JsonCASystemCertificateInfo]);
+        reportedObject[JsonTrustedPublisherCertificateInfo] = CreateInstalledCertificateJsonList(installedCertificates[JsonTrustedPublisherCertificateInfo]);
+        reportedObject[JsonTrustedPeopleCertificateInfo] = CreateInstalledCertificateJsonList( installedCertificates[JsonTrustedPeopleCertificateInfo]);
     }
 
     void CertificateManagementHandler::EmptyReported(
@@ -361,30 +348,40 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
             // Processing Meta Data
             _metaData->FromJsonParentObject(desiredConfig);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
             // Report refreshing
             ReportRefreshing();
 
-            // Apply new state
-            OperationModelT<string> connectionString = Operation::TryGetOptionalSinglePropertyOpStringParameter(desiredConfig, JsonConnectionString);
-
-            ModifyCertificatesHandler(JsonRootCertificateInfo, CSPRootPath, desiredConfig, connectionString, errorList);
-            ModifyCertificatesHandler(JsonCACertificateInfo, CSPCAPath, desiredConfig, connectionString, errorList);
-            ModifyCertificatesHandler(JsonMyUserCertificateInfo, CSPMyUserPath, desiredConfig, connectionString, errorList);
-            ModifyCertificatesHandler(JsonMySystemCertificateInfo, CSPMySystemPath, desiredConfig, connectionString, errorList);
-            ModifyCertificatesHandler(JsonRootSystemCertificateInfo, CSPRootSystemPath, desiredConfig, connectionString, errorList);
-            ModifyCertificatesHandler(JsonCASystemCertificateInfo, CSPCASystemPath, desiredConfig, connectionString, errorList);
-            ModifyCertificatesHandler(JsonTrustedPublisherCertificateInfo, CSPTrustedPublisherPath, desiredConfig, connectionString, errorList);
-            ModifyCertificatesHandler(JsonTrustedPeopleCertificateInfo, CSPTrustedPeoplePath, desiredConfig, connectionString, errorList);
-
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, errorList);
+                // Apply new state
+                OperationModelT<string> connectionString = Operation::TryGetStringJsonValue(desiredConfig, JsonConnectionString);
+                map<string, vector<string>> installedCertificates;
+                ModifyCertificatesHandler(JsonRootCertificateInfo, CSPRootPath, desiredConfig, connectionString, installedCertificates, errorList);
+                ModifyCertificatesHandler(JsonCACertificateInfo, CSPCAPath, desiredConfig, connectionString, installedCertificates, errorList);
+                ModifyCertificatesHandler(JsonMyUserCertificateInfo, CSPMyUserPath, desiredConfig, connectionString, installedCertificates, errorList);
+                ModifyCertificatesHandler(JsonMySystemCertificateInfo, CSPMySystemPath, desiredConfig, connectionString, installedCertificates, errorList);
+                ModifyCertificatesHandler(JsonRootSystemCertificateInfo, CSPRootSystemPath, desiredConfig, connectionString, installedCertificates, errorList);
+                ModifyCertificatesHandler(JsonCASystemCertificateInfo, CSPCASystemPath, desiredConfig, connectionString, installedCertificates, errorList);
+                ModifyCertificatesHandler(JsonTrustedPublisherCertificateInfo, CSPTrustedPublisherPath, desiredConfig, connectionString, installedCertificates, errorList);
+                ModifyCertificatesHandler(JsonTrustedPeopleCertificateInfo, CSPTrustedPeoplePath, desiredConfig, connectionString, installedCertificates, errorList);
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, installedCertificates, errorList);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
-            else
+            else 
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

@@ -37,10 +37,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace WindowsUpdatePlugin {
 
     WindowsUpdateHandler::WindowsUpdateHandler() :
-        MdmHandlerBase(WindowsUpdateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(WindowsUpdateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -89,7 +91,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace W
         Operation::RunOperation(operationId, errorList,
             [&]()
         {
-            OperationModelT<int> operationDataModel = Operation::TryGetOptionalSinglePropertyOpIntParameter(groupDesiredConfigJson, operationId);
+            OperationModelT<int> operationDataModel = Operation::TryGetIntJsonValue(groupDesiredConfigJson, operationId);
             if (operationDataModel.present)
             {
                 string writePath = string(CSPWritePath) + cspNodeId;
@@ -175,28 +177,41 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace W
 
             // Process Meta Data
             _metaData->FromJsonParentObject(groupDesiredConfigJson);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            // Apply new state
-            SetSubGroup(groupDesiredConfigJson, CSPActiveHoursStart, JsonActiveHoursStart, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPActiveHoursEnd, JsonActiveHoursEnd, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPAllowAutoUpdate, JsonAllowAutoUpdate, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPAllowUpdateService, JsonAllowUpdateService, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPBranchReadinessLevel, JsonBranchReadinessLevel, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPDeferFeatureUpdatesPeriodInDays, JsonDeferFeatureUpdatesPeriodInDays, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPDeferQualityUpdatesPeriodInDays, JsonDeferQualityUpdatesPeriodInDays, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPPauseFeatureUpdates, JsonPauseFeatureUpdates, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPPauseQualityUpdates, JsonPauseQualityUpdates, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPScheduledInstallDay, JsonScheduledInstallDay, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPScheduledInstallTime, JsonScheduledInstallTime, errorList);
+            // Report refreshing
+            ReportRefreshing();
 
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, errorList);
+                // Apply new state
+                SetSubGroup(groupDesiredConfigJson, CSPActiveHoursStart, JsonActiveHoursStart, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPActiveHoursEnd, JsonActiveHoursEnd, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPAllowAutoUpdate, JsonAllowAutoUpdate, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPAllowUpdateService, JsonAllowUpdateService, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPBranchReadinessLevel, JsonBranchReadinessLevel, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPDeferFeatureUpdatesPeriodInDays, JsonDeferFeatureUpdatesPeriodInDays, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPDeferQualityUpdatesPeriodInDays, JsonDeferQualityUpdatesPeriodInDays, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPPauseFeatureUpdates, JsonPauseFeatureUpdates, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPPauseQualityUpdates, JsonPauseQualityUpdates, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPScheduledInstallDay, JsonScheduledInstallDay, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPScheduledInstallTime, JsonScheduledInstallTime, errorList);
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, errorList);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
             else
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

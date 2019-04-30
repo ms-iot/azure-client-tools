@@ -10,7 +10,8 @@
           "desired": {
             "__deviceSchemas": {
               "__meta": {
-                "deploymentId": "device_schemas_v1"
+                "deploymentId": "device_schemas_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "reporting": {
                 "groups": "all",
@@ -29,65 +30,56 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "device_schemas_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "__deviceSchemas": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "dm",
                   "type": "raw"
                 },
                 "clearReportedCmd": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "dm",
                   "type": "raw"
                 },
                 "deviceInfo": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 },
                 "StartRebootCmd": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 },
                 "rebootInfo": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 },
                 "StartFactoryResetCmd": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 },
                 "StartRemoteWipeCmd": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 },
                 "timeInfo": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 },
                 "windowsTelemetry": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 },
                 "windowsUpdate": {
-                  "maxInputVersion": 1,
-                  "outputVersion": 1,
+                  "interfaceVersion": "1.0.0",
                   "tags": "",
                   "type": "raw"
                 }

@@ -10,10 +10,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace TestPlugin {
 
     TestStateHandler::TestStateHandler() :
-        HandlerBase(TestStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        HandlerBase(TestStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -101,21 +103,31 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace T
             Operation::RunOperation(TestStateAction, errorList,
                 [&]()
             {
-                OperationModelT<string> operationModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(groupDesiredConfigJson, TestStateAction);
+                string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-                if (operationModel.present)
+                //Compare interface version with the interface version sent by service
+                if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
                 {
-                    _action = operationModel.value;
-                    if (_action == "succeed")
+                    OperationModelT<string> operationModel = Operation::TryGetStringJsonValue(groupDesiredConfigJson, TestStateAction);
+
+                    if (operationModel.present)
                     {
+                        _action = operationModel.value;
+                        if (_action == "succeed")
+                        {
+                        }
+                        else if (_action == "fail")
+                        {
+                            throw DMException(DMSubsystem::DeviceAgentPlugin, PLUGIN_ERROR_STATE_FAILED, "State setting failed as expected.");
+                        }
                     }
-                    else if (_action == "fail")
-                    {
-                        throw DMException(DMSubsystem::DeviceAgentPlugin, PLUGIN_ERROR_STATE_FAILED, "State setting failed as expected.");
-                    }
+                    _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
+                }
+                else
+                {
+                    throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
                 }
             });
-
 
             // Report current state
             if (_metaData->GetReportingMode() == JsonReportingModeDetailed)

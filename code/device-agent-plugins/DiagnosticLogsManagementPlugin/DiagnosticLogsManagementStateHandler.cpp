@@ -44,10 +44,12 @@ using namespace std;
 #define RegEventTracingLogFileFolder L"LogFileFolder"
 #define RegEventTracingLogFileName L"LogFileName"
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace DiagnosticLogsManagementPlugin {
 
     DiagnosticLogsManagementStateHandler::DiagnosticLogsManagementStateHandler() :
-        MdmHandlerBase(DiagnosticLogsManagementStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(DiagnosticLogsManagementStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -438,16 +440,16 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
                 string collectorName = collector.key().asString();
 
                 std::shared_ptr<MetaData> _subMetaData(new MetaData());
-                _subMetaData->FromJsonParentObject(*collector);
+                _subMetaData->FromJsonParentObjectSubMeta(*collector);
 
                 shared_ptr<CollectorCSPConfiguration> collectorCSPConfig;
                 unsigned int fieldCount = 0;
 
-                OperationModelT<string> traceLogFileMode = Operation::TryGetOptionalSinglePropertyOpStringParameter(*collector, JsonCollectorTraceLogFileMode); //optional property
-                OperationModelT<string>  logFileFolderName = Operation::TryGetOptionalSinglePropertyOpStringParameter(*collector, JsonCollectorLogFileFolder);
-                OperationModelT<string> logFileName = Operation::TryGetOptionalSinglePropertyOpStringParameter(*collector, JsonCollectorLogFileName);
-                OperationModelT<int> logFileSizeLimitMB = Operation::TryGetOptionalSinglePropertyOpIntParameter(*collector, JsonCollectorLogFileSizeLimitMB); // optional property
-                OperationModelT<bool> started = Operation::TryGetOptionalSinglePropertyOpBoolParameter(*collector, JsonCollectorStarted);
+                OperationModelT<string> traceLogFileMode = Operation::TryGetStringJsonValue(*collector, JsonCollectorTraceLogFileMode); //optional property
+                OperationModelT<string>  logFileFolderName = Operation::TryGetStringJsonValue(*collector, JsonCollectorLogFileFolder);
+                OperationModelT<string> logFileName = Operation::TryGetStringJsonValue(*collector, JsonCollectorLogFileName);
+                OperationModelT<int> logFileSizeLimitMB = Operation::TryGetIntJsonValue(*collector, JsonCollectorLogFileSizeLimitMB); // optional property
+                OperationModelT<bool> started = Operation::TryGetBoolJsonValue(*collector, JsonCollectorStarted);
                 OperationModel providers = Operation::TryGetJsonValue(*collector, JsonProviders);
                 
                 fieldCount += logFileFolderName.present ? 1 : 0;
@@ -473,9 +475,9 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
                     for (Json::Value::const_iterator provider = providers.value.begin(); provider != providers.value.end(); provider++)
                     {
                         string guid = provider.key().asString();
-                        OperationModelT<bool> enabled = Operation::TryGetOptionalSinglePropertyOpBoolParameter(*provider, JsonProviderEnabled);
-                        OperationModelT<string> traceLevel = Operation::TryGetOptionalSinglePropertyOpStringParameter(*provider, JsonProviderTraceLevel);
-                        OperationModelT<string> keywords = Operation::TryGetOptionalSinglePropertyOpStringParameter(*provider, JsonProviderKeywords); // optional parameter
+                        OperationModelT<bool> enabled = Operation::TryGetBoolJsonValue(*provider, JsonProviderEnabled);
+                        OperationModelT<string> traceLevel = Operation::TryGetStringJsonValue(*provider, JsonProviderTraceLevel);
+                        OperationModelT<string> keywords = Operation::TryGetStringJsonValue(*provider, JsonProviderKeywords); // optional parameter
 
                         if (!enabled.present || !traceLevel.present)
                         {
@@ -564,14 +566,25 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
             {
                 return;
             }
+            // Process Meta Data
+            _metaData->FromJsonParentObject(groupDesiredConfigJson);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
             // Report refreshing
             ReportRefreshing();
 
-            SetSubGroup(groupDesiredConfigJson, errorList);
-                
-            BuildReported(reportedObject, errorList);
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
+            {
+                SetSubGroup(groupDesiredConfigJson, errorList);
 
+                BuildReported(reportedObject, errorList);
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
+            }
+            else
+            {
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
+            }
         });
 
         // Update device twin

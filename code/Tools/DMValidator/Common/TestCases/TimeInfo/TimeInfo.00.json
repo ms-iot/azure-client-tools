@@ -10,7 +10,8 @@
           "desired": {
             "timeInfo": {
               "__meta": {
-                "deploymentId": "time_info_v1"
+                "deploymentId": "time_info_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "ntpServer": "time.windows.com",
               "dynamicDaylightTimeDisabled": false,
@@ -36,7 +37,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "time_info_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "ntpServer": "time.windows.com",
                 "timeZoneBias": 420,
@@ -66,7 +68,8 @@
           "desired": {
             "timeInfo": {
               "__meta": {
-                "deploymentId": "time_info_v1"
+                "deploymentId": "time_info_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "ntpServer": "time.windows.com",
               "dynamicDaylightTimeDisabled": false,
@@ -92,7 +95,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "time_info_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "ntpServer": "time.windows.com",
                 "dynamicDaylightTimeDisabled": false,

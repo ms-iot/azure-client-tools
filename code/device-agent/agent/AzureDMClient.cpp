@@ -113,49 +113,59 @@ void AzureDMClient::EnumeratePlugins(const string& manifestsPath)
             PluginManifest manifest;
             manifest.FromJsonFile(manifestFileName);
 
-            // Load the plug-in binary...
-            string codeFileName = manifest.GetCodeFileName();
-            TRACELINEP(LoggingLevel::Verbose, "Loading: ", codeFileName.c_str());
+            string manifestAgentPluginProtocolVersion = manifest.GetAgentPluginProtocolVersion();
 
-            shared_ptr<IPlugin> plugin;
-
-            if (manifest.IsDirect())
+            //checking if the agent-plugin protocol major version of plugin is same as that of the device agent
+            if (MajorVersionCompare(AgentPluginProtocolVersion, manifestAgentPluginProtocolVersion) == 0)
             {
-                plugin = make_shared<DirectPluginProxy>(codeFileName);
+                // Load the plug-in binary...
+                string codeFileName = manifest.GetCodeFileName();
+                TRACELINEP(LoggingLevel::Verbose, "Loading: ", codeFileName.c_str());
+
+                shared_ptr<IPlugin> plugin;
+
+                if (manifest.IsDirect())
+                {
+                    plugin = make_shared<DirectPluginProxy>(codeFileName);
+                }
+                else
+                {
+                    bool outOfProc = manifest.IsOutOfProc();
+                    TRACELINEP(LoggingLevel::Verbose, "Is Out of proc: ", outOfProc);
+
+                    long keepAliveTime = INFINITE;
+                    if (outOfProc)
+                    {
+                        keepAliveTime = manifest.GetKeepAliveTime();
+                        TRACELINEP(LoggingLevel::Verbose, "Keep alive time: ", keepAliveTime);
+                    }
+                    plugin = make_shared<PluginProxy>(codeFileName, outOfProc, keepAliveTime);
+                }
+
+                plugin->Load();
+
+                // Get the handlers information...
+                vector<HandlerInfo> handlersInfo = plugin->GetHandlersInfo();
+                auto handlersInfoFromManifest = manifest.GetHandlers();
+
+                for (auto& handler : handlersInfo)
+                {
+                    if (handlersInfoFromManifest[handler.id])
+                    {
+                        handler.dependencies = handlersInfoFromManifest[handler.id]->GetDependencies();
+                    }
+                }
+
+                for (const HandlerInfo& handlerInfo : handlersInfo)
+                {
+                    RegisterDynamicHandler(plugin, handlerInfo);
+                }
+                _pluginsMap[codeFileName] = plugin;
             }
             else
             {
-                bool outOfProc = manifest.IsOutOfProc();
-                TRACELINEP(LoggingLevel::Verbose, "Is Out of proc: ", outOfProc);
-
-                long keepAliveTime = INFINITE;
-                if (outOfProc)
-                {
-                    keepAliveTime = manifest.GetKeepAliveTime();
-                    TRACELINEP(LoggingLevel::Verbose, "Keep alive time: ", keepAliveTime);
-                }
-                plugin = make_shared<PluginProxy>(codeFileName, outOfProc, keepAliveTime);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_PROTOCOL_VERSION, "Plugin built against a different version of the device agent.");
             }
-
-            plugin->Load();
-
-            // Get the handlers information...
-            vector<HandlerInfo> handlersInfo = plugin->GetHandlersInfo();
-            auto handlersInfoFromManifest = manifest.GetHandlers();
-
-            for (auto& handler : handlersInfo)
-            {
-                if (handlersInfoFromManifest[handler.id])
-                {
-                    handler.dependencies = handlersInfoFromManifest[handler.id]->GetDependencies();
-                }
-            }
-
-            for (const HandlerInfo& handlerInfo : handlersInfo)
-            {
-                RegisterDynamicHandler(plugin, handlerInfo);
-            }
-            _pluginsMap[codeFileName] = plugin;
         }
         catch (const DMException& ex)
         {

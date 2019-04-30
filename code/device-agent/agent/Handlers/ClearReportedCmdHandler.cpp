@@ -9,12 +9,14 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Client {
 
     ClearReportedCmdHandler::ClearReportedCmdHandler(
         const std::function<void(std::vector<std::string>& handlerIds)>& getHandlerIds,
         const std::function<void(const Json::Value& reportedProperties)>& reportAll) :
-        HandlerBase(JsonClearReportedCmd, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1)),
+        HandlerBase(JsonClearReportedCmd, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion)),
         GetHandlerIds(getHandlerIds),
         ReportAll(reportAll)
     {
@@ -60,26 +62,37 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             // Process Meta Data
             _metaData->FromJsonParentObject(jsonParameters);
 
-            vector<string> handlerIds;
-            if (GetHandlerIds)
-            {
-                GetHandlerIds(handlerIds);
-            }
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            Json::Value emptyValue;
-            Json::Value reportedProperties(Json::objectValue);
-            for (const string& handlerId : handlerIds)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                if (handlerId == GetId())
+                vector<string> handlerIds;
+                if (GetHandlerIds)
                 {
-                    continue;
+                    GetHandlerIds(handlerIds);
                 }
-                reportedProperties[handlerId.c_str()] = emptyValue;
-            }
 
-            if (ReportAll)
+                Json::Value emptyValue;
+                Json::Value reportedProperties(Json::objectValue);
+                for (const string& handlerId : handlerIds)
+                {
+                    if (handlerId == GetId())
+                    {
+                        continue;
+                    }
+                    reportedProperties[handlerId.c_str()] = emptyValue;
+                }
+
+                if (ReportAll)
+                {
+                    ReportAll(reportedProperties);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
+            }
+            else
             {
-                ReportAll(reportedProperties);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

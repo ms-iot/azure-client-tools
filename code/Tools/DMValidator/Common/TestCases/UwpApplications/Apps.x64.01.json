@@ -10,7 +10,8 @@
           "desired": {
             "uwpApps": {
               "__meta": {
-                "deploymentId": "app_install2"
+                "deploymentId": "app_install2",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "connectionString": "<storage connection string>",
               "apps": {
@@ -46,7 +47,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "app_install2",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "apps": {
                   "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
@@ -71,7 +73,7 @@
       }
     },
     {
-      "name": "00",
+      "name": "01",
       "type": "deviceTwin",
       "description": "uninstall foreground app and set new foreground app",
       "readBackPause": 30,
@@ -80,7 +82,8 @@
           "desired": {
             "uwpApps": {
               "__meta": {
-                "deploymentId": "apps_uninstall2"
+                "deploymentId": "apps_uninstall2",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "connectionString": "<storage connection string>",
               "apps": {
@@ -106,7 +109,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "apps_uninstall2",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "apps": {
                   "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
@@ -124,6 +128,6 @@
           }
         }
       }
-    }    
+    }
   ]
 }

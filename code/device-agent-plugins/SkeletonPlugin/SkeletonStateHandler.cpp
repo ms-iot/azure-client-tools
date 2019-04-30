@@ -11,10 +11,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace SkeletonPlugin {
 
     SkeletonStateHandler::SkeletonStateHandler() :
-        BaseHandler(SkeletonStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        BaseHandler(SkeletonStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
     }
 
@@ -115,22 +117,34 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace S
                 return;
             }
 
-
             // Processing Meta Data
             _metaData->FromJsonParentObject(groupDesiredConfigJson);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            // Apply sub-group 0
-            // Apply sub-group 1
-            // etc
+            // Report refreshing
+            ReportRefreshing();
 
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, errorList);
+                // Apply sub-group 0
+                // Apply sub-group 1
+                // etc
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, errorList);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetOutputInterfaceVersion(InterfaceVersion);
             }
             else
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

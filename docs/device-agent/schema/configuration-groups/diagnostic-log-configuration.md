@@ -381,7 +381,7 @@ The configuration of a given provider is identified by its GUID in the map.
                           "keywords": "",
                           "enabled": true
                       }
-                    }
+                    },
                   "__meta": {
                     "reportingMode": "detailed"
                   }

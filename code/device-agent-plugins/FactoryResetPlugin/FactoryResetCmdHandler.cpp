@@ -12,10 +12,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace FactoryResetPlugin {
 
     FactoryResetCmdHandler::FactoryResetCmdHandler() :
-        MdmHandlerBase(FactoryResetCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1)),
+        MdmHandlerBase(FactoryResetCmdHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion)),
         _testModeEnabled(false)
     {
     }
@@ -75,8 +77,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace F
     {
         TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
 
-        (void)desiredConfig;
-
         // Returned objects (if InvokeContext::eDirectMethod, it is returned to the cloud direct method caller).
         InvokeResult invokeResult(InvokeContext::eDirectMethod, JsonDirectMethodSuccessCode, JsonDirectMethodEmptyPayload);
 
@@ -87,44 +87,57 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace F
         Operation::RunOperation(GetId(), errorList,
             [&]()
         {
-            // Get required parameters first...
-            string partitionGuid = Operation::GetSinglePropertyOpStringParameter(desiredConfig, JsonFactoryResetPartitionGuid);
+            // Processing Meta Data
+            _metaData->FromJsonParentObject(desiredConfig);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            // Get optional parameters...
-            OperationModelT<bool> clearTpmDataModel = Operation::TryGetOptionalSinglePropertyOpBoolParameter(desiredConfig, JsonFactoryResetClearTpm);
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
+            { 
+                // Get required parameters first...
+                string partitionGuid = Operation::GetStringJsonValue(desiredConfig, JsonFactoryResetPartitionGuid);
 
-            // Start processing...
-            if (clearTpmDataModel.present && clearTpmDataModel.value)
-            {
+                // Get optional parameters...
+                OperationModelT<bool> clearTpmDataModel = Operation::TryGetBoolJsonValue(desiredConfig, JsonFactoryResetClearTpm);
+
+                // Start processing...
+                if (clearTpmDataModel.present && clearTpmDataModel.value)
+                {
+                    if (!_testModeEnabled)
+                    {
+                        TpmSupport::ClearTpm();
+                    }
+                }
+
+                unsigned long returnCode = 0;
+                string output;
+                wstring command;
+                command += DMUtils::GetSystemRootFolderW();
+                command += L"\\bcdedit.exe  /set {bootmgr} bootsequence {";
+                command += Utils::MultibyteToWide(partitionGuid.c_str());
+                command += L"}";
+
+                TRACELINE(LoggingLevel::Verbose, command.c_str());
+
                 if (!_testModeEnabled)
                 {
-                    TpmSupport::ClearTpm();
+                    Process::Launch(command, returnCode, output);
                 }
+
+                if (returnCode != 0)
+                {
+                    throw DMException(DMSubsystem::BCDEdit, returnCode, "Error: ApplyUpdate.exe returned an error code.");
+                }
+
+                if (!_testModeEnabled)
+                {
+                    _mdmProxy.RunExec(ImmediateRebootCSPPath);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
-
-            unsigned long returnCode = 0;
-            string output;
-            wstring command;
-            command += DMUtils::GetSystemRootFolderW();
-            command += L"\\bcdedit.exe  /set {bootmgr} bootsequence {";
-            command += Utils::MultibyteToWide(partitionGuid.c_str());
-            command += L"}";
-
-            TRACELINE(LoggingLevel::Verbose, command.c_str());
-
-            if (!_testModeEnabled)
+            else
             {
-                Process::Launch(command, returnCode, output);
-            }
-
-            if (returnCode != 0)
-            {
-                throw DMException(DMSubsystem::BCDEdit, returnCode, "Error: ApplyUpdate.exe returned an error code.");
-            }
-
-            if (!_testModeEnabled)
-            {
-                _mdmProxy.RunExec(ImmediateRebootCSPPath);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

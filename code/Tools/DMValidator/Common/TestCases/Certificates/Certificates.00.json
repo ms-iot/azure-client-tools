@@ -4,13 +4,14 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "trigger certificate install.",
-      "readBackPause": 20,
+      "readBackPause": 10,
       "input": {
         "properties": {
           "desired": {
             "certificates": {
               "__meta": {
-                "deploymentId": "certificates_v1"
+                "deploymentId": "certificates_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "connectionString": "<storage connection string>",
               "rootCATrustedCertificates_Root": {
@@ -31,11 +32,19 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "certificates_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
+                "certificateStore_CA_System": {},
+                "certificateStore_My_System": {},
+                "certificateStore_My_User": {},
+                "certificateStore_Root_System": {},
+                "rootCATrustedCertificates_CA": {},
                 "rootCATrustedCertificates_Root": {
-                  "09DE264388CCF8607966266135DA76E0B8D7798B": ""
-                }
+                  "09de264388ccf8607966266135da76e0b8d7798b": ""
+                },
+                "rootCATrustedCertificates_TrustedPeople": {},
+                "rootCATrustedCertificates_TrustedPublisher": {}
               }
             }
           }
@@ -46,13 +55,14 @@
       "name": "01",
       "type": "deviceTwin",
       "description": "trigger certificate uninstall.",
-      "readBackPause": 20,
+      "readBackPause": 10,
       "input": {
         "properties": {
           "desired": {
             "certificates": {
               "__meta": {
-                "deploymentId": "certificates_v2"
+                "deploymentId": "certificates_v2",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "rootCATrustedCertificates_Root": {
                 "09DE264388CCF8607966266135DA76E0B8D7798B": {
@@ -71,7 +81,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "certificates_v2",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 }
               }
             }

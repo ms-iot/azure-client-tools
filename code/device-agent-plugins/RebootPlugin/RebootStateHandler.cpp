@@ -15,10 +15,12 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace RebootPlugin {
 
     RebootStateHandler::RebootStateHandler() :
-        MdmHandlerBase(RebootStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        MdmHandlerBase(RebootStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
         // ToDo: This is the last re-start of DM Client - not necessarily the last reboot time.
         _lastRebootTime = Utils::WideToMultibyte(DateTime::GetCurrentDateTimeString().c_str());
@@ -33,7 +35,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
         Operation::RunOperation(operationId, errorList,
             [&]()
         {
-            OperationModelT<string> operationModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(desiredConfig, operationId);
+            OperationModelT<string> operationModel = Operation::TryGetStringJsonValue(desiredConfig, operationId);
 
             if (operationModel.present)
             {
@@ -144,19 +146,32 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace R
 
             // Processing Meta Data
             _metaData->FromJsonParentObject(groupDesiredConfigJson);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
 
-            // Apply new state
-            SetSubGroup(groupDesiredConfigJson, CSPSingle, JsonSingleRebootTime, errorList);
-            SetSubGroup(groupDesiredConfigJson, CSPDaily, JsonDailyRebootTime, errorList);
+            // Report refreshing
+            ReportRefreshing();
 
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, errorList);
+                // Apply new state
+                SetSubGroup(groupDesiredConfigJson, CSPSingle, JsonSingleRebootTime, errorList);
+                SetSubGroup(groupDesiredConfigJson, CSPDaily, JsonDailyRebootTime, errorList);
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, errorList);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
             else
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

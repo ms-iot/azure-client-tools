@@ -10,12 +10,14 @@ using namespace DMCommon;
 using namespace DMUtils;
 using namespace std;
 
+constexpr char InterfaceVersion[] = "1.0.0";
+
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace TimePlugin {
 
     const char* NtpServerPropertyName = "NtpServer";
 
     TimeStateHandler::TimeStateHandler() :
-        HandlerBase(TimeStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, 1, 1))
+        HandlerBase(TimeStateHandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
     {
         _groupDesiredConfigJson = Json::Value(Json::objectValue);
     }
@@ -102,7 +104,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace T
         Operation::RunOperation(JsonTimeInfoNtpServer, errorList,
             [&]()
         {
-            OperationModelT<string> ntpServerModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(groupDesiredConfigJson, JsonTimeInfoNtpServer);
+            OperationModelT<string> ntpServerModel = Operation::TryGetStringJsonValue(groupDesiredConfigJson, JsonTimeInfoNtpServer);
             if (ntpServerModel.present)
             {
                 SetNtpServer(ntpServerModel.value);
@@ -153,19 +155,19 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace T
             // Parse...
             unsigned int fieldCount = 0;
 
-            OperationModelT<bool> dynamicDaylightTimeDisabledModel = Operation::TryGetOptionalSinglePropertyOpBoolParameter(groupDesiredConfigJson, JsonDynamicDaylightTimeDisabled);
-            OperationModelT<string> timeZoneKeyNameModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(groupDesiredConfigJson, JsonTimeZoneKeyName);
-            OperationModelT<int> timeZoneBiasModel = Operation::TryGetOptionalSinglePropertyOpIntParameter(groupDesiredConfigJson, JsonTimeZoneBias);
+            OperationModelT<bool> dynamicDaylightTimeDisabledModel = Operation::TryGetBoolJsonValue(groupDesiredConfigJson, JsonDynamicDaylightTimeDisabled);
+            OperationModelT<string> timeZoneKeyNameModel = Operation::TryGetStringJsonValue(groupDesiredConfigJson, JsonTimeZoneKeyName);
+            OperationModelT<int> timeZoneBiasModel = Operation::TryGetIntJsonValue(groupDesiredConfigJson, JsonTimeZoneBias);
 
-            OperationModelT<int> timeZoneDaylightBiasModel = Operation::TryGetOptionalSinglePropertyOpIntParameter(groupDesiredConfigJson, JsonTimeZoneDaylightBias);
-            OperationModelT<string> timeZoneDaylightDateModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(groupDesiredConfigJson, JsonTimeZoneDaylightDate);
-            OperationModelT<string> timeZoneDaylightNameModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(groupDesiredConfigJson, JsonTimeZoneDaylightName);
-            OperationModelT<int> timeZoneDaylightDayOfWeekModel = Operation::TryGetOptionalSinglePropertyOpIntParameter(groupDesiredConfigJson, JsonTimeZoneDaylightDayOfWeek);
+            OperationModelT<int> timeZoneDaylightBiasModel = Operation::TryGetIntJsonValue(groupDesiredConfigJson, JsonTimeZoneDaylightBias);
+            OperationModelT<string> timeZoneDaylightDateModel = Operation::TryGetStringJsonValue(groupDesiredConfigJson, JsonTimeZoneDaylightDate);
+            OperationModelT<string> timeZoneDaylightNameModel = Operation::TryGetStringJsonValue(groupDesiredConfigJson, JsonTimeZoneDaylightName);
+            OperationModelT<int> timeZoneDaylightDayOfWeekModel = Operation::TryGetIntJsonValue(groupDesiredConfigJson, JsonTimeZoneDaylightDayOfWeek);
 
-            OperationModelT<int> timeZoneStandardBiasModel = Operation::TryGetOptionalSinglePropertyOpIntParameter(groupDesiredConfigJson, JsonTimeZoneStandardBias);
-            OperationModelT<string> timeZoneStandardDateModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(groupDesiredConfigJson, JsonTimeZoneStandardDate);
-            OperationModelT<string> timeZoneStandardNameModel = Operation::TryGetOptionalSinglePropertyOpStringParameter(groupDesiredConfigJson, JsonTimeZoneStandardName);
-            OperationModelT<int> timeZoneStandardDayOfWeekModel = Operation::TryGetOptionalSinglePropertyOpIntParameter(groupDesiredConfigJson, JsonTimeZoneStandardDayOfWeek);
+            OperationModelT<int> timeZoneStandardBiasModel = Operation::TryGetIntJsonValue(groupDesiredConfigJson, JsonTimeZoneStandardBias);
+            OperationModelT<string> timeZoneStandardDateModel = Operation::TryGetStringJsonValue(groupDesiredConfigJson, JsonTimeZoneStandardDate);
+            OperationModelT<string> timeZoneStandardNameModel = Operation::TryGetStringJsonValue(groupDesiredConfigJson, JsonTimeZoneStandardName);
+            OperationModelT<int> timeZoneStandardDayOfWeekModel = Operation::TryGetIntJsonValue(groupDesiredConfigJson, JsonTimeZoneStandardDayOfWeek);
 
             fieldCount += dynamicDaylightTimeDisabledModel.present ? 1 : 0;
             fieldCount += timeZoneKeyNameModel.present ? 1 : 0;
@@ -347,19 +349,32 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace T
 
             // Processing Meta Data
             _metaData->FromJsonParentObject(groupDesiredConfigJson);
+            string serviceInterfaceVersion = _metaData->GetServiceInterfaceVersion();
+            
+            // Report refreshing
+            ReportRefreshing();
 
-            // Apply new state
-            SetSubGroupNtpServer(_groupDesiredConfigJson, errorList);
-            SetSubGroupTimeZone(_groupDesiredConfigJson, errorList);
-
-            // Report current state
-            if (_metaData->GetReportingMode() == JsonReportingModeDetailed)
+            //Compare interface version with the interface version sent by service
+            if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                BuildReported(reportedObject, errorList);
+                // Apply new state
+                SetSubGroupNtpServer(_groupDesiredConfigJson, errorList);
+                SetSubGroupTimeZone(_groupDesiredConfigJson, errorList);
+
+                // Report current state
+                if (_metaData->GetReportingMode() == JsonReportingModeDefault)
+                {
+                    BuildReported(reportedObject, errorList);
+                }
+                else
+                {
+                    EmptyReported(reportedObject);
+                }
+                _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
             else
             {
-                EmptyReported(reportedObject);
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
         });
 

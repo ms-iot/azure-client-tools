@@ -158,6 +158,7 @@
     </ClCompile>
     <ClCompile Include="TaskQueue.cpp" />
     <ClCompile Include="TpmSupport.cpp" />
+    <ClCompile Include="Version.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

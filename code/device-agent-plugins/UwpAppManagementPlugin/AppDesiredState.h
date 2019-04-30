@@ -3,6 +3,7 @@
 #pragma once
 
 #include "stdafx.h"
+using namespace DMUtils;
 
 enum StartupType
 {
@@ -33,7 +34,7 @@ struct AppDesiredState
     bool launchAfterInstall;
     Windows::ApplicationModel::Package^ package;
 
-    AppDesiredState(const std::string pkgFamilyId) : 
+    AppDesiredState(const std::string pkgFamilyId) :
         packageFamilyId(pkgFamilyId),
         startupType(StartupType::eUndefined),
         action(AppDesiredAction::eQuery),

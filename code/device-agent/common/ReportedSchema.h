@@ -17,14 +17,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         ReportedSchema(
             std::string interfaceType,
             std::string tags,
-            unsigned int maxInputVersion,
-            unsigned int outputVersion);
+            std::string interfaceVersion);
 
         std::string GetInterfaceType() const { return _interfaceType; }
         bool HasTag(const std::string& tag) const;
         bool HasAnyTag(const std::set<std::string>& tags) const;
-        unsigned int GetMaxInputVersion() const { return _maxInputVersion; }
-        unsigned int GetOutputVersion() const { return _outputVersion; }
+        std::string GetInterfaceVersion() const { return _interfaceVersion; }
 
         Json::Value ToJsonValue() const;
 
@@ -33,8 +31,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     private:
         std::string _interfaceType;
         std::set<std::string> _tags;
-        unsigned int _maxInputVersion;
-        unsigned int _outputVersion;
+        std::string _interfaceVersion;
     };
 
 }}}}

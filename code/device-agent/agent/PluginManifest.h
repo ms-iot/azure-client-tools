@@ -32,6 +32,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         bool IsDirect() const;
         bool IsOutOfProc() const;
         long GetKeepAliveTime() const;
+        std::string GetAgentPluginProtocolVersion() const;
         const std::map<std::string, std::shared_ptr<HandlerConfiguration>>& GetHandlers() const;
 
     private:
@@ -40,6 +41,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         bool _isDirect;
         bool _isOutOfProc;
         long _keepAliveTime;
+        std::string _agentPluginProtocolVersion;
         std::map<std::string, std::shared_ptr<HandlerConfiguration>> _handlerInfoList;
     };
 

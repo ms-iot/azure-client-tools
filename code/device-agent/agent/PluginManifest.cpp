@@ -64,6 +64,14 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
         _codeFileName = codeFileName.asString();
 
+        Json::Value agentPluginProtocolVersion = value[JsonAgentPluginProtocolVersion];
+        if (agentPluginProtocolVersion.isNull() || !agentPluginProtocolVersion.isString())
+        {
+            throw DMException(DMSubsystem::DeviceAgent, DM_PLUGIN_ERROR_MANIFEST_MISSING_AGENT_PLUGIN_PROTOCOL_VERSION, "Invalid json schema - plug-in manifest file missing `agent-plugin protocol version` or has an invalid type.");
+        }
+
+        _agentPluginProtocolVersion = agentPluginProtocolVersion.asString();
+
         Json::Value isDirect = value[JsonPluginDirect];
         if (isDirect.isNull() || !isDirect.isBool())
         {
@@ -136,9 +144,13 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         return _keepAliveTime;
     }
 
-    const map<string, shared_ptr<HandlerConfiguration>>& PluginManifest::GetHandlers() const
+    string PluginManifest::GetAgentPluginProtocolVersion() const
+    {
+        return _agentPluginProtocolVersion;
+    }
+
+    const std::map<std::string, std::shared_ptr<HandlerConfiguration>>& PluginManifest::GetHandlers() const
     {
         return _handlerInfoList;
     }
-
 }}}}

@@ -34,6 +34,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     static const int MessageLoopWait = 10;
 
     static const char* PluginManifestFolder = ".";
+    static const char* AgentPluginProtocolVersion = "1.0.0";
 
     // Manifest
     static const long AGENT_ERR_PLUGIN_MANIFEST_INVALID_SCHEMA = -1;

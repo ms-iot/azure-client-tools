@@ -6,7 +6,10 @@
       "directMethodName": "StartRemoteWipeCmd",
       "description": "",
       "input": {
-        "clearTpm":  true
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
+        "clearTpm": true
       },
       "output": {
         "returnJson": {},

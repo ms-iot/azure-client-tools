@@ -7,6 +7,7 @@
 
 // Plug-in Manifest Constants
 #define JsonPluginCodeFileName "codeFileName"
+#define JsonAgentPluginProtocolVersion "agentPluginProtocolVersion"
 #define JsonPluginDirect "direct"
 #define JsonPluginOutOfProc "outOfProc"
 #define JsonPluginKeepAliveTime "keepAliveTime"
@@ -74,6 +75,7 @@
 #define JsonRefreshing "Refreshing"
 
 #define JsonTime "time"
+#define JsonDeviceInterfaceVersion "deviceInterfaceVersion"
 
 // Device Schemas
 #define JsonDeviceSchemas "__deviceSchemas"
@@ -89,8 +91,7 @@
 #define JsonDeviceSchemasTagSensor "sensor"
 
 #define JsonDeviceSchemaType "type"
-#define JsonDeviceSchemaMaxInputVersion "maxInputVersion"
-#define JsonDeviceSchemaOutputVersion "outputVersion"
+#define JsonDeviceSchemasInterfaceVersion "interfaceVersion"
 
 // Reported Summary Object
 #define JsonReportedSummary "__summary"
@@ -112,14 +113,13 @@
 #define JsonDeploymentIdUnspecified "unspecified"
 #define JsonDeploymentIdDefault JsonDeploymentIdUnspecified
 
-#define JsonDependencies "dependencies"
-#define JsonDependenciesDefault ""
-
 #define JsonReportingMode "reportingMode"
 #define JsonReportingModeNone "none"
 #define JsonReportingModeDetailed "detailed"
 #define JsonReportingModeMinimal "minimal"
 #define JsonReportingModeDefault JsonReportingModeDetailed
+
+#define JsonServiceInterfaceVersion "serviceInterfaceVersion"
 
 #define JsonDeploymentStatus "deploymentStatus"
 #define JsonDeploymentStatusNotStarted "notStarted"
