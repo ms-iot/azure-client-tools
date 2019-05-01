@@ -118,7 +118,7 @@ namespace Microsoft { namespace Windows { namespace IoT { namespace DeviceManage
     http_client CAzureDpsRegisterHTTPConnection::make_client_request(method& request_method, json::value& request_body, registration_result_t& final_result) {
 
 
-        uri cur_request_uri{get_current_request_uri(m_dps.get_scope_id(), m_dps.get_registration_id(), final_result.operationId, 
+        uri cur_request_uri{get_current_request_uri(m_dps.get_scope_id(), m_dps.get_registration_id(), final_result.operationId,
                                                     m_registration_body, request_method, request_body)};
 
         CTelemetryProvider::AzureClientRequestURI(request_method == methods::PUT ? L"PUT " : L"GET ", cur_request_uri.to_string().c_str());
@@ -262,7 +262,7 @@ namespace Microsoft { namespace Windows { namespace IoT { namespace DeviceManage
                failure_count < MAX_FAILURE_COUNT) {
             json::value request_body{};
             auto azure_dps = make_client_request(request_method, request_body, final_result);
-            
+
             auto result = azure_dps.request(request_method, wstring(), request_body).then([&](http_response response)->pplx::task<json::value> {
                 BEGIN_GUARDED_ACTIVITY(CTelemetryProvider::ProcessHttpStatusResponse)
                     process_response(response, m_http_status_code);

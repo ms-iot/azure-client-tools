@@ -1,0 +1,7 @@
+{
+  "codeFileName": "TestPlugin.dll",
+  "direct": false,
+  "outOfProc": false,
+  "keepAliveTime": 50000,
+  "agentPluginProtocolVersion": "1.0.0"
+}

@@ -6,8 +6,7 @@
 {
   "type": "raw",
   "tags": "&lt;tag1&gt;;&lt;tag2&gt;",
-  "maxInputVersion": "1",
-  "outputVersion": "2",
+  "interfaceVersion": "1.0.0"
 }
 </pre>
 

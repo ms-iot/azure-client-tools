@@ -41,7 +41,7 @@ To installing a certificate, the operator uploads the certificate file to an Azu
 
 Example:
 
-In the [agent configuration file](../../service-configuration-file.md), add the following snippet under `handlers`:
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet under `handlers`:
 
 <pre>
 {
@@ -304,6 +304,11 @@ The state of a given certificate is identified by its thumbprint in the map.
   }
 }
 </pre>
+
+For details on referenced object schemas:
+
+- See the [Meta Data Object](meta-object.md) page.
+- See the [Error Object](error-object.md) page.
 
 ----
 

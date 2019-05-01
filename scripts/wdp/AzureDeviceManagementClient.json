@@ -3,17 +3,27 @@
   "pluginManifestsPath": "manifests",
   "sasExpiryInterval": 86400,
   "sasRenewalGracePeriod": 3600,
+  "dpsEnabled": true,
   "dpsUri": "global.azure-devices-provisioning.net",
   "dpsScopeId": "",
-  "connectionStringSlotNumber": 0,
-  "debugConnectionString": "",
+  "connectionString": "",
   "moduleId": "dmModule",
+  "azureInterfaceType": "raw",
   "handlers": {
     "deviceInfo": {
       "reportOnConnect": true
     },
     "__deviceSchemas": {
       "reportOnConnect": true
+    },
+    "factoryResetCmd": {
+      "handlerTestMode": true
+    },
+    "rebootCmd": {
+      "handlerTestMode": false
+    },
+    "remoteWipeCmd": {
+      "handlerTestMode": true
     }
   }
 }

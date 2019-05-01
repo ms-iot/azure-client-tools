@@ -30,9 +30,6 @@
     <ClInclude Include="NetConnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TpmSupport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\DpsClientApi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,9 +45,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NetConnection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TpmSupport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DpsDeviceRegistration.cpp">

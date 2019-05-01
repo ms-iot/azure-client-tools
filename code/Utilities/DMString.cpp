@@ -79,13 +79,13 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         DWORD destinationSize = 0;
         if (!CryptStringToBinaryA(base64string.c_str(), static_cast<unsigned int>(base64string.size()), CRYPT_STRING_BASE64, nullptr, &destinationSize, nullptr, nullptr))
         {
-            throw DMException(-1, "Error: cannot obtain the required size to decode buffer from base64.");
+            throw DMException(DMSubsystem::Windows, GetLastError(),  "Error: cannot obtain the required size to decode buffer from base64.");
         }
 
         buffer.resize(destinationSize);
         if (!CryptStringToBinaryA(base64string.c_str(), static_cast<unsigned int>(base64string.size()), CRYPT_STRING_BASE64, reinterpret_cast<unsigned char*>(buffer.data()), &destinationSize, nullptr, nullptr))
         {
-            throw DMException(-1, "Error: cannot obtain the required size to decode buffer from base64.");
+            throw DMException(DMSubsystem::Windows, GetLastError(), "Error: cannot obtain the required size to decode buffer from base64.");
         }
     }
 
@@ -106,13 +106,13 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         DWORD destinationSize = 0;
         if (!CryptBinaryToStringA(nonConstBuffer, static_cast<unsigned int>(buffer.size()), CRYPT_STRING_BASE64, nullptr, &destinationSize))
         {
-            throw DMException(-1, "Error: cannot obtain the required size to encode buffer into base64.");
+            throw DMException(DMSubsystem::Windows, GetLastError(), "Error: cannot obtain the required size to encode buffer into base64.");
         }
 
         vector<char> destinationBuffer(destinationSize);
         if (!CryptBinaryToStringA(nonConstBuffer, static_cast<unsigned int>(buffer.size()), CRYPT_STRING_BASE64, destinationBuffer.data(), &destinationSize))
         {
-            throw DMException(-1, "Error: cannot convert binary stream to base64.");
+            throw DMException(DMSubsystem::Windows, GetLastError(), "Error: cannot convert binary stream to base64.");
         }
 
         // Note that the size returned includes the null terminating character.

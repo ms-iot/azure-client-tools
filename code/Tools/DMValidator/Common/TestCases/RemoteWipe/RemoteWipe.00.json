@@ -1,0 +1,20 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "directMethod",
+      "directMethodName": "StartRemoteWipeCmd",
+      "description": "",
+      "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
+        "clearTpm": true
+      },
+      "output": {
+        "returnJson": {},
+        "returnCode": 200
+      }
+    }
+  ]
+}

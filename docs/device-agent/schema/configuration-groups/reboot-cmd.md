@@ -6,7 +6,7 @@ The Reboot command enables the operator to initiate a reboot on the device in 5 
 
 | Handler Identifier | Plug-in Binary |
 |----|----|
-| `rebootCmd` | RebootPlugin.dll |
+| `StartRebootCmd` | RebootPlugin.dll |
 
 ## Life Cycle and Start-up Configuration
 
@@ -21,7 +21,7 @@ The Reboot command enables the operator to initiate a reboot on the device in 5 
 
 Example:
 
-In the [agent configuration file](../../service-configuration-file.md), add the following snippet under `handlers`:
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet under `handlers`:
 
 <pre>
 {
@@ -62,12 +62,12 @@ Sample:
 {
     "properties": {
         "reported": {
-            "rebootCmd": {
+            "StartRebootCmd": {
                 "__meta": {
                     &lt;meta data object content&gt;
                 },
                 "__errors": {
-                    "rebootCmd": {
+                    "StartRebootCmd": {
                         &lt;error object content&gt;
                     }
                 }

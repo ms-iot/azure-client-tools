@@ -47,19 +47,19 @@ echo.
 md %TARGETARCH%
 pushd %TARGETARCH%
 if /I [%TARGETARCH%] == [x86] (
-cmake -G "Visual Studio 15 2017" .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON ..
+cmake -G "Visual Studio 15 2017" .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON -DCMAKE_SYSTEM_VERSION=%TARGETPLATVER%  ..
 )
 
 if /I [%TARGETARCH%] == [arm] (
-cmake -G "Visual Studio 15 2017 ARM" .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON ..
+cmake -G "Visual Studio 15 2017 ARM" .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON -DCMAKE_SYSTEM_VERSION=%TARGETPLATVER%  ..
 )
 
 if /I [%TARGETARCH%] == [x64] (
-cmake -G "Visual Studio 15 2017 Win64" .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON ..
+cmake -G "Visual Studio 15 2017 Win64" .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON -DCMAKE_SYSTEM_VERSION=%TARGETPLATVER%  ..
 )
 
 if /I [%TARGETARCH%] == [arm64] (
-cmake -G "Visual Studio 15 2017" -A ARM64 .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON ..
+cmake -G "Visual Studio 15 2017" -A ARM64 .. -Duse_prov_client:BOOL=ON -Duse_tpm_simulator:BOOL=OFF -Dbuild_provisioning_service_client=ON -Duse_prov_client_core=ON -Dskip_samples=ON -DCMAKE_SYSTEM_VERSION=%TARGETPLATVER%  ..
 )
 
 popd

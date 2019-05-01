@@ -92,13 +92,26 @@
       <OptimizeReferences Condition="'$(Configuration)'=='Release'">true</OptimizeReferences>
       <AdditionalDependencies>tbs.lib;ncrypt.lib;wininet.lib;crypt32.lib;xmllite.lib;Advapi32.lib;ws2_32.lib;Secur32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Lib>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
+    </Lib>
+    <Lib>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
+    </Lib>
+    <Lib>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
+    </Lib>
+    <Lib>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)$(TargetName)d$(TargetExt)</OutputFile>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AutoCloseBase.h" />
     <ClInclude Include="AutoCloseHandle.h" />
     <ClInclude Include="AutoCloseTypes.h" />
-    <ClInclude Include="Constants.h" />
     <ClInclude Include="DateTime.h" />
+    <ClInclude Include="DependencySort.h" />
+    <ClInclude Include="DMErrors.h" />
     <ClInclude Include="DMException.h" />
     <ClInclude Include="DMString.h" />
     <ClInclude Include="DMThread.h" />
@@ -106,26 +119,32 @@
     <ClInclude Include="File.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Guid.h" />
+    <ClInclude Include="Impersonator.h" />
     <ClInclude Include="JsonUtils.h" />
     <ClInclude Include="json\json-forwards.h" />
     <ClInclude Include="json\json.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Registry.h" />
     <ClInclude Include="ResultMacros.h" />
+    <ClInclude Include="Shell.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="DMProcess.h" />
     <ClInclude Include="TaskQueue.h" />
     <ClInclude Include="TpmSupport.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DateTime.cpp" />
+    <ClCompile Include="DependencySort.cpp" />
+    <ClCompile Include="DMException.cpp" />
     <ClCompile Include="DMString.cpp" />
     <ClCompile Include="ETWLogger.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Guid.cpp" />
+    <ClCompile Include="Impersonator.cpp" />
     <ClCompile Include="jsoncpp.cpp">
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -133,11 +152,13 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="DMProcess.cpp" />
     <ClCompile Include="Registry.cpp" />
+    <ClCompile Include="Shell.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TaskQueue.cpp" />
     <ClCompile Include="TpmSupport.cpp" />
+    <ClCompile Include="Version.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

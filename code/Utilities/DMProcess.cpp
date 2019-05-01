@@ -33,12 +33,12 @@ void Process::Launch(
 
     if (!CreatePipe(stdOutReadHandle.GetAddress(), stdOutWriteHandle.GetAddress(), &securityAttributes, pipeBufferSize))
     {
-        throw DMException(GetLastError());
+        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to create anonymous pipe for reading/writing child process stdin|stdout");
     }
 
     if (!SetHandleInformation(stdOutReadHandle.Get(), HANDLE_FLAG_INHERIT, 0 /*flags*/))
     {
-        throw DMException(GetLastError());
+        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to set handle information for stdout read handler");
     }
 
     PROCESS_INFORMATION piProcInfo;
@@ -53,17 +53,17 @@ void Process::Launch(
     siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
     if (!CreateProcess(NULL,
-        const_cast<wchar_t*>(commandString.c_str()), // command line 
-        NULL,         // process security attributes 
-        NULL,         // primary thread security attributes 
-        TRUE,         // handles are inherited 
-        0,            // creation flags 
-        NULL,         // use parent's environment 
-        NULL,         // use parent's current directory 
-        &siStartInfo, // STARTUPINFO pointer 
+        const_cast<wchar_t*>(commandString.c_str()), // command line
+        NULL,         // process security attributes
+        NULL,         // primary thread security attributes
+        TRUE,         // handles are inherited
+        0,            // creation flags
+        NULL,         // use parent's environment
+        NULL,         // use parent's current directory
+        &siStartInfo, // STARTUPINFO pointer
         &piProcInfo)) // receives PROCESS_INFORMATION
     {
-        throw DMException(GetLastError());
+        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to create process");
     }
     TRACELINE(LoggingLevel::Verbose, "Child process has been launched.");
 
@@ -130,7 +130,7 @@ wstring Process::GetProcessExePath(
     AutoCloseHandle processHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
     if (NULL == processHandle.Get())
     {
-        throw DMException(GetLastError(), "Failed to open process.");
+        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to open process.");
     }
 
     HMODULE moduleHandle = NULL;   // do not call CloseHandle() on handles returned by EnumProcessModules() (see MSDN).
@@ -138,12 +138,12 @@ wstring Process::GetProcessExePath(
     wchar_t exePath[MAX_PATH] = L"<unknown>";
     if (!EnumProcessModules(processHandle.Get(), &moduleHandle, sizeof(moduleHandle), &neededBytes))
     {
-        throw DMException(GetLastError(), "Failed to enumerate process modules.");
+        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to enumerate process modules.");
     }
 
     if (0 == GetModuleFileNameEx(processHandle.Get(), moduleHandle, exePath, sizeof(exePath) / sizeof(wchar_t)))
     {
-        throw DMException(GetLastError(), "Failed to get the module file name.");
+        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to get the module file name.");
     }
 
     return wstring(exePath);
@@ -161,7 +161,7 @@ bool Process::IsProcessRunning(
     DWORD bytesNeeded = 0;
     if (!EnumProcesses(processHandles, sizeof(processHandles), &bytesNeeded))
     {
-        throw DMException(GetLastError(), "Failed to enumerate running processes.");
+        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to enumerate running processes.");
     }
 
     DWORD processCount = bytesNeeded / sizeof(DWORD);

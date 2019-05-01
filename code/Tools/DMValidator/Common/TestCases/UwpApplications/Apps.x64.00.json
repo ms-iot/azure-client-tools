@@ -1,0 +1,131 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "trigger application install.",
+      "readBackPause": 30,
+      "input": {
+        "properties": {
+          "desired": {
+            "uwpApps": {
+              "__meta": {
+                "deploymentId": "app_install1",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "connectionString" : "<storage connection string>",
+              "apps": {
+                "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e": {
+                  "pkgFamilyName": "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e",
+                  "version": "1.0.0.0",
+                  "appxSource": "dmtest\\UwpApps\\x64\\UwpTestApplication_1.0.0.0_x64.appx",
+                  "depsSources": "dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Framework.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Runtime.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.VCLibs.x64.14.00.appx"
+                }
+              }
+            },
+            "certificates": {
+              "__meta": {
+                "deploymentId": "certificates_v1",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "connectionString": "<storage connection string>",
+              "rootCATrustedCertificates_TrustedPeople": {
+                "ed13ab12241a0cc005e0cde4ef8e28c94a5973ab": {
+                  "state": "installed",
+                  "fileName": "dmtest\\UwpApps\\x64\\UwpTestApplication_1.0.0.0_x64.cer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "uwpApps": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "app_install1",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "apps": {
+                  "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e": {
+                    "pkgFamilyName": "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e",
+                    "version": "1.0.0.0"
+                  }
+                }
+              },
+              "certificates": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "certificates_v1",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "rootCATrustedCertificates_TrustedPeople": {
+                  "ed13ab12241a0cc005e0cde4ef8e28c94a5973ab": ""
+                },
+                "certificateStore_CA_System": "<ignore>",
+                "certificateStore_My_System": "<ignore>",
+                "certificateStore_My_User": "<ignore>",
+                "certificateStore_Root_System": "<ignore>",
+                "rootCATrustedCertificates_CA": "<ignore>",
+                "rootCATrustedCertificates_Root": "<ignore>",
+                "rootCATrustedCertificates_TrustedPublisher": "<ignore>"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "deviceTwin",
+      "description": "trigger application uninstall.",
+      "readBackPause": 30,
+      "input": {
+        "properties": {
+          "desired": {
+            "uwpApps": {
+              "__meta": {
+                "deploymentId": "apps_uninstall1",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "connectionString" : "<storage connection string>",
+              "apps": {
+                "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e": {
+                  "pkgFamilyName": "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e",
+                  "version": "not installed"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "uwpApps": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "apps_uninstall1",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "apps": {
+                  "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e": {
+                    "pkgFamilyName": "b25c11ac-729d-41c8-8408-3fc413d5d5a4_7ywy5sjsre78e",
+                    "version": "not installed"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

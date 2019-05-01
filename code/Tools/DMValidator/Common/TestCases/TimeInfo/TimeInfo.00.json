@@ -4,12 +4,14 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "set time zone to mountain",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {
             "timeInfo": {
               "__meta": {
-                "deploymentId": "time_info_v1"
+                "deploymentId": "time_info_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "ntpServer": "time.windows.com",
               "dynamicDaylightTimeDisabled": false,
@@ -35,7 +37,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "time_info_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "ntpServer": "time.windows.com",
                 "timeZoneBias": 420,
@@ -59,12 +62,14 @@
       "name": "01",
       "type": "deviceTwin",
       "description": "set time zone to pacific",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {
             "timeInfo": {
               "__meta": {
-                "deploymentId": "time_info_v1"
+                "deploymentId": "time_info_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "ntpServer": "time.windows.com",
               "dynamicDaylightTimeDisabled": false,
@@ -90,7 +95,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "time_info_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "ntpServer": "time.windows.com",
                 "dynamicDaylightTimeDisabled": false,

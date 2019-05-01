@@ -53,8 +53,6 @@ echo .
 echo "Building DM binaries"
 echo .
 
-echo on
-
     msbuild %REPO_ROOT%\deps\security\Urchin\Lib\Urchin.vcxproj /p:SolutionDir=%REPO_ROOT%\code\output\ /p:Configuration=%TARGETCONFIG% /p:Platform=%TARGETARCH% /p:TargetPlatformVersion=%TARGETPLATVER%
     if errorlevel 1 goto BuildError
     msbuild %REPO_ROOT%\deps\security\Urchin\Platform\Platform.vcxproj /p:SolutionDir=%REPO_ROOT%\code\output\ /p:Configuration=%TARGETCONFIG% /p:Platform=%TARGETARCH% /p:TargetPlatformVersion=%TARGETPLATVER%
@@ -71,17 +69,24 @@ echo on
 
     if /I [%TARGETARCH%] == [arm64] goto Success
 
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementCommon\AzureDeviceManagementCommon.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent\uwp-bridge-lib\DMBridgeInterface\DMBridgeInterface.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementClient\AzureDeviceManagementClient.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent\uwp-bridge-lib\DMBridge\DMBridge.vcxproj %DEFAULT_BUILD_PARAMS%
+    if errorlevel 1 goto BuildError
+    msbuild %REPO_ROOT%\code\device-agent\uwp-bridge-lib\DMBridgeComponent\DMBridgeComponent.vcxproj %DEFAULT_BUILD_PARAMS%
+    if errorlevel 1 goto BuildError
+
+    msbuild %REPO_ROOT%\code\device-agent\common\AzureDeviceManagementCommon.vcxproj %DEFAULT_BUILD_PARAMS%
+    if errorlevel 1 goto BuildError
+    msbuild %REPO_ROOT%\code\device-agent\agent\AzureDeviceManagementClient.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
 
     @REM Plugin Infrastructure
 
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\AzureDeviceManagementPluginCommon\AzureDeviceManagementPluginCommon.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent\plugin-common\AzureDeviceManagementPluginCommon.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
 
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPluginHost\AzureDeviceManagementPluginHost.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent\plugin-host\AzureDeviceManagementPluginHost.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
 
     if /I [%TARGETARCH%] NEQ [arm] (
@@ -91,26 +96,34 @@ echo on
 
     @REM Plugins
  
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\FactoryResetPlugin\FactoryResetPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\FactoryResetPlugin\FactoryResetPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\RebootPlugin\RebootPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\RebootPlugin\RebootPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\RemoteWipePlugin\RemoteWipePlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\RemoteWipePlugin\RemoteWipePlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\TimePlugin\TimePlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\TimePlugin\TimePlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\WindowsTelemetryPlugin\WindowsTelemetryPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\WindowsTelemetryPlugin\WindowsTelemetryPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\WindowsUpdatePlugin\WindowsUpdatePlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\WindowsUpdatePlugin\WindowsUpdatePlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\DeviceInfoPlugin\DeviceInfoPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\DeviceInfoPlugin\DeviceInfoPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
-    msbuild %REPO_ROOT%\code\AzureDeviceManagementPlugins\CertificateManagementPlugin\CertificateManagementPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    msbuild %REPO_ROOT%\code\device-agent-plugins\CertificateManagementPlugin\CertificateManagementPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    if errorlevel 1 goto BuildError
+    msbuild %REPO_ROOT%\code\device-agent-plugins\DiagnosticLogsManagementPlugin\DiagnosticLogsManagementPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    if errorlevel 1 goto BuildError
+    msbuild %REPO_ROOT%\code\device-agent-plugins\UwpAppManagementPlugin\UwpAppManagementPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
 
     @REM
     @REM -- Samples --
     @REM
+
+    msbuild %REPO_ROOT%\code\Samples\Plugins\TestPlugin\TestPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
+    if errorlevel 1 goto BuildError
+
     msbuild %REPO_ROOT%\code\Samples\Plugins\DirectRebootManagementPlugin\DirectRebootManagementPlugin.vcxproj %DEFAULT_BUILD_PARAMS%
     if errorlevel 1 goto BuildError
 

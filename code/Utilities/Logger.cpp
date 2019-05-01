@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include <windows.h>
 #include <fstream>
-#include <iostream> 
+#include <iostream>
 #include <iomanip>
 #include <filesystem>
 
@@ -31,7 +31,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
 
         // format time
         basic_ostringstream<wchar_t> formattedTime;
-        formattedTime 
+        formattedTime
             << setw(4) << setfill(L'0') << (int)systemTime.wYear
             << L'_' << setw(2) << setfill(L'0') << (int)systemTime.wMonth
             << L'_' << setw(2) << setfill(L'0') << (int)systemTime.wDay

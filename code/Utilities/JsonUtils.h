@@ -19,6 +19,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
 
         static bool TryParseJSONFile(
             const std::string& fileName, Json::Value& readJson);
+
+        static void WriteJSONFile(
+            const std::string& fileName, Json::Value& json);
+
+        static bool TryWriteJSONFile(
+            const std::string& fileName, Json::Value& json);
     };
 
 }}}}

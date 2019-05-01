@@ -1,0 +1,207 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "start diagnostic log collection",
+      "readBackPause": 10,
+      "input": {
+        "properties": {
+          "desired": {
+            "eventTracingCollectors": {
+              "__meta": {
+                "deploymentId": "diagnostics_v1",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "collector00": {
+                "traceLogFileMode": "sequential",
+                "logFileSizeLimitMB": 500,
+                "logFileFolder": "collectorFolderName",
+                "logFileName": "logFileName",
+                "started": true,
+                "providers": {
+                  "DAF0B914-9C1C-450A-81B2-FEA7244F6FFA": {
+                    "traceLevel": "verbose",
+                    "keywords": "",
+                    "enabled": true
+                  }
+                },
+                "__meta": {
+                  "reportingMode": "detailed"
+                }
+              },
+              "collector01": {
+                "__meta": {
+                  "reportingMode": "minimal"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "eventTracingCollectors": {
+                "__meta": {
+                  "deploymentId": "diagnostics_v1",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "collector00": {
+                  "logFileFolder": "collectorFolderName",
+                  "logFileName": "logFileName",
+                  "logFileSizeLimitMB": 500,
+                  "providers": {
+                    "DAF0B914-9C1C-450A-81B2-FEA7244F6FFA": {
+                      "enabled": true,
+                      "keywords": "0",
+                      "traceLevel": "verbose"
+                    }
+                  },
+                  "started": true,
+                  "traceLogFileMode": "sequential"
+                },
+                "collector01": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "deviceTwin",
+      "description": "stop diagnostic log collection",
+      "readBackPause": 35,
+      "input": {
+        "properties": {
+          "desired": {
+            "eventTracingCollectors": {
+              "__meta": {
+                "deploymentId": "diagnostics_v1",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "collector00": {
+                "traceLogFileMode": "sequential",
+                "logFileSizeLimitMB": 500,
+                "logFileFolder": "collectorFolderName",
+                "logFileName": "logFileName",
+                "started": false,
+                "providers": {
+                  "DAF0B914-9C1C-450A-81B2-FEA7244F6FFA": {
+                    "traceLevel": "verbose",
+                    "keywords": "",
+                    "enabled": true
+                  }
+                },
+                "__meta": {
+                  "reportingMode": "detailed"
+                }
+              }
+              }
+            }
+          }
+        },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "eventTracingCollectors": {
+                "__meta": {
+                  "deploymentId": "diagnostics_v1",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "collector00": {
+                  "logFileFolder": "collectorFolderName",
+                  "logFileName": "logFileName",
+                  "logFileSizeLimitMB": 500,
+                  "providers": {
+                    "DAF0B914-9C1C-450A-81B2-FEA7244F6FFA": {
+                      "enabled": true,
+                      "keywords": "0",
+                      "traceLevel": "verbose"
+                    }
+                  },
+                  "started": true,
+                  "traceLogFileMode": "sequential"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "02",
+      "type": "directMethod",
+      "directMethodName": "EnumerateLogFoldersCmd",
+      "description": "list all files in the folder",
+      "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        }
+      },
+      "output": {
+        "returnJson": {
+          "list": [ "collectorFolderName" ]
+        },
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "02",
+      "type": "directMethod",
+      "directMethodName": "EnumerateLogFilesCmd",
+      "description": "list all files in the folder",
+      "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
+        "folderName": "collectorFolderName"
+      },
+      "output": {
+        "returnJson": {
+          "list": [ "logFileName.etl" ]
+        },
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "03",
+      "type": "directMethod",
+      "directMethodName": "DeleteLogFileCmd",
+      "description": "delete a file in the folder",
+      "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
+        "folderName": "collectorFolderName",
+        "fileName": "logFileName.etl"
+      },
+      "output": {
+        "returnJson": {},
+        "returnCode": 200
+      }
+    },
+    {
+      "name": "04",
+      "type": "directMethod",
+      "directMethodName": "UploadLogFileCmd",
+      "description": "upload a file should fail",
+      "input": {
+        "__meta": {
+          "serviceInterfaceVersion": "1.0.0"
+        },
+        "folderName": "collectorFolderName",
+        "fileName": "logFileName",
+        "connectionString": "<storage connection string>",
+        "container": "dmtest"
+      },
+      "output": {
+        "returnJson": {},
+        "returnCode": 200
+      }
+    }
+  ]
+}

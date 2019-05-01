@@ -34,13 +34,28 @@
     <ClCompile Include="JsonUtils.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-	  <ClCompile Include="File.cpp">
+    <ClCompile Include="File.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="Guid.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DMException.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Impersonator.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DependencySort.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Version.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -52,9 +67,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="AutoCloseTypes.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Constants.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="DateTime.h">
@@ -111,13 +123,31 @@
     <ClInclude Include="FileSystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
-	<ClInclude Include="File.h">
-       <Filter>Headers</Filter>
+    <ClInclude Include="File.h">
+      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Guid.h">
       <Filter>Headers</Filter>
     </ClInclude>
-  </ItemGroup>
+    <ClInclude Include="DMErrors.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Shell.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Impersonator.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Version.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DependencySort.h">
+      <Filter>Sources</Filter>
+      </ClCompile>
+      <ClInclude Include="Version.h">
+        <Filter>Headers</Filter>
+      </ClInclude>
+    </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
       <UniqueIdentifier>{e46fe9c9-2ee6-48e8-b97e-7f8becefdb1b}</UniqueIdentifier>

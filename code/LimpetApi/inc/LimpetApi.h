@@ -265,3 +265,7 @@ UINT32 LimpetReadUriName(UINT32 logicalDeviceNumber,
 );
 
 UINT32 LimpetForceClearTpm();
+
+UINT32 LimpetGetRegistrationId(
+     std::wstring& registrationId
+);

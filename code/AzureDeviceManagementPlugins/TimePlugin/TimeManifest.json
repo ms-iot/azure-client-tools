@@ -1,6 +1,0 @@
-{
-  "codeFileName": "TimePlugin.dll",
-  "direct": false,
-  "outOfProc": true,
-  "keepAliveTime": 50000
-}

@@ -2,6 +2,32 @@
 
 DMValidator is a CLI tool that tests DM Client running on the devices connected to Azure IoT Hub.
 
+## Quick Start
+
+1. Setup the Device Agent on the device where the testing will take place.
+2. On the dev box, construct a configuration file with the tests you want to run.
+    <pre>
+    {
+        "connection-string" : "&lt;enter_iothub_owner_connection_string_here&gt;",
+        "storage-connection-string": "&lt;enter_azure_storage_connection_string_here&gt;",
+        "scenarioFiles": [
+            "..\\Common\\TestCases\\DeviceInfo\\DeviceInfo.MBM.00.json"
+        ],
+        "devices" : [
+            "&lt;device_name&gt;"
+        ],
+        "log" : "e:\\temp\\dmtest"
+    }
+    </pre>
+
+    - Replace everything in angle brackets with the actual values that apply to your Azure services.
+3. Start a Visual Studio command prompt and run the following:
+    <pre>
+    cd code\Tools\DMValidator\CLI\
+    dotnet bin\Debug\netcoreapp2.1\DMConsoleValidator.dll -C c:\tests\validator.config
+    </pre>
+
+
 ## Prerequisites
 
 To run the tool, you need to download .NET Core (SDK + CLI)
@@ -10,64 +36,6 @@ Below are instructions on how to get the .NET Core SDK:
 
 Try the installation instructions from this website:
 https://www.microsoft.com/net/learn/dotnet/hello-world-tutorial
-
-### Libraries
-
-Libraries are pulled automatically by `dotnet` when building.
-
-
-## Building DMValidator
-
-To build DMValidator, use `dotnet build` command in the DMValidator directory:
-
-```bash
-#Assuming we are in the project root directory:
-cd code\tests\DMValidator\CLI
-dotnet build
-```
-
-You can also build the code from any other directory by providing a path to the .csproj file:
-
-```bash
-#Assuming we are in the project root directory:
-dotnet build code\tests\console\DMValidator\CLI\DMValidator.csproj
-```
-
-## Running DMValidator
-
-To run DMValidator, use `dotnet run` command in the DMValidator directory:
-
-```bash
-#Assuming we are in the project root directory:
-cd code\tests\console\DMValidator\CLI\
-dotnet run
-```
-
-You can also run the program from any other directory by providing a path to the .csproj file using `--project` flag:
-
-```bash
-#Assuming we are in the project root directory:
-dotnet run --project code\tests\console\DMValidator\CLI\DMValidator.csproj
-```
-
-*NOTE:** This does not change the current working directory, which is used by the project to access files!
-
-### Running and building DMValidator at once
-
-`dotnet run` command builds the program first(if needed), so you can run just this one command.
-
-## Passing arguments to DMValidator
-
-Because we use `dotnet` to run DMValidator, our argument goes through three steps:
-
-- Bash parses the argument
-- `dotnet` receives the parsed argument
-- DMValidator receives the argument passed by `dotnet`
-
-This means our argument has two places where it could break:
-
-- IoT Hub connection strings contain semicolons ';'. These are recognized by bash as command separators. To avoid getting interpreted by bash, ensure that all the arguments are quoted(single or double quotes).
-- `dotnet` might not distinguish between arguments meant for DMValidator and itself. To make sure that arguments are passed to DMValidator, separate arguments to `dotnet` and DMValidator with `--` (if there are no dotnet arguments simply put this string after the dotnet command call. )
 
 ## DMValidator configuration file
 
@@ -100,13 +68,15 @@ have to be passed as an array (even if providing just one value).
 
 <pre>
 {
-    "connection-string" : "insert-your-string",
-    "tests" : "..\Common\",
-    "devices" : [
-        "myDevice1",
-        "myDevice2"
+    "connection-string" : "enter_iot_hub_connection_string",
+    "scenariosFolder" : "..\\Common\\TestCases\\TimeInfo\\",
+    "scenarioFiles": [
+        "..\\Common\\TestCases\\DeviceInfo\\DeviceInfo.MBM.00.json"
     ],
-    "log" : ".",
+    "devices" : [
+        "device_name"
+    ],
+    "log" : "e:\\temp\\dmtest"
 }
 </pre>
 
@@ -160,19 +130,9 @@ In this example we ignore a configuration file and pass arguments using command 
 
 ### Running DMValidator using a configuration file at non-standard location
 
-Assuming that a configuration file is stored in a current working directory:
-
-`dotnet run -- -C otherName.json`
-
-Assuming that a configuration file is stored as 'validator.config' in our dm directory:
-
-`dotnet run -- -C "c:\dm\validator.config"`
-
-or:
-
 <pre>
-cd code\tests\DMValidator\CLI\
-dotnet bin\Debug\netcoreapp2.1\DMConsoleValidator.dll -C validator.config
+cd code\Tools\DMValidator\CLI\
+dotnet bin\Debug\netcoreapp2.1\DMConsoleValidator.dll -C c:\tests\validator.config
 </pre>
 
 where validator.config has something like:
@@ -180,7 +140,11 @@ where validator.config has something like:
 <pre>
 {
     "connection-string" : "&lt;enter_iothub_owner_connection_string_here&gt;",
-    "tests" : "..\\Common\\TestCases\\TimeInfo\\",
+    "storage-connection-string": "&lt;enter_azure_storage_connection_string_here&gt;",
+    "scenariosFolder" : "..\\Common\\TestCases\\TimeInfo\\",
+    "scenarioFiles": [
+        "..\\Common\\TestCases\\DeviceInfo\\DeviceInfo.MBM.00.json"
+    ],
     "devices" : [
         "&lt;device_name&gt;"
     ],

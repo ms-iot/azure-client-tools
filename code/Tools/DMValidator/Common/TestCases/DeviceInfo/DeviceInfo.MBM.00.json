@@ -4,10 +4,15 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "trigger device info reporting for MBM",
+      "readBackPause": 15,
       "input": {
         "properties": {
           "desired": {
-            "deviceInfo": {}
+            "deviceInfo": {
+              "__meta": {
+                "serviceInterfaceVersion": "1.0.0",
+              }
+            }
           }
         }
       },
@@ -19,7 +24,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "unspecified",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "batteryRuntime": -1,
                 "batteryRemaining": -1,

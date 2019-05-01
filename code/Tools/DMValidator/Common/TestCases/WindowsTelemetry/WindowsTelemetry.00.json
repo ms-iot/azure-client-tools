@@ -4,12 +4,14 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "set Windows telemetry level",
+      "readBackPause": 8,
       "input": {
         "properties": {
           "desired": {
             "windowsTelemetry": {
               "__meta": {
-                "deploymentId": "windows_telemetry_v1"
+                "deploymentId": "windows_telemetry_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "level": "security"
             }
@@ -24,7 +26,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "windows_telemetry_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "level": "security"
               }

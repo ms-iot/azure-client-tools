@@ -6,24 +6,41 @@
 #include <windows.h>
 #include <exception>
 #include <sstream> 
+#include <map>
 #include "Logger.h"
 #include "DMString.h"
+#include "DMErrors.h"
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Utils {
+
+    // Note: If you are adding a new field in here, also update dmSubsystemsMap in this DMException.cpp 
+    enum DMSubsystem
+    {
+        DeviceAgent = 0,
+        Windows,
+        RPC,
+        XmlLite,
+        Limpet,
+        DPS,
+        IotHub,
+        MDM,
+        MDMOperation,
+        DeviceAgentPlugin,
+        W32TM,
+        BCDEdit,
+        Linux,
+        IotStartup
+    };
 
     class DMException : public std::exception
     {
     public:
-        DMException(long code) :
-            _code(code)
-        {
-            TRACELINEP(Utils::LoggingLevel::Error, "Exception code   : ", code);
-        }
-
-        DMException(long code, const std::string& message) :
+        DMException(DMSubsystem subSystem, long code, const std::string& message) :
             _code(code),
             _debugMessage(message)
         {
+            _subSystem = dmSubsystemsMap.at(subSystem);
+            TRACELINEP(Utils::LoggingLevel::Error, "SubSystem              : ", _subSystem.c_str());
             TRACELINEP(Utils::LoggingLevel::Error, "Exception code         : ", _code);
             TRACELINEP(Utils::LoggingLevel::Error, "Exception debug message: ", _debugMessage.c_str());
         }
@@ -64,6 +81,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         long _code;
         std::string _debugMessage;
         std::string _subSystem;
+
+    private:
+        static std::map<DMSubsystem, std::string> dmSubsystemsMap;
     };
 
+    void LogDMException(const DMException& ex, const std::string& message, const std::string& param);
+
+    void LogStdException(const std::exception& ex, const std::string& message, const std::string& param);
 }}}}

@@ -6,7 +6,7 @@ The Remote wipe command enables the operator to wipe out all data on the device 
 
 | Handler Identifier | Plug-in Binary |
 |----|----|
-| `remoteWipeCmd` | RemoteWipePlugin.dll |
+| `StartRemoteWipeCmd` | RemoteWipePlugin.dll |
 
 ## Life Cycle and Start-up Configuration
 
@@ -21,7 +21,7 @@ The Remote wipe command enables the operator to wipe out all data on the device 
 
 Example:
 
-In the [agent configuration file](../../service-configuration-file.md), add the following snippet under `handlers`:
+In the [device-agent configuration file](../../reference/device-agent-configuration-file.md), add the following snippet under `handlers`:
 
 <pre>
 {
@@ -77,12 +77,12 @@ Sample:
 {
     "properties": {
         "reported": {
-            "remoteWipeCmd": {
+            "StartRemoteWipeCmd": {
                 "__meta": {
                     &lt;meta data object content&gt;
                 },
                 "__errors": {
-                    "rebootCmd": {
+                    "StartRemoteWipeCmd": {
                         &lt;error object content&gt;
                     }
                 }

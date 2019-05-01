@@ -1,0 +1,133 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "App startup test",
+      "readBackPause": 30,
+      "input": {
+        "properties": {
+          "desired": {
+            "uwpApps": {
+              "__meta": {
+                "deploymentId": "app_install2",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "connectionString": "<storage connection string>",
+              "apps": {
+                "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                  "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                  "version": "1.0.0.0",
+                  "appxSource": "dmtest\\UwpApps\\x64\\UwpApp1_1.0.0.0_x64.appx",
+                  "depsSources": "dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Framework.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Runtime.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.VCLibs.x64.14.00.appx",
+                  "startup": "foreground"
+                },
+                "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e": {
+                  "pkgFamilyName": "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e",
+                  "version": "1.0.0.0",
+                  "appxSource": "dmtest\\UwpApps\\x64\\UWPApp2_1.0.0.0_x64.appx",
+                  "depsSources": "dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Framework.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.NET.Native.Runtime.1.7.appx;dmtest\\UwpApps\\x64\\Microsoft.VCLibs.x64.14.00.appx"
+                },
+                "UWPBackgroundApp1-uwp_7ywy5sjsre78e": {
+                  "pkgFamilyName": "UWPBackgroundApp1-uwp_7ywy5sjsre78e",
+                  "version": "1.0.0.0",
+                  "appxSource": "dmtest\\UwpApps\\x64\\UWPBackgroundApp1_1.0.0.0_x64.appxbundle",
+                  "startup": "background"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "uwpApps": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "app_install2",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "apps": {
+                  "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                    "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                    "version": "1.0.0.0",
+                    "startup": "foreground"
+                  },
+                  "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e": {
+                    "pkgFamilyName": "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e",
+                    "version": "1.0.0.0"
+                  },
+                  "UWPBackgroundApp1-uwp_7ywy5sjsre78e": {
+                    "pkgFamilyName": "UWPBackgroundApp1-uwp_7ywy5sjsre78e",
+                    "version": "1.0.0.0",
+                    "startup": "background"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "deviceTwin",
+      "description": "uninstall foreground app and set new foreground app",
+      "readBackPause": 30,
+      "input": {
+        "properties": {
+          "desired": {
+            "uwpApps": {
+              "__meta": {
+                "deploymentId": "apps_uninstall2",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "connectionString": "<storage connection string>",
+              "apps": {
+                "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                  "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                  "version": "not installed"
+                },
+                "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e": {
+                  "pkgFamilyName": "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e",
+                  "version": "1.0.0.0",
+                  "startup": "foreground"
+                }
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "uwpApps": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "apps_uninstall2",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "apps": {
+                  "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e": {
+                    "pkgFamilyName": "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+                    "version": "not installed"
+                  },
+                  "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e": {
+                    "pkgFamilyName": "5b893357-cf5e-4f9d-bc05-1f3d33333459_7ywy5sjsre78e",
+                    "version": "1.0.0.0",
+                    "startup": "foreground"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

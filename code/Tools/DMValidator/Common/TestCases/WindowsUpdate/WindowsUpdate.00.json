@@ -4,12 +4,14 @@
       "name": "00",
       "type": "deviceTwin",
       "description": "our windows update policy test case!",
+      "readBackPause": 10,
       "input": {
         "properties": {
           "desired": {
             "windowsUpdate": {
               "__meta": {
-                "deploymentId": "windows_update_v1"
+                "deploymentId": "windows_update_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "activeHoursStart": 1,
               "activeHoursEnd": 2,
@@ -32,7 +34,8 @@
                 "__meta": {
                   "deploymentStatus": "succeeded",
                   "deploymentId": "windows_update_v1",
-                  "time": "<ignore>"
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
                 },
                 "activeHoursStart": 1,
                 "activeHoursEnd": 2,

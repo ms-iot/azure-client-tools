@@ -29,6 +29,7 @@ set DEVICE_FOLDER=%ROOT_FOLDER%\Device
 for %%Z in (x86 arm x64) do (
     echo Populating %%Z folder...
     call deploy.create-device-folder.cmd %%Z Debug %DEVICE_FOLDER%\%%Z
+    echo placeholder > %DEVICE_FOLDER%\%%Z\logs\placeholder.txt
 
 )
 

@@ -4,7 +4,7 @@
 #pragma once
 
 #define LIMPET_TPM_OBJECT_NAME             (sizeof(UINT16) + SHA256_DIGEST_SIZE)
-#define LIMPET_DEVICE_ID_STRING_LENGTH     (70) 
+#define LIMPET_DEVICE_ID_STRING_LENGTH     (70)
 #define LIMPET_STRING_SIZE                 (512)
 #define MAX_CONNECTION_STRING_LEN          (1024)
 

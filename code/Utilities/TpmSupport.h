@@ -11,9 +11,6 @@ typedef std::vector<BYTE> keybuffer_t;
 
 class TpmSupport
 {
-private:
-    static std::wstring Azure_EncodeBase32(std::vector<unsigned char> &pData);
-
 public:
 
     static HRESULT ImportKeyToTpm(UINT32 logicalDeviceNumber, unsigned char* pbKeyBlob, size_t cbKeyBlob);

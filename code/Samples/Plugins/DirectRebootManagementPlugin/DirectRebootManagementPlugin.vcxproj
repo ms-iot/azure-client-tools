@@ -130,12 +130,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;DIRECTREBOOTMANAGEMENTPLUGIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>DirectRebootManagementPlugin.def</ModuleDefinitionFile>
-      <AdditionalDependencies>AzureDeviceManagementPluginCommon.lib;AzureDeviceManagementCommon.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;AzureDeviceManagementUtilities.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -147,12 +148,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;DIRECTREBOOTMANAGEMENTPLUGIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>DirectRebootManagementPlugin.def</ModuleDefinitionFile>
-      <AdditionalDependencies>AzureDeviceManagementPluginCommon.lib;AzureDeviceManagementCommon.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;AzureDeviceManagementUtilities.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -164,12 +166,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;DIRECTREBOOTMANAGEMENTPLUGIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>DirectRebootManagementPlugin.def</ModuleDefinitionFile>
-      <AdditionalDependencies>AzureDeviceManagementPluginCommon.lib;AzureDeviceManagementCommon.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;AzureDeviceManagementUtilities.lib;kernel32.lib;user32.lib;advapi32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;user32.lib;advapi32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -183,6 +186,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;DIRECTREBOOTMANAGEMENTPLUGIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,7 +194,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>DirectRebootManagementPlugin.def</ModuleDefinitionFile>
-      <AdditionalDependencies>AzureDeviceManagementPluginCommon.lib;AzureDeviceManagementCommon.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;AzureDeviceManagementUtilities.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -204,6 +208,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;DIRECTREBOOTMANAGEMENTPLUGIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -211,7 +216,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>DirectRebootManagementPlugin.def</ModuleDefinitionFile>
-      <AdditionalDependencies>AzureDeviceManagementPluginCommon.lib;AzureDeviceManagementCommon.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;AzureDeviceManagementUtilities.lib;kernel32.lib;user32.lib;advapi32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;user32.lib;advapi32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -225,6 +230,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;DIRECTREBOOTMANAGEMENTPLUGIN_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -232,7 +238,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>DirectRebootManagementPlugin.def</ModuleDefinitionFile>
-      <AdditionalDependencies>AzureDeviceManagementPluginCommon.lib;AzureDeviceManagementCommon.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;AzureDeviceManagementUtilities.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;user32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

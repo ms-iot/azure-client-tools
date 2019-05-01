@@ -1,0 +1,23 @@
+{
+  "connection-string": "<enter iothub owner connection string>",
+  "storage-connection-string": "<enter azure storage connection string>",
+  "scenarioFiles": [
+    "..\\..\\..\\..\\Common\\TestCases\\TestPlugin\\TestPlugin.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\Certificates\\Certificates.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\DeviceInfo\\DeviceInfo.Desktop.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\DeviceSchemas\\DeviceSchemas.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\RebootManagement\\RebootInfo.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\RebootManagement\\RebootCmd.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\TimeInfo\\TimeInfo.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\WindowsTelemetry\\WindowsTelemetry.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\WindowsUpdate\\WindowsUpdate.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\RemoteWipe\\RemoteWipe.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\FactoryReset\\FactoryReset.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\UwpApplications\\Apps.x64.00.json",
+    "..\\..\\..\\..\\Common\\TestCases\\UwpApplications\\Apps.x64.01.json"
+  ],
+  "devices": [
+    "gmileka02"
+  ],
+  "log": "d:/temp/dmtest"
+}

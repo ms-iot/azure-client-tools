@@ -1,7 +1,13 @@
 # Quick Starts
 
-- [Quick start using Windows IoT Core and Azure DPS](quick-start-iot-core.md).
-- [Quick start using Windows IoT Enterprise](quick-start-iot-enterprise.md).
+- [Quick Start without Azure DPS](quick-start-without-dps.md).
+    - TPM is not required.
+    - Walk-through applies to both Windows IoT Core and Windows IoT Enterprise.
+
+- [Quick start using Azure DPS](quick-start-with-dps.md).
+    - TPM is required.
+    - Walk-through applies to Windows IoT Core.
+        - Note that DPS is supported on both Windows IoT Enterprise and Windows IoT Core.
 
 ----
 

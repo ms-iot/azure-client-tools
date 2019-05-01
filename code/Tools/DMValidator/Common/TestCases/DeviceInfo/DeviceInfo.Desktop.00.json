@@ -1,0 +1,59 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "trigger device info reporting for Desktop",
+      "readBackPause": 15,
+      "input": {
+        "properties": {
+          "desired": {
+            "deviceInfo": {
+              "__meta": {
+                "serviceInterfaceVersion": "1.0.0"
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "deviceInfo": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "unspecified",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "batteryRuntime": -1,
+                "batteryRemaining": -1,
+                "batteryStatus": 1,
+                "osEdition": "4",
+                "secureBootState": 1,
+                "totalMemory": 32768,
+                "name": "<ignore>",
+                "processorArchitecture": "9",
+                "displayResolution": "1680x1050",
+                "radioSwVer": "Not Present",
+                "processorType": "8664",
+                "fwVer": "<ignore>",
+                "hwVer": "<ignore>",
+                "oem": "Hewlett-Packard",
+                "type": "HP Z440 Workstation",
+                "language": "en-US",
+                "dmVer": "1.3",
+                "model": "HP Z440 Workstation",
+                "manufacturer": "Hewlett-Packard",
+                "id": "<ignore>",
+                "osPlatform": "<ignore>",
+                "swVer": "<ignore>"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

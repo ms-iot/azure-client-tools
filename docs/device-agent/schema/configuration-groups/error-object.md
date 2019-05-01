@@ -27,7 +27,7 @@ Their primary purpose is to make debugging easier. For known ones, the web-appli
 <pre>
 {
     "subsystem": ""
-    "context": "rebootCmd",
+    "context": "StartRebootCmd",
     "code": -2147024891,
     "message": "RegisterDeviceWithLocalManagement",
     "parameters": {},

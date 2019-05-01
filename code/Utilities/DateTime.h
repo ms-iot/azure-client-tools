@@ -53,6 +53,9 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
 
         static std::wstring GetCurrentDateTimeString();
         static std::wstring GetDateTimeString(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, unsigned int second);
+
+        static std::string GetFormattedCurrentDateTimeString();
+        static std::string GetFormattedDateTimeString(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, unsigned int second);
     };
 
 }}}}

@@ -12,5 +12,5 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
     public:
         static std::wstring NewGuid();
     };
-        
+
 }}}}

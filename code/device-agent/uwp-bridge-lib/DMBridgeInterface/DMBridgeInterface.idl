@@ -1,0 +1,9 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+import "oaidl.idl";
+import "unknwn.idl";
+
+#include "DpsInterface.idl"
+#include "RebootInterface.idl"
+#include "TpmInterface.idl"

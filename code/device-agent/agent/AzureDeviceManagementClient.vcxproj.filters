@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Handlers\ClearReportedCmdHandler.cpp">
+      <Filter>Source Files\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="Handlers\DeviceSchemasHandler.cpp">
+      <Filter>Source Files\Handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="Mdm\MdmServer.cpp">
+      <Filter>Source Files\Mdm</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugins\AgentStub.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugins\PluginBinaryProxy.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugins\PluginProxy.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="AzureDMClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginManifest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceParameters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugins\RawHandlerProxy.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugins\DirectPluginProxy.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugins\OutOfProcPluginBinaryProxy.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="Raw\AzureRawHost.cpp">
+      <Filter>Source Files\Raw</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalDMClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IoTHub\IoTHubInterfaces.h">
+      <Filter>Header Files\Handlers\IoTHub</Filter>
+    </ClInclude>
+    <ClInclude Include="Handlers\ClearReportedCmdHandler.h">
+      <Filter>Header Files\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Handlers\DeviceSchemasHandler.h">
+      <Filter>Header Files\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mdm\MdmServer.h">
+      <Filter>Header Files\Mdm</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins\AgentStub.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins\PluginBinaryProxy.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins\PluginProxy.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="AzureDMClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMConstants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginManifest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceParameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mdm\WinSDKRS2.h">
+      <Filter>Header Files\Mdm</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins\RawHandlerProxy.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins\DirectPluginProxy.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugins\OutOfProcPluginBinaryProxy.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Raw\AzureRawHost.h">
+      <Filter>Header Files\Raw</Filter>
+    </ClInclude>
+    <ClInclude Include="AzureClientInterfaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceClientInterfaces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalDMClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{a830d230-162f-4b3f-a536-ccdd1e7b00de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{71e5e054-a2d5-4f2d-8b2d-d234d77a6762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Handlers">
+      <UniqueIdentifier>{0fdd62fd-0939-4d45-9635-f09a09ef5a7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mdm">
+      <UniqueIdentifier>{cdbf13ef-2036-46cc-80fc-d50ab8399168}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Plugins">
+      <UniqueIdentifier>{12ea3f70-031d-48e6-bc57-87856c8ce014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Handlers\IoTHub">
+      <UniqueIdentifier>{640eba97-02b5-41a2-b21a-810c008db0ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Handlers">
+      <UniqueIdentifier>{ca87c6c0-0b74-4481-b8c4-8dc6ca96aeef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mdm">
+      <UniqueIdentifier>{7b1d4857-745a-489f-bd0f-bb9a1e4933e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Plugins">
+      <UniqueIdentifier>{03726a5e-9c7b-4bd2-b3b2-2b57098597c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{3debc753-649d-4371-98ca-f28d683abb70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Raw">
+      <UniqueIdentifier>{ee63ad28-9cec-4228-9d52-b73c841eb5d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Raw">
+      <UniqueIdentifier>{ba717f02-6d91-44c0-b1a2-b14ae1792e0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

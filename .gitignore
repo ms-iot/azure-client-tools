@@ -38,3 +38,14 @@ Release
 # format (NuGet v4 and .NET Core).
 project.lock.json
 project.assets.json
+/code/Samples/UwpAccess/UwpAppUsingDMBridge/Generated Files
+*.log
+/code/Tools/DMValidator/CLI/Properties/launchSettings.json
+/code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_x64_s.c
+/code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_x64_c.c
+/code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_Win32_s.c
+/code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_Win32_c.c
+/code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_ARM_s.c
+/code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_ARM_c.c
+/code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_h.h
+*.aps

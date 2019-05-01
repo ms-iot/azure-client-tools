@@ -1,0 +1,82 @@
+{
+  "scenario": [
+    {
+      "name": "00",
+      "type": "deviceTwin",
+      "description": "our first test case!",
+      "readBackPause": 8,
+      "input": {
+        "properties": {
+          "desired": {
+            "rebootInfo": {
+              "__meta": {
+                "deploymentId": "reboot_schedule_v1",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "singleRebootTime": "2016-10-10T17:00:00Z",
+              "dailyRebootTime": "2016-10-10T17:00:00Z"
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "rebootInfo": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "reboot_schedule_v1",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "lastBootTime": "<ignore>",
+                "singleRebootTime": "2016-10-10T17:00:00Z",
+                "dailyRebootTime": "2016-10-10T17:00:00Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "01",
+      "type": "deviceTwin",
+      "description": "remove all schedule reboots",
+      "readBackPause": 8,
+      "input": {
+        "properties": {
+          "desired": {
+            "rebootInfo": {
+              "__meta": {
+                "deploymentId": "reboot_schedule_v2",
+                "serviceInterfaceVersion": "1.0.0"
+              },
+              "singleRebootTime": "",
+              "dailyRebootTime": ""
+            }
+          }
+        }
+      },
+      "output": {
+        "present": {
+          "properties": {
+            "reported": {
+              "rebootInfo": {
+                "__meta": {
+                  "deploymentStatus": "succeeded",
+                  "deploymentId": "reboot_schedule_v2",
+                  "time": "<ignore>",
+                  "deviceInterfaceVersion": "1.0.0"
+                },
+                "lastBootTime": "<ignore>",
+                "singleRebootTime": "",
+                "dailyRebootTime": ""
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

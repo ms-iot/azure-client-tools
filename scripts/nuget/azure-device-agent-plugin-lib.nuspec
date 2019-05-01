@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>azure-device-agent-plugin-lib</id>
+    <version>$Version$</version>
+    <title>azure-device-agent-plugin-lib</title>
+    <authors>Microsoft Corporation</authors>
+    <description>This library provides helper classes to make integrating custom plug-ins into the device management client agent easy.</description>
+    <releaseNotes>This is a preview build.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>native Azure Device Agent Plugin</tags>
+    <language>en-US</language>
+  </metadata>
+  <files>
+
+    <file src="azure-device-agent-plugin-lib.targets" target="build\native" />
+    <file src="..\..\code\utilities\*.h" target="build\native\include\utilities" />
+    <file src="..\..\code\utilities\json\*.h" target="build\native\include\utilities\json" />
+    <file src="..\..\code\device-agent\common\*.h" target="build\native\include\device-agent\common" />
+    <file src="..\..\code\device-agent\common\plugins\*.h" target="build\native\include\device-agent\common\plugins" />
+    <file src="..\..\code\device-agent\common\csps\*.h" target="build\native\include\device-agent\common\csps" />
+    <file src="..\..\code\device-agent\plugin-common\*.h" target="build\native\include\device-agent\plugin-common" />
+
+    <!-- arm -->
+    <file src="..\..\code\output\arm\release\AzureDeviceManagementCommon.lib" target="build\native\arm" />
+    <file src="..\..\code\output\arm\release\AzureDeviceManagementPluginCommon.lib" target="build\native\arm" />
+    <file src="..\..\code\output\arm\release\AzureDeviceManagementUtilities.lib" target="build\native\arm" />
+
+    <file src="..\..\code\output\arm\debug\AzureDeviceManagementCommond.lib" target="build\native\arm" />
+    <file src="..\..\code\output\arm\debug\AzureDeviceManagementPluginCommond.lib" target="build\native\arm" />
+    <file src="..\..\code\output\arm\debug\AzureDeviceManagementUtilitiesd.lib" target="build\native\arm" />
+
+    <file src="..\..\code\output\arm\release\Platform.lib" target="build\native\arm" />
+    <file src="..\..\code\output\arm\release\Urchin.lib" target="build\native\arm" />
+
+    <!-- x64 -->
+    <file src="..\..\code\output\x64\release\AzureDeviceManagementCommon.lib" target="build\native\x64" />
+    <file src="..\..\code\output\x64\release\AzureDeviceManagementPluginCommon.lib" target="build\native\x64" />
+    <file src="..\..\code\output\x64\release\AzureDeviceManagementUtilities.lib" target="build\native\x64" />
+
+    <file src="..\..\code\output\x64\debug\AzureDeviceManagementCommond.lib" target="build\native\x64" />
+    <file src="..\..\code\output\x64\debug\AzureDeviceManagementPluginCommond.lib" target="build\native\x64" />
+    <file src="..\..\code\output\x64\debug\AzureDeviceManagementUtilitiesd.lib" target="build\native\x64" />
+
+    <file src="..\..\code\output\x64\release\Platform.lib" target="build\native\x64" />
+    <file src="..\..\code\output\x64\release\Urchin.lib" target="build\native\x64" />
+
+    <!-- x86 -->
+    <file src="..\..\code\output\win32\release\AzureDeviceManagementCommon.lib" target="build\native\x86" />
+    <file src="..\..\code\output\win32\release\AzureDeviceManagementPluginCommon.lib" target="build\native\x86" />
+    <file src="..\..\code\output\win32\release\AzureDeviceManagementUtilities.lib" target="build\native\x86" />
+
+    <file src="..\..\code\output\win32\debug\AzureDeviceManagementCommond.lib" target="build\native\x86" />
+    <file src="..\..\code\output\win32\debug\AzureDeviceManagementPluginCommond.lib" target="build\native\x86" />
+    <file src="..\..\code\output\win32\debug\AzureDeviceManagementUtilitiesd.lib" target="build\native\x86" />
+
+    <file src="..\..\code\output\win32\release\Platform.lib" target="build\native\x86" />
+    <file src="..\..\code\output\win32\release\Urchin.lib" target="build\native\x86" />
+
+  </files>
+</package>

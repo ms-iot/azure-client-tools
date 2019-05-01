@@ -34,6 +34,26 @@ wstring DateTime::GetDateTimeString(unsigned int year, unsigned int month, unsig
     return formattedTime.str();
 }
 
+string DateTime::GetFormattedCurrentDateTimeString()
+{
+    SYSTEMTIME systemTime;
+    GetLocalTime(&systemTime);
+
+    return GetFormattedDateTimeString(systemTime.wYear, systemTime.wMonth, systemTime.wDay, systemTime.wHour, systemTime.wMinute, systemTime.wSecond);
+}
+
+string DateTime::GetFormattedDateTimeString(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, unsigned int second)
+{
+    basic_ostringstream<char> formattedTime;
+    formattedTime << setw(2) << setfill('0') << year
+        << '_' << setw(2) << setfill('0') << month
+        << '_' << setw(2) << setfill('0') << day
+        << '_' << setw(2) << setfill('0') << hour
+        << '_' << setw(2) << setfill('0') << minute
+        << '_' << setw(2) << setfill('0') << second;
+    return formattedTime.str();
+}
+
 void DateTime::ISO8601DateTimeFromString(const wstring& dateTimeString, ISO8601DateTime& dateTime)
 {
     // Iso 8601 partial spec
@@ -48,14 +68,14 @@ void DateTime::ISO8601DateTimeFromString(const wstring& dateTimeString, ISO8601D
     Utils::SplitString(dateTimeString, L'T', tokens);
     if (tokens.size() != 2)
     {
-        throw DMException(GetLastError(), "Error: invalid date/time format.");
+        throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_DATETIME_FORMAT, "Error: invalid date/time format.");
     }
 
     vector<wstring> dateComponents;
     Utils::SplitString(tokens[0], L'-', dateComponents);
     if (dateComponents.size() != 3)
     {
-        throw DMException(GetLastError(), "Error: invalid date/time format. Date must be in the form YYYY-MM-DD.");
+        throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_DATETIME_FORMAT, "Error: invalid date/time format. Date must be in the form YYYY-MM-DD.");
     }
     dateTime.year = static_cast<WORD>(stoi(dateComponents[0]));
     dateTime.month = static_cast<WORD>(stoi(dateComponents[1]));
@@ -100,7 +120,7 @@ void DateTime::ISO8601DateTimeFromString(const wstring& dateTimeString, ISO8601D
     Utils::SplitString(timeString, L':', timeComponents);
     if (timeComponents.size() != 3)
     {
-        throw DMException(GetLastError(), "Error: invalid date/time format. Time must be in the form hh:mm:ss.");
+        throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_DATETIME_FORMAT, "Error: invalid date/time format. Time must be in the form hh:mm:ss.");
     }
     dateTime.hour = static_cast<WORD>(stoi(timeComponents[0]));
     dateTime.minute = static_cast<WORD>(stoi(timeComponents[1]));
@@ -125,7 +145,7 @@ void DateTime::ISO8601DateTimeFromString(const wstring& dateTimeString, ISO8601D
         Utils::SplitString(zoneString, L':', timeComponents);
         if (timeComponents.size() != 2)
         {
-            throw DMException(GetLastError(), "Error: invalid date/time format. Time offset information must be in the form hh:mm.");
+            throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_DATETIME_FORMAT, "Error: invalid date/time format. Time offset information must be in the form hh:mm.");
         }
         dateTime.zoneHour = static_cast<short>(stoi(timeComponents[0])) * (zoneChar == L'-' ? -1 : 1);
         dateTime.zoneMinute = static_cast<WORD>(stoi(timeComponents[1]));
@@ -142,7 +162,7 @@ void DateTime::SystemTimeFromISO8601(const wstring& dateTimeString, SYSTEMTIME& 
     {
         // We return false here because the time represented by SYSTEMTIME cannot capture
         // time zone information. It's always local time.
-        throw DMException(GetLastError(), "Error: Only local time is allowed. Cannot specify time zone offset.");
+        throw DMException(DMSubsystem::DeviceAgent, DM_ERROR_INVALID_TIMEKIND, "Error: Only local time is allowed. Cannot specify time zone offset.");
     }
 
     dateTime.wYear = iso8601DateTime.year;
@@ -176,5 +196,4 @@ wstring DateTime::ISO8601FromSystemTime(const SYSTEMTIME& dateTime)
 
     return formattedTime.str();
 }
-
 }}}}

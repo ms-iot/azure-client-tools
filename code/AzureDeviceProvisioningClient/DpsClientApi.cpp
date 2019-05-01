@@ -91,9 +91,9 @@ HRESULT AzureDpsRegisterDeviceWithoutModules(
 }
 
 HRESULT AzureDpsRegisterDevice(
-    UINT32 tpmSlotNumber, 
-    const std::string dpsUri, 
-    const std::string dpsScopeId, 
+    UINT32 tpmSlotNumber,
+    const std::string dpsUri,
+    const std::string dpsScopeId,
     UINT32 tpmDmModuleSlotNumber,
     const std::string dmModuleId,
     const std::map<std::string, UINT32> otherModules)

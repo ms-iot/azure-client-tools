@@ -20,14 +20,14 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         string line;
         if (!file.is_open())
         {
-            throw DMException(GetLastError(), "Error: failed to open binary file!");
+            throw DMException(DMSubsystem::Windows, GetLastError(), "Error: failed to open binary file!");
         }
 
         buffer.resize(static_cast<unsigned int>(file.tellg()));
         file.seekg(0, ios::beg);
         if (!file.read(buffer.data(), buffer.size()))
         {
-            throw DMException(GetLastError(), "Error: failed to read file!");
+            throw DMException(DMSubsystem::Windows, GetLastError(), "Error: failed to read file!");
         }
         file.close();
     }

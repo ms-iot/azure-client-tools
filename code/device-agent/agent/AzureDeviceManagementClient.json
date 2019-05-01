@@ -1,0 +1,30 @@
+{
+  "textLogFilesPath": "..\\logs",
+  "pluginManifestsPath": "..\\manifests",
+  "pluginsDataPath": "..\\data",
+  "sasExpiryInterval": 86400,
+  "sasRenewalGracePeriod": 3600,
+  "dpsEnabled": true,
+  "dpsUri": "global.azure-devices-provisioning.net",
+  "dpsScopeId": "",
+  "connectionString": "",
+  "moduleId": "dmModule",
+  "azureInterfaceType": "raw",
+  "handlers": {
+    "deviceInfo": {
+      "reportOnConnect": true
+    },
+    "__deviceSchemas": {
+      "reportOnConnect": true
+    },
+    "StartFactoryResetCmd": {
+      "handlerTestMode": true
+    },
+    "StartRebootCmd": {
+      "handlerTestMode": false
+    },
+    "StartRemoteWipeCmd": {
+      "handlerTestMode": true
+    }
+  }
+}

@@ -1,4 +1,12 @@
 {
   "codeFileName": "DirectRebootManagementPlugin.dll",
-  "direct": true
+  "direct": true,
+  "outOfProc": true,
+  "keepAliveTime": 50000,
+  "agentPluginProtocolVersion": "1.0.0",
+  "handlers": [
+    {
+      "id": "DirectRebootInfo"
+    }
+  ]
 }

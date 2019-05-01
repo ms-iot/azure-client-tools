@@ -49,7 +49,9 @@ namespace DMValidator
 
         public void CreateNewFile()
         {
-            _targetLogFile = _targetLogPath + "/" + GetLogFileName();
+            Directory.CreateDirectory(_targetLogPath);
+
+            _targetLogFile = _targetLogPath + "/" + GenerateLogFileName();
             using (StreamWriter sw = File.CreateText(_targetLogFile))
             {
             }
@@ -59,9 +61,14 @@ namespace DMValidator
         {
         }
 
-        private static string GetLogFileName()
+        private static string GenerateLogFileName()
         {
-            return "DMValidator_" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
+            return "DMValidator_" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + ".log";
+        }
+
+        public string GetLogFileName()
+        {
+            return _targetLogFile;
         }
 
         public void Log(LogLevel logLevel, string message)

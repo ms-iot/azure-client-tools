@@ -9,6 +9,8 @@ CertificateManagementPlugin.pdb
 cpprest141d_2_10.dll
 DeviceInfoPlugin.dll
 DeviceInfoPlugin.pdb
+DiagnosticLogsManagementPlugin.dll
+DiagnosticLogsManagementPlugin.pdb
 DirectRebootManagementPlugin.dll
 DirectRebootManagementPlugin.pdb
 FactoryResetPlugin.dll
@@ -19,6 +21,8 @@ RemoteWipePlugin.dll
 RemoteWipePlugin.pdb
 TimePlugin.dll
 TimePlugin.pdb
+UwpAppManagementPlugin.dll
+UwpAppManagementPlugin.pdb
 wastorage.dll
 WindowsTelemetryPlugin.dll
 WindowsTelemetryPlugin.pdb

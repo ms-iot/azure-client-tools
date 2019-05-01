@@ -13,7 +13,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
     class LockGuard
     {
     public:
-        LockGuard(std::mutex* m) :
+        LockGuard(std::recursive_mutex* m) :
             _m(m)
         {
             assert(m != nullptr);
@@ -25,7 +25,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
             _m->unlock();
         }
     private:
-        std::mutex* _m;
+        std::recursive_mutex* _m;
     };
 
     class TaskQueue
