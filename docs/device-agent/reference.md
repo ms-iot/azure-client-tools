@@ -40,6 +40,10 @@
 - [Plugin Manifest File](reference/plugin-manifest-file.md)
 - [Device Agent Deployment Layout](reference/device-agent-deployment-layout.md)
 
+## Installing
+
+- [Installing Pre-built Test Binaries](install-pre-built-binaries.md)
+
 ## OEM Device Setup
 
 - [OEM Device Setup](oem-device-setup.md)

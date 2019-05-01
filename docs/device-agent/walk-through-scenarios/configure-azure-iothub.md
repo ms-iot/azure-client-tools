@@ -55,4 +55,4 @@ To explore the contents of the device Device Twin:
 
 ----
 
-[Bug Bash Scenarios](bug-bash-scenarios.md)
+[Quick Starts](quick-start.md)

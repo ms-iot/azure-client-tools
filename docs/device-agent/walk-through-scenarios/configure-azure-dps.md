@@ -27,4 +27,4 @@ To verify the successfull creation,
 
 ----
 
-[Bug Bash Scenarios](bug-bash-scenarios.md)
+[Quick Starts](quick-start.md)

@@ -1,7 +1,5 @@
 # Quick start with Azure DPS
 
-**Steps below apply only to Windows IoT Core on a device with TPM 2.0/HMAC support**. If the target device does not have this support, you can follow the instructions on [Quick Start without Azure DPS](quick-start-without-dps.md) walk-through.
-
 In this tutorial, we will walk the reader through the minimal steps to get a debug version of the Device Agent running on a Windows IoT Core device.
 
 For a quick start on Windows IoT Enterprise, see this [page](quick-start-without-dps.md).
@@ -12,30 +10,29 @@ WDP is a development tool and should not be part of your production image.
 More information about WDP can be found [here](https://docs.microsoft.com/en-us/windows/uwp/debug-test-perf/device-portal).
 
 We will also be using the Azure Device Provisioning Service (DPS). This service allows the device to get its IoT Hub identity after its image has been built.
-This is achieved by harvesting an offline device identity (TPM endorsement key or an x509 certificate), and registering that information with the DPS. When the device is later deployed, and it connects to the cloud, it will use that identity with DPS to retrieve its IoT Hub identity.
+This is achieved by harvesting an offline device identity (TPM endorsement key), and registering that information with the DPS. When the device is later deployed, and it connects to the cloud, it will use that identity with DPS to retrieve its IoT Hub identity.
 More information about DPS can be found [here](https://docs.microsoft.com/en-us/azure/iot-dps/).
 
 Here's an overview of the steps:
+- Verify TPM compatibility
 - Get the device identity information.
 - Create the Device Provisioning Service and enroll the device.
 - Configure the device and start the Device Agent.
+
+## Verify TPM Compatibility
+
+See our [TPM Compatibility for DPS Scenarios](tpm/tpm-dps-compatibility.md) page.
+
+If your device is not compatible, you can install a TPM simulator to test out the scenarios.
+However, TPM simulators are not secure and should not be used in a production environment. See our [Installing TPM Simulator](tpm-simulator-install.md) page.
 
 ## Get Device Identity Information
 
 In this part, we harvest the information that identifies the device to the Azure device provisioning service.
 
-- Make sure the test device supports TPM 2.0 (for example, a SnapDragon 410c).
-- Navigate to the device portal (WDP) using your browser (by typing http://&lt;ip&gt;:8080).
-- Make sure you can see both: `Azure Clients` and `TPM Configuration`. They might not show up if the browser connected to devices with older versions of Windows and is using a cached copy of the UI.
-    - If you do not see either one, clear the browser cache and refresh the page.
-    - Another way to make sure they are visible is to click the `Options menu` at the top left corner, and then `Add tools to workspace`, select both of them and then click `Add`.
+1. Get Limpet.exe (see the [Installing Pre-built Binaries](../install-pre-built-binaries.md) page).
 
-    <img src="wdp-menu.png" width="800"/>
-
-- On the left pane, click 'TPM Configuration'
-    - The 'TPM Configuration' page shows whether the TPM Tools are Installed or not. Make sure the latest tools are installed by clicking "Install Latest". Limpet.exe will be installed to `c:\windows\system32`.
-    - Once the TPM Tools are installed, make sure Slot 0 in the TPM is not provisioned (under "Logical Devices Setttings").
-- Connect to the device and run the following commands:
+2. Connect to the device and run the following commands:
     <pre>
     cd c:\windows\system32
     limpet.exe -azuredps -enrollmentinfo

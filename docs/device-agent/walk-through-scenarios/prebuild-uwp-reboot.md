@@ -5,12 +5,12 @@ In this scenario, we will use IoT Hub service, and a pre-built set of binaries f
 1. Configure Azure IoT Hub [here](configure-azure-iothub.md).
 2. Note the connection string of the device you have created in the previous step.
 3. Flash your Raspberry Pi device with RS5 IoT Core.
-4. Follow the instructions in our [Quick Start without Azure DPS](../device-agent/quick-start-without-dps.md) guide to install and start the Agent.
+4. Follow the instructions in our [Quick Start without Azure DPS](../quick-start-without-dps.md) guide to install and start the Agent.
 
 The Device Agent should be running now. Time to create the UWP...
 
 1. In Visual Studio, create a new UWP blank C# project. The target SDK version should be 16299.
-2. Download and install the pre-built azure-device-agent-uwp-bridge-lib.2.0.0.nupkg from the [downloads folder](../../downloads).
+2. Download and install the pre-built azure-device-agent-uwp-bridge-lib.2.0.0.nupkg from the [downloads folder](../../../downloads).
     <pre>
     install-package azure-device-agent-uwp-bridge-lib
     </pre>
@@ -60,4 +60,4 @@ Coverage: ARM/UWP/Nuget/Quick Start
 
 ----
 
-[Bug Bash Scenarios](bug-bash-scenarios.md)
+[Quick Starts](../quick-start.md)

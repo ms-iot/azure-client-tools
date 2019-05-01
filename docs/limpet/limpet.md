@@ -28,7 +28,7 @@ Limpet.exe [Command]
 
  -VER => Show Limpet.exe version
  -LAT => List supported add-on TPMs
- -IAT [IDx] => Install specified add-on TPM
+ -IAT [IDx] => Install specified add-on TPM where IDx is the index of the add-on from the output of `limpet.exe -LAT`.
 
 Global TPM Present Commands:
  -GTI => Get TPM Info
@@ -43,6 +43,7 @@ Limpet.exe [LogicalDeviceNo 0..9] [Command] [Parameter] {Optional}
  -SUR [URI] => Store Service URI
  -RUR => Read Service URI
  -DUR => Destroy Service URI
+ -PCS [connection string] => Provision connection string
 
 HMAC Symmetric Identities:
  -CHK [HmacKey] => Create persisted HMAC Key

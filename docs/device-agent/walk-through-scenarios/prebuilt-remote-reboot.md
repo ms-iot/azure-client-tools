@@ -5,7 +5,7 @@ In this scenario, we will use Azure device provisioning service, IoT Hub service
 1. Configure Azure Device Provisioning Service [here](configure-azure-dps.md).
 2. Configure Azure IoT Hub [here](configure-azure-iothub.md).
 3. Flash your **SnapDragon** device with RS5 IoT Core.
-4. Follow the instructions in our [Quick Start](../device-agent/quick-start-with-dps.md) guide to install and start the Agent.
+4. Follow the instructions in our [Quick Start](../quick-start-with-dps.md) guide to install and start the Agent.
 
 The Device Agent should be running now. Time to invoke the reboot remotely...
 
@@ -20,4 +20,4 @@ Coverage: IoT/Core/ARM/DPS/Quick Start
 
 ----
 
-[Bug Bash Scenarios](bug-bash-scenarios.md)
+[Quick Starts](../quick-start.md)

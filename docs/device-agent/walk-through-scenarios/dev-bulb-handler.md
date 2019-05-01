@@ -7,7 +7,7 @@ Extension is done by writing a new plug-in, and deploying it to the device, and 
 1. Configure Azure IoT Hub [here](configure-azure-iothub.md).
 2. Note the connection string of the device you have created in the previous step.
 3. Flash your Raspberry Pi device with RS5 IoT Core.
-4. Follow the steps in the [Developer Scenario](../device-agent/development-scenario.md).
+4. Follow the steps in the [Developer Scenario](../development-scenario.md).
 5. Implement the invoke method such that
    - It parses the incoming json according to the schema you have defined and takes the appropriate action.
    - It reports the current state of the bulb.
@@ -18,4 +18,4 @@ Extension is done by writing a new plug-in, and deploying it to the device, and 
 
 ----
 
-[Bug Bash Scenarios](bug-bash-scenarios.md)
+[Quick Starts](../quick-start.md)
