@@ -24,13 +24,13 @@ Here's an overview of the steps:
 See our [TPM Compatibility for DPS Scenarios](tpm/tpm-dps-compatibility.md) page.
 
 If your device is not compatible, you can install a TPM simulator to test out the scenarios.
-However, TPM simulators are not secure and should not be used in a production environment. See our [Installing TPM Simulator](tpm-simulator-install.md) page.
+However, TPM simulators are not secure and should not be used in a production environment. See our [Installing TPM Simulator](tpm/tpm-simulator-install.md) page.
 
 ## Get Device Identity Information
 
 In this part, we harvest the information that identifies the device to the Azure device provisioning service.
 
-1. Get Limpet.exe (see the [Installing Pre-built Binaries](../install-pre-built-binaries.md) page).
+1. Get Limpet.exe (see the [Installing Pre-built Binaries](install-pre-built-binaries.md) page).
 
 2. Connect to the device and run the following commands:
     <pre>
