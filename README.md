@@ -1,4 +1,4 @@
-# Azure Client Tools - Public Preview
+# Azure Client Tools
 
 ### Overview
 
