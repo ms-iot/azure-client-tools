@@ -14,6 +14,7 @@
 - [Reboot Management](schema/configuration-groups/reboot-management.md)
 - [Remote Wipe command](schema/configuration-groups/remote-wipe-cmd.md)
 - [Time Management](schema/configuration-groups/time-management.md)
+- [UWP Application Management](schema/configuration-groups/uwpapplication-management.md)
 - [Windows Telemetry Management](schema/configuration-groups/windows-telemetry-management.md)
 - [Windows Update Management](schema/configuration-groups/windows-update-management.md)
 
