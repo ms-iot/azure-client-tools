@@ -1,5 +1,13 @@
 # Azure IoT Device Agent
 
+## Quick Links
+
+The device agent is shared as an open source project in this repo.
+
+- [Quick Starts](quick-start.md)
+- [Development Scenario Walk-through](development-scenario.md)
+- [Device Agent Reference](reference.md)
+
 ## Overview
 
 Microsoft Azure provides scalable and secure cloud services that enable device management for a large number of devices.

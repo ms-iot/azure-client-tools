@@ -11,6 +11,9 @@ The Device Agent should be running now. Time to create the UWP...
 
 1. In Visual Studio, create a new UWP blank C# project. The target SDK version should be 16299.
 2. Download and install the pre-built azure-device-agent-uwp-bridge-lib.2.0.0.nupkg from the [downloads folder](../../downloads).
+    <pre>
+    install-package azure-device-agent-uwp-bridge-lib
+    </pre>
 3. Modify the Package.appxmanifest:
 
     <pre>
@@ -47,6 +50,7 @@ The Device Agent should be running now. Time to create the UWP...
 
 Time to invoke the reboot...
 
+- Start the Device Agent (net start AzureDeviceManagementClient).
 - Start the UWP application (to run on the same device as the Device Agent).
 - Click the `Reboot` button.
 

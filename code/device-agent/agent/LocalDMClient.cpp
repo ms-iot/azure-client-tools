@@ -25,8 +25,13 @@ LocalDMClient::LocalDMClient(
 
 void LocalDMClient::InvokeReboot()
 {
-    Json::Value emptyParametersJson;
-    InvokeHandlerResult result = _rawHandlerRouter->InvokeHandler("StartRebootCmd", emptyParametersJson);
+    Json::Value metaObject(Json::objectValue);
+    metaObject[JsonServiceInterfaceVersion] = "1.0.0";
+
+    Json::Value rebootParams(Json::objectValue);
+    rebootParams[JsonMeta] = metaObject;
+
+    InvokeHandlerResult result = _rawHandlerRouter->InvokeHandler("StartRebootCmd", rebootParams);
     // ToDo: communicate the return code?
 }
 

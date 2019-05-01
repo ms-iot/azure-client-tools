@@ -37,64 +37,6 @@ Below are instructions on how to get the .NET Core SDK:
 Try the installation instructions from this website:
 https://www.microsoft.com/net/learn/dotnet/hello-world-tutorial
 
-### Libraries
-
-Libraries are pulled automatically by `dotnet` when building.
-
-
-## Building DMValidator
-
-To build DMValidator, use `dotnet build` command in the DMValidator directory:
-
-```bash
-#Assuming we are in the project root directory:
-cd code\tools\DMValidator\CLI
-dotnet build
-```
-
-You can also build the code from any other directory by providing a path to the .csproj file:
-
-```bash
-#Assuming we are in the project root directory:
-dotnet build code\tools\DMValidator\CLI\DMConsoleValidator.csproj
-```
-
-## Running DMValidator
-
-To run DMValidator, use `dotnet run` command in the DMValidator directory:
-
-```bash
-#Assuming we are in the project root directory:
-cd code\tools\DMValidator\CLI\
-dotnet run
-```
-
-You can also run the program from any other directory by providing a path to the .csproj file using `--project` flag:
-
-```bash
-#Assuming we are in the project root directory:
-dotnet run --project code\tools\DMValidator\CLI\DMConsoleValidator.csproj
-```
-
-*NOTE:** This does not change the current working directory, which is used by the project to access files!
-
-### Running and building DMValidator at once
-
-`dotnet run` command builds the program first(if needed), so you can run just this one command.
-
-## Passing arguments to DMValidator
-
-Because we use `dotnet` to run DMValidator, our argument goes through three steps:
-
-- Bash parses the argument
-- `dotnet` receives the parsed argument
-- DMValidator receives the argument passed by `dotnet`
-
-This means our argument has two places where it could break:
-
-- IoT Hub connection strings contain semicolons ';'. These are recognized by bash as command separators. To avoid getting interpreted by bash, ensure that all the arguments are quoted(single or double quotes).
-- `dotnet` might not distinguish between arguments meant for DMValidator and itself. To make sure that arguments are passed to DMValidator, separate arguments to `dotnet` and DMValidator with `--` (if there are no dotnet arguments simply put this string after the dotnet command call. )
-
 ## DMValidator configuration file
 
 Passing the same values every time you need to use DMValidator can be cumbersome.

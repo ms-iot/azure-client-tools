@@ -1,15 +1,10 @@
+:: Copyright (c) Microsoft Corporation. All rights reserved.
+:: Licensed under the MIT License.
 @echo off
-@REM Examples:
-@REM   build.uwp-bridge-nuget.cmd 1.4.4 Release
-@REM   build.uwp-bridge-nuget.cmd 1.4.4 Debug
 
-@if "%1"=="" goto MissingParameters
-@if "%2"=="" goto MissingParameters
+goto START
 
-NuGet.exe pack "azure-device-agent-uwp-bridge-lib.nuspec" -Prop Version=%1 -Prop Flavor=%2
-goto End
-
-:MissingParameters
+:Usage
 @echo.
 @echo Usage:
 @echo     build.uwp-bridge-nuget.cmd version flavor
@@ -19,7 +14,16 @@ goto End
 @echo     flavor : Debug or Release
 @echo.
 @echo Example:
-@echo     build.uwp-bridge-nuget.cmd 1.4.4 Release
+@echo     build.uwp-bridge-nuget.cmd 2.0.0 Release
 @echo.
+endlocal
+exit /b 1
 
-:End
+:START
+setlocal ENABLEDELAYEDEXPANSION
+
+if [%1] == [/?] goto Usage
+if [%1] == [-?] goto Usage
+if [%1] == [] goto Usage
+
+NuGet.exe pack "azure-device-agent-uwp-bridge-lib.nuspec" -Prop Version=%1 -Prop Flavor=%2

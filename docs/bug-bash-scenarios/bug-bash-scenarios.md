@@ -10,10 +10,3 @@
 
 1. Extend the Device Agent to support shutdown [[here](dev-shutdown-handler.md)].
 2. Extend the Device AGent to add a simulated bulb switch [[here](dev-bulb-handler.md)].
-
-## Questions or Help?
-
-Contact: rachitb;namkedia;rushiral;gmileka
-
-
-

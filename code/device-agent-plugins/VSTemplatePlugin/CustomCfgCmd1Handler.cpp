@@ -9,7 +9,7 @@ using namespace std;
 constexpr char InterfaceVersion[] = "1.0.0";
 
 $safeprojectname$Cmd1Handler::$safeprojectname$Cmd1Handler() :
-    BaseHandler($safeprojectname$Cmd1HandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
+    HandlerBase($safeprojectname$Cmd1HandlerId, ReportedSchema(JsonDeviceSchemasTypeRaw, JsonDeviceSchemasTagDM, InterfaceVersion))
 {
 }
 
@@ -86,7 +86,7 @@ InvokeResult $safeprojectname$Cmd1Handler::Invoke(
             else
             {
             }
-            _metaData->SetOutputInterfaceVersion(InterfaceVersion);
+            _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
         }
         else
         {

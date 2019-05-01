@@ -10,11 +10,9 @@ The plug-ins source code can then be built, signed, and packaged in the device i
 The repo comes with pre-built **debug** nugets that you can directly consume into your project.
 The nugets can be found here:
 
-- `downloads/azure-device-agent-plugin-lib.2.0.0.nupkg`
+- [`downloads/azure-device-agent-plugin-lib.2.0.0.nupkg`](../../../downloads/azure-device-agent-plugin-lib.2.0.0.nupkg)
 
 If you make changes to the agent libraries source code, you can generate those nugets by following the instructions on the [SDK Build](sdk-build.md) page.
-
-**Note: There is a bug currently where the nuget cannot be consumed for both debug and release builds. A temporary work around is to use the pre-built debug nuget for testing, and when the code is ready for release, a release nuget can be generated and will replace the debug nuget. We are working on a fix for this issue.**
 
 ## Create The Plugin Using a VS Template
 
@@ -24,12 +22,13 @@ If you make changes to the agent libraries source code, you can generate those n
 
 - Install The VS Template
     - Copy 
-        - `downloads/AzureDeviceAgentPluginTemplate.zip`
+        - [`downloads/AzureDeviceAgentPluginTemplate.zip`](../../../downloads/AzureDeviceAgentPluginTemplate.zip)
         - to
         - `"C:\Users\<user_name>\Documents\Visual Studio 2017\Templates\ProjectTemplates\Visual C++ Project"`
     - Shut down Visual Studio.
     - Run
         - `"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe" /updateconfiguration`.
+        - Note that this command will return immediately, but keep working in the background. You can determine if it is done by watching the devenv.exe process go away in Task Manager.
     - Start Visual Studio.
     - Navigate to File | New | Project | Visual C++
         <img src="plugin-build-standalone-wizard.png" />

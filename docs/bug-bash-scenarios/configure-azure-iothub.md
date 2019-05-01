@@ -19,12 +19,12 @@ A virtual device consists of:
 To configure your Azure IoT Hub service:
 
 1. [https://portal.azure.com]
-2. Use your Microsoft credentials.
+2. Use your credentials.
 3. Click `Create a resource`.
 4. Type `IoT Hub` in the search box.
 5. Click the `Create` button.
 6. Fill out the fields:
-  - Choose the IOT-Athens-SLFHST subscription if available. If not, use the your MSDN subscription.
+  - Choose the subscription of your choice.
   - If you don't already have a resource group, create one.
   - Choose `West US`.
   - Type in a name with your alias in it.

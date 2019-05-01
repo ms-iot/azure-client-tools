@@ -7,13 +7,13 @@ The secure hardware identity is obtained from its TPM. If the device does not ha
 To configure your Azure Device Provisioning Service:
 
 1. [https://portal.azure.com]
-2. Use your Microsoft credentials.
+2. Use your credentials.
 3. Click `Create a resource`.
 4. Type `IoT Hub Device Provisioning Service` in the search box.
 5. Click the `Create` button.
 6. Fill out the fields:
   - Type in a name with your alias in it.
-  - Choose the IOT-Athens-SLFHST subscription if available. If not, use the your MSDN subscription.
+  - Choose the subscription of your choice.
   - If you don't already have a resource group, create one.
   - Choose `West US`.
   - Click `Create`.
