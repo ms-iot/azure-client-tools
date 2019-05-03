@@ -1,7 +1,5 @@
-﻿//
-// MainPage.xaml.h
-// Declaration of the MainPage class.
-//
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
 #pragma once
 

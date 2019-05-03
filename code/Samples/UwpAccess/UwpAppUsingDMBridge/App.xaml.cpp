@@ -1,7 +1,5 @@
-﻿//
-// App.xaml.cpp
-// Implementation of the App class.
-//
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
 #include "pch.h"
 #include "MainPage.xaml.h"
