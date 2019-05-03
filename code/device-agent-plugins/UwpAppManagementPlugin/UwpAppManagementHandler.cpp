@@ -630,15 +630,15 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
     void UwpAppManagementHandler::UninstallApp(const std::string& pkgFamilyName)
     {
         TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
-        TRACELINEP(LoggingLevel::Verbose, L"Uninstalling app: ", pkgFamilyName.c_str());
+        TRACELINEP(LoggingLevel::Verbose, "Uninstalling app: ", pkgFamilyName.c_str());
 
         // FindApp uses PackageManager:FindPackages which needs to be run
         // as admin, not as the Impersonated user
         Package^ package = FindApp(pkgFamilyName);
         if (!package)
         {
-            TRACELINE(LoggingLevel::Verbose, "Warning: failed to find the specified package.");
-            throw DMException(DMSubsystem::DeviceAgent, DM_SHELL_ERROR_APP_UNINSTALL_FAILED, "Application is not installed");
+            TRACELINE(LoggingLevel::Verbose, "The specified package is already not installed.");
+            return;
         }
 
         UninstallApp(package);
