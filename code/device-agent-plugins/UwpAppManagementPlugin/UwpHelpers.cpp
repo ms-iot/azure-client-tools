@@ -9,6 +9,7 @@ using namespace DMUtils;
 using namespace std;
 
 constexpr wchar_t IotStartupExe[] = L"%windir%\\system32\\iotstartup.exe";
+constexpr wchar_t ListCmd[] = L" list ";
 constexpr wchar_t AddCmd[] = L" add ";
 constexpr wchar_t RemoveCmd[] = L" remove ";
 constexpr wchar_t StartCmd[] = L" run ";
@@ -16,6 +17,9 @@ constexpr wchar_t StopCmd[] = L" stop ";
 constexpr wchar_t Headless[] = L" headless ";
 constexpr wchar_t Headed[] = L" headed ";
 constexpr wchar_t Startup[] = L" startup ";
+
+constexpr char HeadedPrefix[] = "Headed   :";
+constexpr char HeadlessPrefix[] = "Headless :";
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace UwpAppManagementPlugin {
 
@@ -54,23 +58,70 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         }
     }
 
+    StartupType UwpHelpers::GetAppStartupType(
+        const std::string& pkgFamilyName)
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+        TRACELINEP(LoggingLevel::Verbose, "Getting app startup for: ", pkgFamilyName.c_str());
+
+        wstring cmd = IotStartupExePath();
+        cmd += ListCmd;
+        cmd += MultibyteToWide(pkgFamilyName.c_str());
+
+        unsigned long returnCode = 0;
+        string output;
+        DMUtils::Process::Launch(cmd, returnCode, output);
+        if (returnCode != 0)
+        {
+            throw DMException(DMSubsystem::IotStartup, returnCode, "Error: iotstartup.exe returned an error code.");
+        }
+
+        StartupType startupType = StartupType::eUndefined;
+
+        if (output.size() > 0)
+        {
+            if (0 == strncmp(HeadedPrefix, output.c_str(), strlen(HeadedPrefix)))
+            {
+                TRACELINE(LoggingLevel::Verbose, "Foreground");
+                startupType = StartupType::eForeground;
+            }
+            else if (0 == strncmp(HeadlessPrefix, output.c_str(), strlen(HeadedPrefix)))
+            {
+                TRACELINE(LoggingLevel::Verbose, "Background");
+                startupType = StartupType::eBackground;
+            }
+        }
+
+        return startupType;
+    }
+
     void UwpHelpers::UpdateAppStartup(const std::string& pkgFamilyName, StartupType startupType)
     {
         TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+        TRACELINEP(LoggingLevel::Verbose, "Updating app startup for: ", pkgFamilyName.c_str());
 
         wstring cmd = IotStartupExePath();
+
+        if (GetAppStartupType(pkgFamilyName) == startupType)
+        {
+            TRACELINE(LoggingLevel::Verbose, "Start-up type is already in sync. Returning...");
+            return;
+        }
 
         switch (startupType)
         {
             case StartupType::eForeground:
+                TRACELINE(LoggingLevel::Verbose, "Adding to the headed list.");
                 cmd += AddCmd;
                 cmd += Headed;
                 break;
             case StartupType::eBackground:
+                TRACELINE(LoggingLevel::Verbose, "Adding to the headless list.");
                 cmd += AddCmd;
                 cmd += Headless;
                 break;
             case StartupType::eNone:
+                TRACELINE(LoggingLevel::Verbose, "Removing from the headless list.");
                 // In case of none, we assume its a headless app. Removing headed app is not supported. 
                 cmd += RemoveCmd;
                 cmd += Headless;

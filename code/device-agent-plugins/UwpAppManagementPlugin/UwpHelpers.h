@@ -21,5 +21,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
 
     private:
         static const std::wstring IotStartupExePath();
+
+        static StartupType GetAppStartupType(
+            const std::string& pkgFamilyName);
     };
 }}}}
