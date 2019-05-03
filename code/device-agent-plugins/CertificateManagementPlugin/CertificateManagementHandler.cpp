@@ -207,8 +207,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
                                 TRACELINEP(LoggingLevel::Verbose, "-- Will be uninstalling: ", thumbprint.c_str());
                                 certificatesToUninstall.push_back(thumbprint);
                             }
-                            else if (certDesiredState == JsonStateInstalled) {
+                            else if (certDesiredState == JsonStateInstalled)
+                            {
                                 TRACELINEP(LoggingLevel::Verbose, "-- Already installed: ", thumbprint.c_str());
+                                installedCertificates[subGroupId].push_back(thumbprint);
                             }
                             else
                             {
