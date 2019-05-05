@@ -9,11 +9,11 @@ The **UWP Application Management** functionality allows the operator to perform 
 - List installed applications.
 - Managing application lifecycle
 
-## Installing or upgrading an application
+## Installing or Upgrading an Application
 
 Device Management client supports declarative app management with Azure IoT Hub device twin. To install a new application on the device, the opeator uploads the application package file to an Azure Storage container first and then configures the device twin with the file location. 
 
-### Example JSON for installing a new application 
+### Example JSON for Installing a New Application 
 
 <pre>
 "desired" : {
@@ -58,7 +58,7 @@ Each app is identified by its `"packageFamilyId"` - which is its package family 
 - `"launchAfterInstall": true`
     - `true`: The application will be launched after the installation is complete
 
-## Uninstalling an application
+## Uninstalling an Application
 
 An installed application can be uninstalled by specifying `"not installed"` in the version field. 
 
@@ -80,14 +80,27 @@ An installed application can be uninstalled by specifying `"not installed"` in t
 
 <b>Note</b> If an application is marked as `"startup"` as `"foreground"`, it cannot be uninstalled without setting a different application with `"startup"` as `"foreground"`
 
-## Listing installed applications 
+## Listing Installed Applications 
 
 To get the list of all the installed applications on a device, operator needs to do a direct method call.
 
 ### Method Name 
 `GetInstalledUwpAppsCmd`
 
-This method returns all the installed application on the system in following format 
+This method returns all the installed applications on the system.
+
+#### Input
+
+<pre>
+{
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    }
+}
+</pre>
+
+
+#### Output
 
 <pre>
 "installedApps" :
@@ -104,7 +117,7 @@ This method returns all the installed application on the system in following for
   ]
 </pre>
 
-## Managing application lifecycle
+## Managing Application Lifecycle
 
 For managing application lifecyle, operator needs to do a direct method call.
 
@@ -117,8 +130,11 @@ For managing application lifecyle, operator needs to do a direct method call.
 
 <pre>
 {
-  "pkgFamilyName" : "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
-  "action" : "start"
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    },
+    "pkgFamilyName" : "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+    "action" : "start"
 }
 </pre>
 
@@ -126,8 +142,11 @@ For managing application lifecyle, operator needs to do a direct method call.
 
 <pre>
 {
-  "pkgFamilyName" : "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
-  "action" : "stop"
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    },
+    "pkgFamilyName" : "8112d70e-a549-4378-96a9-63e8491e3d66_7ywy5sjsre78e",
+    "action" : "stop"
 }
 </pre>
 

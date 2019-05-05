@@ -40,6 +40,9 @@ Sample:
 
 <pre>
 {
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    },
     "path": "./Vendor/MSFT/CertificateStore/CA/System",
     "hash": "109F1CAED645BB78B3EA2B94C0697C740733031C"
 }

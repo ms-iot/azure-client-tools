@@ -44,6 +44,9 @@ Sample:
 
 <pre>
 {
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    },
     "folderName": "collectorFolderName",
     "fileName": "logFileName",
     "connectionString": "<AzureStorageConnectionString>",

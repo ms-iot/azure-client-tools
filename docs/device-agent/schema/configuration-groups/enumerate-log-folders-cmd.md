@@ -33,7 +33,17 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 
 ## Parameters
  
- none 
+ none.
+
+Sample:
+
+  <pre>
+{
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    }
+}
+ </pre>
 
 ## Outputs
 

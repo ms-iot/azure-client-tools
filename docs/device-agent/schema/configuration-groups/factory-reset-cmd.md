@@ -40,6 +40,9 @@ Sample:
 
 <pre>
 {
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    },
     "partitionGuid": "guid",
     "clearTpm": true
 }

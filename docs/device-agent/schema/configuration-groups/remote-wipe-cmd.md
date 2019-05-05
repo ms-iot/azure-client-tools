@@ -25,21 +25,11 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 
 <pre>
 {
-  "textLogFilesPath": "c:\logs"
+    "textLogFilesPath": "c:\logs"
 }
 </pre>
 
 ## Parameters
-
-- None
-
-Sample:
-
-<pre>
-{}
-</pre>
-
-#### Parameters
 
 | Name | Required | Type | Description |
 |-----|-----|-----|-----|
@@ -49,6 +39,9 @@ Sample:
 
 <pre>
 {
+    "__meta": {
+        "serviceInterfaceVersion": "1.0.0"
+    },
     "clearTpm": true
 }
 </pre>

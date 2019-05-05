@@ -14,6 +14,14 @@ The Device Agent should be running now. Time to invoke the reboot remotely...
 3. Click `Direct method` at the top bar.
 4. Fill the fields:
   - Set `Method Name` to `StartRebootCmd`.
+  - Set `Payload` to
+    <pre>
+    {
+        "__meta": {
+            "serviceInterfaceVersion": "1.0.0"
+        }
+    }
+    </pre>
   - Click `Invoke Method`.
 
 Coverage: IoT/Core/ARM/DPS/Quick Start
