@@ -34,32 +34,29 @@ private:
     void ClientInitialization();
     void PluginInitialization();
     void ClientUninitializePlugin();
-    std::shared_ptr<Message> SendMessageWorker(std::shared_ptr<Message>);
+    std::shared_ptr<Message> SendMessageWorker(
+        std::shared_ptr<Message>);
+    void WriteMessage(
+        std::shared_ptr<Message>);
+    std::shared_ptr<Message> ReadMessage(
+        HANDLE hPipe);
     void ProcessRequest();
     void MessageHandlerWorker();
     void PluginHostMonitor();
     void ProcessRequestMessage(std::shared_ptr<Message>);
 
     // Worker threads
-    static void PluginHostMonitoringThreadProc(void* context)
-    {
-        PluginNamedPipeTransport* transport = static_cast<PluginNamedPipeTransport*>(context);
-        transport->PluginHostMonitor();
-    }
+    static void PluginHostMonitoringThreadProc(void* context);
+    static void MessageHandlerThreadProc(void* context);
+    static void RequestProcessorThreadProc(void* context);
 
-    static void MessageHandlerThreadProc(void* context)
-    {
-        PluginNamedPipeTransport* transport = static_cast<PluginNamedPipeTransport*>(context);
-        transport->MessageHandlerWorker();
-    }
+    void MessageToPackets(
+        std::shared_ptr<Message> message,
+        std::vector<Packet>& packets);
 
-    static void RequestProcessorThreadProc(void* context)
-    {
-        PluginNamedPipeTransport* transport = static_cast<PluginNamedPipeTransport*>(context);
-        transport->ProcessRequest();
-    }
+    std::shared_ptr<Message> PacketsToMessage(
+        const std::vector<Packet>& packets);
 
-private:
     std::recursive_mutex _mutex;
     bool _client;
     long _keepAliveTime;

@@ -244,6 +244,7 @@
     <ClInclude Include="MdmHandlerBase.h" />
     <ClInclude Include="MetaData.h" />
     <ClInclude Include="Operation.h" />
+    <ClInclude Include="plugins\Message.h" />
     <ClInclude Include="Plugins\MessageQueue.h" />
     <ClInclude Include="Plugins\PluginConstants.h" />
     <ClInclude Include="Plugins\PluginHelpers.h" />
@@ -267,6 +268,7 @@
     <ClCompile Include="MdmHandlerBase.cpp" />
     <ClCompile Include="MetaData.cpp" />
     <ClCompile Include="Operation.cpp" />
+    <ClCompile Include="plugins\Message.cpp" />
     <ClCompile Include="Plugins\MessageQueue.cpp" />
     <ClCompile Include="Plugins\PluginHelpers.cpp" />
     <ClCompile Include="Plugins\CrossBinaryRequest.cpp" />

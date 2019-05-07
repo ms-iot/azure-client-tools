@@ -33,12 +33,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         reverseInvokeRequest->messageType = Request;
         reverseInvokeRequest->callType = ReverseInvokeCall;
         reverseInvokeRequest->errorCode = DM_ERROR_SUCCESS;
-        std::memcpy(reverseInvokeRequest->data, jsonInputString, strlen(jsonInputString) + 1);
+        reverseInvokeRequest->SetData(jsonInputString, strlen(jsonInputString) + 1);
 
-        std::shared_ptr<Message> response = _transport->SendAndGetResponse(reverseInvokeRequest);
-
-        *jsonOutputString = new char[strlen(response->data) + 1];
-        std::memcpy(*jsonOutputString, response->data, strlen(response->data) + 1);
+        shared_ptr<Message> response = _transport->SendAndGetResponse(reverseInvokeRequest);
+        size_t responseLength = strlen(response->Payload()) + 1;
+        *jsonOutputString = new char[responseLength];
+        std::memcpy(*jsonOutputString, response->Payload(), responseLength);
 
         return DM_ERROR_SUCCESS;
     }

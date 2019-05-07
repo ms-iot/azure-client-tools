@@ -52,6 +52,9 @@
     <ClCompile Include="Operation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="plugins\Message.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CSPs\MdmProxy.h">
@@ -73,9 +76,6 @@
       <Filter>Header Files\Plugins</Filter>
     </ClInclude>
     <ClInclude Include="DMCommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DMConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DMInterfaces.h">
@@ -128,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="Operation.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plugins\Message.h">
+      <Filter>Header Files\Plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

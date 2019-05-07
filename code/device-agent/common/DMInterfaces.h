@@ -6,7 +6,7 @@
 #include "ReportedSchema.h"
 #include "DMJsonConstants.h"
 
-#define BUFFER_SIZE 20480
+#define IPC_BUFFER_SIZE 20480
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Common {
 
