@@ -49,3 +49,4 @@ project.assets.json
 /code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_ARM_c.c
 /code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_h.h
 *.aps
+/code/Tools/ZipHelperUtility/.vs/ZipHelperUtility/v15/Server/sqlite3

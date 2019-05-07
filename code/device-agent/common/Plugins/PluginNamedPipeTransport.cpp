@@ -8,6 +8,7 @@
 #include "CrossBinaryRequest.h"
 
 #define PLUGIN_SHUTDOWN_TIME 5000
+using namespace std;
 using namespace DMUtils;
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Common {
@@ -97,8 +98,8 @@ void PluginNamedPipeTransport::ClientInitialization()
         PIPE_READMODE_MESSAGE |             // message-read mode
         PIPE_WAIT,                          // blocking mode
         PIPE_UNLIMITED_INSTANCES,           // max. instances
-        BUFFER_SIZE,                        // output buffer size
-        BUFFER_SIZE,                        // input buffer size
+        IPC_BUFFER_SIZE,                    // output buffer size
+        IPC_BUFFER_SIZE,                    // input buffer size
         0,                                  // client time-out
         nullptr);                           // default security attribute
 
@@ -114,8 +115,8 @@ void PluginNamedPipeTransport::ClientInitialization()
         PIPE_READMODE_MESSAGE |             // message-read mode
         PIPE_WAIT,                          // blocking mode
         PIPE_UNLIMITED_INSTANCES,           // max. instances
-        BUFFER_SIZE,                        // output buffer size
-        BUFFER_SIZE,                        // input buffer size
+        IPC_BUFFER_SIZE,                    // output buffer size
+        IPC_BUFFER_SIZE,                    // input buffer size
         0,                                  // client time-out
         nullptr);                           // default security attribute
 
@@ -233,7 +234,7 @@ HANDLE PluginNamedPipeTransport::GetShutdownNotificationEvent()
     return _hShutdownNotification;
 }
 
-std::shared_ptr<Message>PluginNamedPipeTransport::SendAndGetResponse(std::shared_ptr<Message> message)
+std::shared_ptr<Message> PluginNamedPipeTransport::SendAndGetResponse(std::shared_ptr<Message> message)
 {
     TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " __FUNCTION__);
     std::lock_guard<std::recursive_mutex> guard(_mutex);
@@ -249,23 +250,93 @@ std::shared_ptr<Message>PluginNamedPipeTransport::SendAndGetResponse(std::shared
     return SendMessageWorker(message);
 }
 
+void PluginNamedPipeTransport::MessageToPackets(
+    shared_ptr<Message> message,
+    vector<Packet>& packets)
+{
+    // Create a single buffer to hold the data we neet to transfer.
+    size_t dataToWriteSize = Message::HeaderSize() + message->PayloadSize();
+    vector<char> dataToWrite(dataToWriteSize);
+    memcpy(dataToWrite.data(), message->Header(), Message::HeaderSize());
+    memcpy(dataToWrite.data() + Message::HeaderSize(), message->Payload(), message->PayloadSize());
+
+    // Calcualte how many packets we'll need...
+    size_t maxPacketPayloadSize = Packet::MaxPayloadSize();
+    size_t packetCount = (dataToWriteSize / maxPacketPayloadSize) + 1;
+
+    // Create the packets...
+    for (size_t i = 0; i < packetCount; ++i)
+    {
+        Packet packet;
+        packet.index = i;
+        packet.count = packetCount;
+        packet.payloadSize = dataToWriteSize > maxPacketPayloadSize ? maxPacketPayloadSize : dataToWriteSize;
+        memcpy(packet.payload, dataToWrite.data() + i * maxPacketPayloadSize, packet.payloadSize);
+
+        packets.push_back(packet);
+
+        dataToWriteSize -= maxPacketPayloadSize;
+    }
+}
+
+std::shared_ptr<Message> PluginNamedPipeTransport::PacketsToMessage(
+    const std::vector<Packet>& packets)
+{
+    // Get the total size of the payload
+    size_t payloadSize = 0;
+    for (size_t i = 0; i < packets.size(); ++i)
+    {
+        payloadSize += packets[i].payloadSize;
+    }
+
+    // Reconstruct the message payload
+    vector<char> payload(payloadSize);
+    for (size_t i = 0; i < packets.size(); ++i)
+    {
+        memcpy(payload.data() + i * Packet::MaxPayloadSize(), packets[i].payload, packets[i].payloadSize);
+    }
+
+    // Reconstruct the message
+    std::shared_ptr<Message> message = std::make_shared<Message>();
+    memcpy(message.get(), payload.data(), Message::HeaderSize());
+    message->SetData(payload.data() + Message::HeaderSize(), payload.size() - Message::HeaderSize());
+    return message;
+}
+
+void PluginNamedPipeTransport::WriteMessage(
+    std::shared_ptr<Message> message)
+{
+    TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " __FUNCTION__);
+
+    vector<Packet> packets;
+    MessageToPackets(message, packets);
+
+    HANDLE hPipe = _client ? _hPluginPipe : _hClientPipe;
+
+    for (size_t i = 0; i < packets.size(); ++i)
+    {
+        DWORD cbWritten = 0;
+        DWORD cbToWrite = static_cast<DWORD>(Packet::HeaderSize() + packets[i].payloadSize);
+        // Write the reply to the pipe.
+        BOOL fSuccess = WriteFile(
+            hPipe,         // handle to pipe
+            &packets[i],   // buffer to write from
+            cbToWrite,     // number of bytes to write
+            &cbWritten,    // number of bytes written
+            nullptr);      // not overlapped I/O
+
+        if (!fSuccess || cbToWrite != cbWritten)
+        {
+            throw DMException(DMSubsystem::Windows, GetLastError(), "WriteFile to named pipe failed");
+        }
+    }
+}
+
 std::shared_ptr<Message> PluginNamedPipeTransport::SendMessageWorker(std::shared_ptr<Message> message)
 {
-    HANDLE hPipe = _client ? _hPluginPipe : _hClientPipe;
-    DWORD cbWritten = 0;
-    DWORD cbMessageSize = sizeof(Message);
-    // Write the reply to the pipe.
-    BOOL fSuccess = WriteFile(
-        hPipe,         // handle to pipe
-        message.get(), // buffer to write from
-        cbMessageSize, // number of bytes to write
-        &cbWritten,    // number of bytes written
-        nullptr);      // not overlapped I/O
+    TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " __FUNCTION__);
 
-    if (!fSuccess || cbMessageSize != cbWritten)
-    {
-        throw DMException(DMSubsystem::Windows, GetLastError(), "WriteFile to named pipe failed");
-    }
+    WriteMessage(message);
 
     // Wait for response
     WaitForSingleObject(_hResponseNotification, INFINITE);
@@ -294,7 +365,7 @@ void PluginNamedPipeTransport::LaunchPluginHost()
         L" -clientPipeName " + _clientPipeName +
         L" -pluginPipeName " + _pluginPipeName;
 #if DEBUG_DEVICE_AGENT_ROUTING
-    cmdLine += L" -logsPath <replace with logs path>"
+    cmdLine += L" -logsPath <replace with logs path>";
 #endif
 
     if (!CreateProcess(
@@ -407,40 +478,96 @@ void PluginNamedPipeTransport::ClientUninitializePlugin()
     _hPluginPipe = INVALID_HANDLE_VALUE;
 }
 
+shared_ptr<Message> PluginNamedPipeTransport::ReadMessage(HANDLE hPipe)
+{
+    DWORD cbBytesRead = 0, cbReplyBytes = 0, cbWritten = 0;
+
+    vector<Packet> packets;
+    do
+    {
+        Packet packet;
+
+        BOOL fSuccess = ReadFile(
+            hPipe,                 // handle to pipe
+            &packet,               // buffer to receive data
+            static_cast<DWORD>(Packet::HeaderSize()), // size of buffer
+            &cbBytesRead,          // number of bytes read
+            nullptr);              // not overlapped I/O
+
+        DWORD error = GetLastError();
+
+        if ((!fSuccess && error != ERROR_MORE_DATA) || cbBytesRead == 0)
+        {
+            TRACELINEP(LoggingLevel::Verbose, "[Transport Layer] " "Failed to read packet header from the pipe", error);
+            if (_client && !_pluginHostInitialized)
+            {
+                TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Plugin is not initialized, exiting MessageHandlerWorker");
+            }
+            return nullptr;
+        }
+
+        if (packet.payloadSize != 0)
+        {
+            fSuccess = ReadFile(
+                hPipe,                 // handle to pipe
+                packet.payload,        // buffer to receive data
+                static_cast<DWORD>(packet.payloadSize),    // size of buffer
+                &cbBytesRead,          // number of bytes read
+                nullptr);              // not overlapped I/O
+
+            if (!fSuccess || cbBytesRead == 0)
+            {
+                TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Failed to read packet payload from the pipe");
+
+                if (_client && !_pluginHostInitialized)
+                {
+                    TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Plugin is not initialized, exiting MessageHandlerWorker");
+                }
+                return nullptr;
+            }
+        }
+
+        packets.push_back(packet);
+
+        // Is this the last packet of this message?
+        if (packet.index == packet.count - 1)
+        {
+            break;
+        }
+
+    } while (true);
+
+    return PacketsToMessage(packets);
+}
+
 void PluginNamedPipeTransport::MessageHandlerWorker()
 {
     TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " __FUNCTION__);
 
     while (1)
     {
-        if (_client && !_pluginHostInitialized)
+        try
         {
-            TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Plugin is not initialized, exiting MessageHandlerWorker");
-            return;
-        }
-
-        DWORD cbBytesRead = 0, cbReplyBytes = 0, cbWritten = 0;
-        std::shared_ptr<Message> incomingMessage = std::make_shared<Message>();
-        // If client start reading messages on client pipe else if plugin read messages from pluginpipe
-        HANDLE hPipe = _client ? _hClientPipe : _hPluginPipe;
-
-        if (hPipe != INVALID_HANDLE_VALUE)
-        {
-            BOOL fSuccess = ReadFile(
-                hPipe,                 // handle to pipe
-                incomingMessage.get(), // buffer to receive data
-                sizeof(Message),       // size of buffer
-                &cbBytesRead,          // number of bytes read
-                nullptr);              // not overlapped I/O
-
-            if (!fSuccess || cbBytesRead == 0)
+            if (_client && !_pluginHostInitialized)
             {
-                TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Failed to read from the pipe");
+                TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Plugin is not initialized, exiting MessageHandlerWorker");
+                return;
+            }
 
-                if (_client && !_pluginHostInitialized)
-                {
-                    TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Plugin is not initialized, exiting MessageHandlerWorker");
-                }
+            // If client start reading messages on client pipe else if plugin read messages from pluginpipe
+            HANDLE hPipe = _client ? _hClientPipe : _hPluginPipe;
+
+            if (hPipe == INVALID_HANDLE_VALUE)
+            {
+                // ToDo: Do we need to keep re-trying?
+                ::Sleep(100);
+                continue;
+            }
+
+            std::shared_ptr<Message> incomingMessage = ReadMessage(hPipe);
+            if (incomingMessage == nullptr)
+            {
+                // ToDo: Do we give up on listening?
                 return;
             }
 
@@ -459,6 +586,14 @@ void PluginNamedPipeTransport::MessageHandlerWorker()
                 TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Response notification sent");
             }
         }
+        catch (const DMException& ex)
+        {
+            LogDMException(ex, "An error occured while processing Plugin Host Monitor thread.", "");
+        }
+        catch (const exception& ex)
+        {
+            LogStdException(ex, "An error occured while processing Plugin Host Monitor thread.", "");
+        }
     }
 
     TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Exiting message handler thread");
@@ -471,32 +606,43 @@ void PluginNamedPipeTransport::ProcessRequest()
     bool bProcessRequests = true;
     while (bProcessRequests)
     {
-        HANDLE hEvents[2];
-        hEvents[0] = _hRequestNotification;
-        hEvents[1] = _hShutdownNotification;
-        switch(WaitForMultipleObjects(2, hEvents, FALSE, INFINITE))
+        try
         {
-            case WAIT_OBJECT_0:
+            HANDLE hEvents[2];
+            hEvents[0] = _hRequestNotification;
+            hEvents[1] = _hShutdownNotification;
+            switch(WaitForMultipleObjects(2, hEvents, FALSE, INFINITE))
             {
-                if (_client && !_pluginHostInitialized)
+                case WAIT_OBJECT_0:
                 {
-                    TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Plugin is not initialized, exiting MessageHandlerWorker");
-                    return;
-                }
+                    if (_client && !_pluginHostInitialized)
+                    {
+                        TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Plugin is not initialized, exiting MessageHandlerWorker");
+                        return;
+                    }
 
-                TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Message Processing Thread: Received new request notification");
-                std::shared_ptr<Message> requestMessage = _request.Pop();
-                if (requestMessage)
-                {
-                    ProcessRequestMessage(requestMessage);
+                    TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Message Processing Thread: Received new request notification");
+                    std::shared_ptr<Message> requestMessage = _request.Pop();
+                    if (requestMessage)
+                    {
+                        ProcessRequestMessage(requestMessage);
+                    }
+                    break;
                 }
-                break;
+                case WAIT_OBJECT_0 + 1:
+                default:
+                {
+                    bProcessRequests = false;
+                }
             }
-            case WAIT_OBJECT_0 + 1:
-            default:
-            {
-                bProcessRequests = false;
-            }
+        }
+        catch (const DMException& ex)
+        {
+            LogDMException(ex, "An error occured while processing Plugin Host Monitor thread.", "");
+        }
+        catch (const exception& ex)
+        {
+            LogStdException(ex, "An error occured while processing Plugin Host Monitor thread.", "");
         }
     }
     TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Message Processing Thread: Exiting");
@@ -518,11 +664,11 @@ void PluginNamedPipeTransport::ProcessRequestMessage(std::shared_ptr<Message> re
         assert(requestMessage->callType == ReverseInvokeCall);
 
         TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Received reverse-invoke call. Calling reverse invoke...");
-        response->errorCode = _pluginReverseInvoke((char*)requestMessage->data, &responseData);
+        response->errorCode = _pluginReverseInvoke(requestMessage->Payload(), &responseData);
 
         TRACELINEP(LoggingLevel::Verbose, "[Transport Layer] " "Reverse invoke returned with error code ", response->errorCode);
         // Copy response data
-        std::memcpy(response->data, responseData, strlen(responseData) + 1);
+        response->SetData(responseData, strlen(responseData) + 1);
         // Freeup the buffer
         _pluginReverseDeleteBuffer(responseData);
         TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Deleted ReverseInvoke buffer");
@@ -533,9 +679,9 @@ void PluginNamedPipeTransport::ProcessRequestMessage(std::shared_ptr<Message> re
     {
         if (requestMessage->callType == PluginInvokeCall)
         {
-            response->errorCode = _pluginInvoke((char*)requestMessage->data, &responseData);
+            response->errorCode = _pluginInvoke(requestMessage->Payload(), &responseData);
             // Copy response data
-            std::memcpy(response->data, responseData, strlen(responseData) + 1);
+            response->SetData(responseData, strlen(responseData) + 1);
             // Freeup the buffer
             _pluginDeleteBuffer(responseData);
         }
@@ -545,12 +691,12 @@ void PluginNamedPipeTransport::ProcessRequestMessage(std::shared_ptr<Message> re
             if (response->errorCode == DM_ERROR_SUCCESS)
             {
                 size_t responseLength = strlen(PLUGIN_CREATE_SUCCESS_RESPONSE) + 1;
-                std::memcpy(response->data, PLUGIN_CREATE_SUCCESS_RESPONSE, responseLength);
+                response->SetData(PLUGIN_CREATE_SUCCESS_RESPONSE, responseLength);
             }
             else
             {
                 size_t responseLength = strlen(PLUGIN_CREATE_FAILED_RESPONSE) + 1;
-                std::memcpy(response->data, PLUGIN_CREATE_FAILED_RESPONSE, responseLength);
+                response->SetData(PLUGIN_CREATE_FAILED_RESPONSE, responseLength);
             }
         }
         else if (requestMessage->callType == PluginShutdownCall)
@@ -568,25 +714,60 @@ void PluginNamedPipeTransport::ProcessRequestMessage(std::shared_ptr<Message> re
 
     TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Sending response");
 
-    // if client, write to pluginPipe or if plugin write to client pipe
-    HANDLE hPipe = _client ? _hPluginPipe : _hClientPipe;
-
-    DWORD cbWritten = 0;
-    DWORD cbResponseSize = sizeof(Message);
-    // Write the reply to the pipe.
-    BOOL fSuccess = WriteFile(
-        hPipe,          // handle to pipe
-        response.get(), // buffer to write from
-        cbResponseSize, // number of bytes to write
-        &cbWritten,     // number of bytes written
-        nullptr);       // not overlapped I/O
-
-    if (!fSuccess || cbResponseSize != cbWritten)
-    {
-        throw DMException(DMSubsystem::Windows, GetLastError(), "Failed to write to named pipe");
-    }
+    WriteMessage(response);
 
     TRACELINE(LoggingLevel::Verbose, "[Transport Layer] " "Response sent");
+}
+
+void PluginNamedPipeTransport::PluginHostMonitoringThreadProc(void* context)
+{
+    try
+    {
+        PluginNamedPipeTransport* transport = static_cast<PluginNamedPipeTransport*>(context);
+        transport->PluginHostMonitor();
+    }
+    catch (const DMException& ex)
+    {
+        LogDMException(ex, "An error occured while processing Plugin Host Monitor thread.", "");
+    }
+    catch (const exception& ex)
+    {
+        LogStdException(ex, "An error occured while processing Plugin Host Monitor thread.", "");
+    }
+}
+
+void PluginNamedPipeTransport::MessageHandlerThreadProc(void* context)
+{
+    try
+    {
+        PluginNamedPipeTransport* transport = static_cast<PluginNamedPipeTransport*>(context);
+        transport->MessageHandlerWorker();
+    }
+    catch (const DMException& ex)
+    {
+        LogDMException(ex, "An error occured while processing Mesage Handler thread.", "");
+    }
+    catch (const exception& ex)
+    {
+        LogStdException(ex, "An error occured while processing Mesage Handler thread.", "");
+    }
+}
+
+void PluginNamedPipeTransport::RequestProcessorThreadProc(void* context)
+{
+    try
+    {
+        PluginNamedPipeTransport* transport = static_cast<PluginNamedPipeTransport*>(context);
+        transport->ProcessRequest();
+    }
+    catch (const DMException& ex)
+    {
+        LogDMException(ex, "An error occured while processing Request thread.", "");
+    }
+    catch (const exception& ex)
+    {
+        LogStdException(ex, "An error occured while processing Request thread.", "");
+    }
 }
 
 void PluginNamedPipeTransport::CloseTransport()

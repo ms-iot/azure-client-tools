@@ -2,161 +2,161 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="DateTime.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="DMProcess.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="DMString.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ETWLogger.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="jsoncpp.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Registry.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="TpmSupport.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="TaskQueue.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="JsonUtils.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="File.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Guid.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="DMException.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Shell.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Impersonator.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DependencySort.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMProcess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DMString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ETWLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Guid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Impersonator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Registry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TpmSupport.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Version.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="jsoncpp.cpp">
+      <Filter>Source Files\json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoCloseBase.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AutoCloseHandle.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AutoCloseTypes.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DateTime.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="DMException.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="DMProcess.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="DMString.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="DMThread.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ETWLogger.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Registry.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ResultMacros.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="TpmSupport.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="json\json.h">
-      <Filter>Headers\json</Filter>
-    </ClInclude>
-    <ClInclude Include="json\json-forwards.h">
-      <Filter>Headers\json</Filter>
-    </ClInclude>
-    <ClInclude Include="TaskQueue.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="JsonUtils.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="File.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Guid.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="DMErrors.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Shell.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Impersonator.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Version.h">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DependencySort.h">
-      <Filter>Sources</Filter>
-      </ClCompile>
-      <ClInclude Include="Version.h">
-        <Filter>Headers</Filter>
-      </ClInclude>
-    </ItemGroup>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMErrors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ETWLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Impersonator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Guid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TpmSupport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json.h">
+      <Filter>Header Files\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json-forwards.h">
+      <Filter>Header Files\json</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{e46fe9c9-2ee6-48e8-b97e-7f8becefdb1b}</UniqueIdentifier>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{4a1a6a55-47f2-4179-b3e9-fb5fc554c63c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources">
-      <UniqueIdentifier>{4271176d-8b00-4751-9bda-9da928f05f73}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{38ad3dad-1a68-4a62-806f-b9ba9f7b9749}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headers\json">
-      <UniqueIdentifier>{9d8b16b5-ffc1-44fe-9d64-518c400dd1d3}</UniqueIdentifier>
+    <Filter Include="Header Files\json">
+      <UniqueIdentifier>{a458403f-d117-4fe0-b6dd-132c4f5124b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\json">
+      <UniqueIdentifier>{24de1331-62b3-4ee0-97d1-a834062608a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

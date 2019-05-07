@@ -26,14 +26,23 @@ if [%2] == [] goto Usage
 
 set ROOT_FOLDER=%1
 set DEVICE_FOLDER=%ROOT_FOLDER%\Device
-set ZIP_VERSION=%2
+set ZIP_FILE_VERSION=%2
+set ZIP_UTILITY=%~dp0..\code\Tools\ZipHelperUtility\bin\Debug\ZipHelperUtility.exe
+
+if not exist %ZIP_UTILITY% (
+    echo.
+    echo Error: Missing %ZIP_UTILITY%
+    echo.
+    echo Make sure you build: code\Tools\ZipHelperUtility\ZipHelperUtility.sln
+    exit /b 1
+)
 
 for %%Z in (x86 arm x64) do (
     echo Populating %%Z folder...
     call deploy.create-device-folder.cmd %%Z Debug %DEVICE_FOLDER%\%%Z
     echo placeholder > %DEVICE_FOLDER%\%%Z\logs\placeholder.txt
 
-    %~dp0..\code\Tools\ZipHelperUtility\bin\Debug\ZipHelperUtility.exe %DEVICE_FOLDER%\%%Z %~dp0..\downloads\device.agent.%ZIP_VERSION%.%%Z.zip
+    %ZIP_UTILITY% %DEVICE_FOLDER%\%%Z %~dp0..\downloads\device.agent.%ZIP_FILE_VERSION%.%%Z.zip
 )
 
 popd

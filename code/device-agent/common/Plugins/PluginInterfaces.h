@@ -3,6 +3,7 @@
 
 #pragma once
 #include "..\DMInterfaces.h"
+#include "Message.h"
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Common {
 
@@ -87,29 +88,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const Json::Value& targetParameters) = 0;
 
         virtual void Unload() = 0;
-    };
-
-    enum MessageType
-    {
-        Request,
-        Response
-    };
-
-    enum CallType
-    {
-        None,
-        PluginCreateCall,
-        PluginInvokeCall,
-        PluginShutdownCall,
-        ReverseInvokeCall
-    };
-
-    struct Message
-    {
-        MessageType messageType;
-        CallType callType;
-        DWORD errorCode;
-        char data[BUFFER_SIZE];
     };
 
     // IPluginTransport

@@ -49,7 +49,7 @@ void OutOfProcPluginBinaryProxy::SendCreatePluginRequest()
     createRequest->messageType = Request;
     createRequest->callType = PluginCreateCall;
     createRequest->errorCode = DM_ERROR_SUCCESS;
-    std::memcpy(createRequest->data, PLUGIN_CREATE_REQUEST, strlen(PLUGIN_CREATE_REQUEST) + 1);
+    createRequest->SetData(PLUGIN_CREATE_REQUEST, strlen(PLUGIN_CREATE_REQUEST) + 1);
 
     std::shared_ptr<Message> createResponse = _transport->SendAndGetResponse(createRequest);
     if (createResponse->errorCode != DM_ERROR_SUCCESS)
@@ -161,7 +161,7 @@ Json::Value OutOfProcPluginBinaryProxy::Invoke(
     invokeRequest->messageType = Request;
     invokeRequest->callType = PluginInvokeCall;
     invokeRequest->errorCode = DM_ERROR_SUCCESS;
-    strcpy_s(invokeRequest->data, request.c_str());
+    invokeRequest->SetData(request.c_str(), request.size() + 1);
 
     std::shared_ptr<Message> invokeResponse = _transport->SendAndGetResponse(invokeRequest);
     if (invokeResponse->errorCode != DM_ERROR_SUCCESS)
@@ -169,13 +169,13 @@ Json::Value OutOfProcPluginBinaryProxy::Invoke(
         throw DMException(DMSubsystem::DeviceAgent, invokeResponse->errorCode, "PluginInvoke returned error.");
     }
 
-    if (invokeResponse->data == nullptr)
+    if (strlen(invokeResponse->Payload()) == 0)
     {
         throw DMException(DMSubsystem::DeviceAgent, DM_PLUGIN_ERROR_INVALID_OUTPUT_BUFFER, "PluginInvoke returned invalid buffer.");
     }
 
     // Copy to local heap.
-    string responseString = invokeResponse->data;
+    string responseString = invokeResponse->Payload();
 
     // Translates failures to exceptions.
     return CrossBinaryResponse::GetPayloadFromJsonString(responseString);
