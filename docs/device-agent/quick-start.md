@@ -13,7 +13,7 @@
 
 ## End-to-End Scenarios
 
-### Device Builder/Operator Scenarios: (60 minutes each)
+### Device Builder/Operator Scenarios:
 
 1. Reboot a device remotely [[here](walk-through-scenarios/prebuilt-remote-reboot.md)].
 2. Change the time zone remotely [[here](walk-through-scenarios/prebuilt-remote-set-time-zone.md)].

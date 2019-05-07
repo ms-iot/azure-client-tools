@@ -1,4 +1,4 @@
-# Quick start with Azure DPS
+# Quick Start with Azure DPS
 
 In this tutorial, we will walk the reader through the minimal steps to get a debug version of the Device Agent running on a Windows IoT Core device.
 
@@ -18,6 +18,8 @@ Here's an overview of the steps:
 - Get the device identity information.
 - Create the Device Provisioning Service and enroll the device.
 - Configure the device and start the Device Agent.
+    - Device with Only the Device Agent
+    - Device with the Device Agent and another IoT Hub Application
 
 ## Verify TPM Compatibility
 
@@ -72,6 +74,8 @@ In this part, we configure the Azure device provisioning service to be ready to 
 
 ## Configure the Device and Start the Device Agent.
 
+### Device with Only the Device Agent 
+
 - Navigate to the device portal (WDP) using your browser (by typing http://&lt;ip&gt;:8080).
 - On the left pane, click 'Azure Clients'
     - The 'Azure Clients' page shows the current state of the device provisioning parameters and the device management client.
@@ -89,6 +93,46 @@ In this part, we configure the Azure device provisioning service to be ready to 
 You can now use your [Azure Portal](https://portal.azure.com) or [Azure Device Explorer](https://github.com/Azure/azure-iot-sdk-csharp/tree/master/tools/DeviceExplorer) to start interacting with the device and access many of its capabilities.
 
 Note that the device client reports to the twin a list of all the available capabilities.
+
+### Device with the Device Agent and another IoT Hub Application
+
+To be able to provision multiple applications on the device, and associate them to the same IoT Hub device, we need to use sub-device IoT Hub identities - namely [Module Twins](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-module-twins).
+
+Using module twins allows the device developer to avoid representing two applications (running on the same physical device) as two separate device identities in IoT Hub.
+
+The Device Agent enables its users to make use of module twins to provision all applications on the device.
+The device builder has to describe what device and sub-device identities are needed, where they need to be stored in the TPM, and the Device Agent will take care of that.
+The applications just need to wait for their connection strings to appear in the TPM, and once its been placed there by the Device Agent, they can proceed to connect.
+
+The DPS provisioning scenario looks like this:
+
+- DPS provisioning retrieves the device connection string.
+- The Device Agent uses the device connection string to create the other modules based on its configuration file.
+- The Device Agent stores the connection strings for the newly created modules in their designated TPM slots.
+- Applications wait until their connection strings appear in the TPM and then reads them from there.
+
+Configuring this scenario is not supported entirely through WDP. However, after installing the tools (using WDP; see above), and before starting the AzureDeviceManagementClient (using WDP) - you just need to modify the configuration file (`c:\dm\AzureDeviceManagementClient.json`) to have the following:
+
+<pre>
+  ...
+  "dpsEnabled": true,
+  "dpsUri": "global.azure-devices-provisioning.net",
+  "dpsScopeId": "0ne000567F7",
+  "deviceSlotNumber": 0,
+  "dmModuleSlotNumber": 1,
+  "dmModuleId": "dmModule",
+  "otherModuleIds": {
+    "uxApp": 2
+  },
+  ...
+</pre>
+
+The above snippet configures three applications on the device to connect to IoT Hub after DPS provisioning is done:
+- An application will use the device twin connection string and it will pick it up from TPM slot 0.
+- The Device Agent will use a module twin connection string and it will pick it up from TPM slot 1.
+- A UWP application will use a module twin connection string and it will pick it up from TPM slot 2.
+
+The application need to be built in such a way to keep trying to acquire the connection string from their designated TPM slot. That way, when the connection string is placed there by the Device Agent, they will be able to pick it up.
 
 ----
 
