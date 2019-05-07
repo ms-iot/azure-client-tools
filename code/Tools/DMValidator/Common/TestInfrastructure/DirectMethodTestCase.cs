@@ -47,10 +47,12 @@ namespace DMValidator
 
         public override async Task Execute(ILogger logger, TestParameters testParameters)
         {
+            JObject resolvedParameters = (JObject)testParameters.ResolveParameters(_parameters);
+
             DeviceMethodReturnValue returnValue = await testParameters.IoTCloudServices.IoTHubManager.InvokeDirectMethod(
                 testParameters.IoTHubDeviceId,
                 _methodName,
-                _parameters.ToString());
+                resolvedParameters.ToString());
 
             if (returnValue.Status != _expectedReturnCode)
             {

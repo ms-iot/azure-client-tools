@@ -198,6 +198,17 @@ namespace DMValidator
 
                     break;
 
+                case JTokenType.Boolean:
+                    if ((bool)expectedValue != (bool)actualValue)
+                    {
+                        string msg = "Mismatch: Property: " + propertyName + ", Expected Value: " + (bool)expectedValue + " ,Actual Value: " + (bool)actualValue;
+                        errorList.Add(msg);
+                        Debug.WriteLine(msg);
+                        result = false;
+                    }
+
+                    break;
+
                 case JTokenType.Array:
                     if (actualValue.Type != JTokenType.Array)
                     {
