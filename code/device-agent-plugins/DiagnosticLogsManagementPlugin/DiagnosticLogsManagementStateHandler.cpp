@@ -283,7 +283,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
         }
         else
         {
-            etlFileName = collector._cspConfiguration->_logFileName + ".etl";
+            etlFileName = collector._cspConfiguration->_logFileName;
         }
 
         string etlFullFileName = etlFolderName + "\\" + etlFileName;
@@ -425,7 +425,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
 
     void DiagnosticLogsManagementStateHandler::SetSubGroup(
         const Json::Value& desiredConfig,
-        shared_ptr<DMCommon::ReportedErrorList> errorList) {
+        shared_ptr<DMCommon::ReportedErrorList> errorList,
+        set<string>& configuredCollectors) {
 
         // Get required parameters first...
         vector<CollectorConfiguration> collectorConfigurations;
@@ -434,16 +435,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
             Operation::RunOperation(GetId(), errorList,
                 [&]()
             {
-                CollectorConfiguration collectorDesiredConfiguration;
-                vector<shared_ptr<ProviderConfiguration>> providersConfigList;
-
                 string collectorName = collector.key().asString();
-
-                std::shared_ptr<MetaData> _subMetaData(new MetaData());
-                _subMetaData->FromJsonParentObjectSubMeta(*collector);
-
-                shared_ptr<CollectorCSPConfiguration> collectorCSPConfig;
-                unsigned int fieldCount = 0;
+                if (collectorName == JsonMeta)
+                {
+                    // Not a collector
+                    return;
+                }
 
                 OperationModelT<string> traceLogFileMode = Operation::TryGetStringJsonValue(*collector, JsonCollectorTraceLogFileMode); //optional property
                 OperationModelT<string>  logFileFolderName = Operation::TryGetStringJsonValue(*collector, JsonCollectorLogFileFolder);
@@ -452,6 +449,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
                 OperationModelT<bool> started = Operation::TryGetBoolJsonValue(*collector, JsonCollectorStarted);
                 OperationModel providers = Operation::TryGetJsonValue(*collector, JsonProviders);
                 
+                unsigned int fieldCount = 0;
                 fieldCount += logFileFolderName.present ? 1 : 0;
                 fieldCount += logFileName.present ? 1 : 0;
                 fieldCount += started.present ? 1 : 0;
@@ -463,14 +461,18 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
                     throw DMException(DMSubsystem::DeviceAgentPlugin, DM_ERROR_INVALID_JSON_FORMAT, "Missing collector fields");
                 }
 
-                // If nothing, return...
+                shared_ptr<MetaData> subMetaData(new MetaData());
+                subMetaData->FromJsonParentObjectSubMeta(*collector);
+
                 if (fieldCount == 0)
                 {
                     TRACELINE(LoggingLevel::Verbose, "No collector fields are defined. Returning.");
-
+                    collectorConfigurations.push_back(CollectorConfiguration(collectorName, subMetaData, nullptr));
                 }
                 else
                 {
+                    vector<shared_ptr<ProviderConfiguration>> providersConfigList;
+
                     //get the provider config for the collector
                     for (Json::Value::const_iterator provider = providers.value.begin(); provider != providers.value.end(); provider++)
                     {
@@ -487,23 +489,32 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
                         shared_ptr<ProviderConfiguration> providerConfig(new ProviderConfiguration(guid, traceLevel.value, keywords.value, enabled.value));
                         providersConfigList.push_back(providerConfig);
                     }
-                    collectorCSPConfig = shared_ptr<CollectorCSPConfiguration>(new CollectorCSPConfiguration(traceLogFileMode.value, logFileSizeLimitMB.value, logFileFolderName.value, logFileName.value, started.value, providersConfigList));
-                }
 
-                collectorDesiredConfiguration = CollectorConfiguration(collectorName, _subMetaData, collectorCSPConfig);
-                collectorConfigurations.push_back(collectorDesiredConfiguration);
+                    shared_ptr<CollectorCSPConfiguration> collectorCSPConfig =
+                        shared_ptr<CollectorCSPConfiguration>(
+                            new CollectorCSPConfiguration(traceLogFileMode.value,
+                                                      logFileSizeLimitMB.value,
+                                                      logFileFolderName.value,
+                                                      logFileName.value,
+                                                      started.value,
+                                                      providersConfigList));
+
+                    collectorConfigurations.push_back(CollectorConfiguration(collectorName, subMetaData, collectorCSPConfig));
+                }
             });
         }
 
         for (CollectorConfiguration collector : collectorConfigurations)
         {
             ApplyCollectorConfiguration(collector,errorList);
+            configuredCollectors.emplace(collector._name);
         }
     }
 
     void DiagnosticLogsManagementStateHandler::BuildReported(
         Json::Value& reportedObject,
-        shared_ptr<DMCommon::ReportedErrorList> errorList)
+        shared_ptr<DMCommon::ReportedErrorList> errorList,
+        const set<string>& configuredCollectors)
     {
         vector<shared_ptr<CollectorConfiguration>> collectorResponseList;
         collectorResponseList = GetSubGroup();
@@ -513,6 +524,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
 
         for (auto collector : collectorResponseList)
         {
+            if (configuredCollectors.find((*collector)._name) == configuredCollectors.cend())
+            {
+                continue;
+            }
+
             string applicableReporting = collector->_subMetaData->GetReportingMode();
             if (applicableReporting == JsonReportLevelDetailed)
             {
@@ -576,9 +592,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
             //Compare interface version with the interface version sent by service
             if (MajorVersionCompare(InterfaceVersion, serviceInterfaceVersion) == 0)
             {
-                SetSubGroup(groupDesiredConfigJson, errorList);
+                set<string> configuredCollectors;
+                SetSubGroup(groupDesiredConfigJson, errorList, configuredCollectors);
 
-                BuildReported(reportedObject, errorList);
+                BuildReported(reportedObject, errorList, configuredCollectors);
                 _metaData->SetDeviceInterfaceVersion(InterfaceVersion);
             }
             else

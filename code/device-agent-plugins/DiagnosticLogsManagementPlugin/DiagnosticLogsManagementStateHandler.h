@@ -38,11 +38,13 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
 
         void SetSubGroup(
             const Json::Value& desiredConfig,
-            std::shared_ptr<DMCommon::ReportedErrorList> errorList);
+            std::shared_ptr<DMCommon::ReportedErrorList> errorList,
+            std::set<std::string>& configuredCollectors);
 
         void BuildReported(
             Json::Value& reportedObject,
-            std::shared_ptr<DMCommon::ReportedErrorList> errorList);
+            std::shared_ptr<DMCommon::ReportedErrorList> errorList,
+            const std::set<std::string>& configuredCollectors);
     };
 
 }}}}

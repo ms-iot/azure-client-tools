@@ -92,6 +92,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
 
                 wstring fullFileName = MultibyteToWide((_dataFolder + "\\" + folderName + "\\" + fileName).c_str());
 
+                TRACELINEP(LoggingLevel::Verbose, L"Uploading: ", fullFileName.c_str());
+
                 // Retrieve storage account from connection string.
                 auto storageAccount = azure::storage::cloud_storage_account::parse(MultibyteToWide(connectionString.c_str()));
 
@@ -118,7 +120,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace D
             }
             else
             {
-            throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
+                throw DMException(DMSubsystem::DeviceAgentPlugin, DM_PLUGIN_ERROR_INVALID_INTERFACE_VERSION, "Service solution is trying to talk with Interface Version that is not supported.");
             }
 
         });
