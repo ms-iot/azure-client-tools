@@ -477,20 +477,17 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "desired": {
       "deviceInfo": {
         "__meta": {
-            &lt;meta data object content&gt;
+          "serviceInterfaceVersion": "1.0.0"
         }
       }
     },
     "reported": {
       "deviceInfo": {
         "__meta": {
-            &lt;meta data object content&gt;
-        },
-        "__errors": {
-            "sub-group-id": {
-                &lt;error object content&gt;
-            }
-            ...
+          "deploymentStatus": "succeeded",
+          "deploymentId": "unspecified",
+          "deviceInterfaceVersion": "1.0.0",
+          "time": "..."
         },
         "batteryRemaining": -1,
         "batteryRuntime": -1,

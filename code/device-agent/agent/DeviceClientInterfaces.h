@@ -49,6 +49,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             DMCommon::ConnectionStatus status) = 0;
 
         virtual void Destroy() = 0;
+
+        virtual ~IDeviceClient() {}
     };
 
     struct InvokeHandlerResult
@@ -71,6 +73,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const std::string& handlerId,
             const Json::Value& parametersJson) = 0;
 
+        virtual ~IRawHandlerRouter() {}
     };
 
 }}}}

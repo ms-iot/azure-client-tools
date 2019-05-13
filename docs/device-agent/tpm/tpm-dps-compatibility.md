@@ -43,3 +43,15 @@ Note the following fields:
 - `HMAC` has to be `true`.
 
 
+## Troubleshooting
+
+If configuring the TPM is not successful for QCDB410C (Dragonboard), try following these steps to reset the TPM:
+
+1. Unplug the board
+2. Hold down the (|) and (+) button and power the board
+3. Move the cursor with (-) and (+) to select "15. UEFI Menu" and confirm with (|)
+4. Move the cursor with (-) and (+) to select "5. Clear UEFI BS Variables" and confirm with (|)
+5. Move the cursor with (-) and (+) to select "6. Clear UEFI RT Variables and fTPM (Erase RPMB)" and confirm with (|)
+6. Unplug the board
+
+

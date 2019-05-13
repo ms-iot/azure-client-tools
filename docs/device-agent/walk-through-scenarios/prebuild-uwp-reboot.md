@@ -10,7 +10,7 @@ In this scenario, we will use IoT Hub service, and a pre-built set of binaries f
 The Device Agent should be running now. Time to create the UWP...
 
 1. In Visual Studio, create a new UWP blank C# project. The target SDK version should be 16299.
-2. Download and install the pre-built azure-device-agent-uwp-bridge-lib.2.0.0.nupkg from the [downloads folder](../../../downloads).
+2. Download and install the pre-built azure-device-agent-uwp-bridge-lib.2.0.3.nupkg from the [downloads folder](../../../downloads).
     <pre>
     install-package azure-device-agent-uwp-bridge-lib
     </pre>

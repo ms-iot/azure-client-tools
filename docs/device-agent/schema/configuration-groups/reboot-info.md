@@ -101,7 +101,8 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "desired": {
       "rebootInfo": {
         "__meta": {
-            &lt;meta data object content&gt;
+          "deploymentId": "reboot_schedule_v1",
+          "serviceInterfaceVersion": "1.0.0"
         },
         "singleRebootTime": "2016-11-11T17:00:00Z",
         "dailyRebootTime": "2016-10-10T17:00:00Z"
@@ -110,13 +111,10 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "reported": {
       "rebootInfo": {
         "__meta": {
-            &lt;meta data object content&gt;
-        },
-        "__errors": {
-            "sub-group-id": {
-                &lt;error object content&gt;
-            }
-            ...
+          "deploymentStatus": "succeeded",
+          "deploymentId": "reboot_schedule_v1",
+          "deviceInterfaceVersion": "1.0.0",
+          "time": "..."
         },
         "singleRebootTime": "2016-11-11T17:00:00Z",
         "dailyRebootTime": "2016-10-10T17:00:00Z",

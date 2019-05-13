@@ -223,7 +223,8 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "desired" : {
       "timeInfo": {
         "__meta": {
-          &lt;meta data object content&gt;
+          "deploymentId": "time_info_v1",
+          "serviceInterfaceVersion": "1.0.0"
         },
         "ntpServer": "time.windows.com",
         "dynamicDaylightTimeDisabled": false,
@@ -242,13 +243,10 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "reported": {
       "timeInfo": {
         "__meta": {
-          &lt;meta data object content&gt;
-        },
-        "__errors": {
-          "sub-group-id": {
-            &lt;error object content&gt;
-          }
-          ...
+          "deploymentStatus": "succeeded",
+          "deploymentId": "time_info_v1",
+          "deviceInterfaceVersion": "1.0.0",
+          "time": "..."
         },
         "ntpServer": "time.windows.com",
         "timeZoneBias": 420,

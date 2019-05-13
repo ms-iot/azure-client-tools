@@ -13,7 +13,7 @@ using namespace Microsoft::Azure::DeviceManagement::Utils;
 
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Client {
 
-const unsigned int RecoverInterval = 60;   // in seconds
+const unsigned int RecoveryInterval = 60;   // in seconds
 
 DMService *DMService::s_service = NULL;
 
@@ -285,8 +285,12 @@ void DMService::RunClient()
         if (!failureOccured)
             break;
 
+        TRACELINE(LoggingLevel::Critical, L"A critical error occured while running Azure Client - Attempting to re-construct the client in 60 seconds...");
+
         // Otherwise, wait a little, and re-try...
-        ::Sleep(RecoverInterval * 1000);
+        ::Sleep(RecoveryInterval * 1000);
+
+        _serviceParameters->Load();
 
     } while (true);
 }

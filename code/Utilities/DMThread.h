@@ -24,6 +24,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
             }
         }
 
+        std::thread::id GetId() const
+        {
+            return _thread.get_id();
+        }
+
         ~JoiningThread()
         {
             Join();

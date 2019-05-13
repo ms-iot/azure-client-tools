@@ -38,7 +38,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         _reportedSectionsSummary = make_shared<ReportedSummary>();
     }
 
-    std::shared_ptr<AzureRawHost> AzureRawHost::GetInstance()
+    RawHandlerInfo::~RawHandlerInfo()
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+    }
+
+    std::shared_ptr<AzureRawHost> AzureRawHost::Create()
     {
         LockGuard lk(&_lock);
 
@@ -48,6 +53,11 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         }
 
         return _this;
+    }
+
+    AzureRawHost::~AzureRawHost()
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
     }
 
     void AzureRawHost::SetServiceParameters(
@@ -162,9 +172,9 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         handler->SetHandlerHost(_this);
 
         // Store in a handlerInfo struct...
-        shared_ptr<RawHandlerInfo> rawHandlerInfo = make_shared<RawHandlerInfo>();
-        rawHandlerInfo->_state = RawHandlerState::eInactive;
-        rawHandlerInfo->_rawHandler = handler;
+        RawHandlerInfo rawHandlerInfo;
+        rawHandlerInfo._state = RawHandlerState::eInactive;
+        rawHandlerInfo._rawHandler = handler;
 
         _rawHandlerMap[handler->GetId()] = rawHandlerInfo;
     }
@@ -204,10 +214,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         handler->SetHandlerHost(_this);
 
         // Store in a handlerInfo struct...
-        shared_ptr<RawHandlerInfo> rawHandlerInfo = make_shared<RawHandlerInfo>();
-        rawHandlerInfo->_state = RawHandlerState::eInactive;
-        rawHandlerInfo->_rawHandler = handler;
-        rawHandlerInfo->_dependencies = handlerInfo.dependencies;
+        RawHandlerInfo rawHandlerInfo;
+        rawHandlerInfo._state = RawHandlerState::eInactive;
+        rawHandlerInfo._rawHandler = handler;
+        rawHandlerInfo._dependencies = handlerInfo.dependencies;
 
         _rawHandlerMap[handlerInfo.id] = rawHandlerInfo;
     }
@@ -217,7 +227,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         DependencySort depSort;
         for (auto& it : _rawHandlerMap)
         {
-            depSort.SetDependenciesMap(it.first, it.second->_dependencies);
+            depSort.SetDependenciesMap(it.first, it.second._dependencies);
         }
         _rawHandlerSequence = depSort.SortDependency();
     }
@@ -400,15 +410,15 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
                 continue;
             }
 
-            const string& handlerId = handlerIt->second->_rawHandler->GetId();
+            const string& handlerId = handlerIt->second._rawHandler->GetId();
 
             try
             {
                 // noexcept
                 _reportedSectionsSummary->SetSectionStatus(handlerId, status);
 
-                handlerIt->second->_rawHandler->SetDeploymentStatus(status);
-                reportedProperties[handlerId] = handlerIt->second->_rawHandler->GetDeploymentStatusJson();
+                handlerIt->second._rawHandler->SetDeploymentStatus(status);
+                reportedProperties[handlerId] = handlerIt->second._rawHandler->GetDeploymentStatusJson();
             }
             catch (const exception& ex)
             {
@@ -447,7 +457,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
             TRACELINEP(LoggingLevel::Verbose, "Found handler for: ", handlerId.c_str());
 
-            if (handlerIt->second->_state == RawHandlerState::eInactive)
+            if (handlerIt->second._state == RawHandlerState::eInactive)
             {
                 TRACELINE(LoggingLevel::Verbose, "Handler is inactive.");
                 return invokeHandlerResult;
@@ -455,7 +465,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
             invokeHandlerResult.active = true;
 
-            invokeHandlerResult.invokeResult = handlerIt->second->_rawHandler->Invoke(parametersJson);
+            invokeHandlerResult.invokeResult = handlerIt->second._rawHandler->Invoke(parametersJson);
         }
         catch (const DMException& ex)
         {
@@ -588,15 +598,15 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         {
             TRACELINEP(LoggingLevel::Verbose, "Starting: ", it.first.c_str());
 
-            const string& handlerId = it.second->_rawHandler->GetId();
+            const string& handlerId = it.second._rawHandler->GetId();
 
             try
             {
                 Json::Value handlerConfig = BuildHandlerConfig(handlerId);
 
                 bool active = false;
-                it.second->_rawHandler->Start(handlerConfig, active);
-                it.second->_state = active ? RawHandlerState::eActive : RawHandlerState::eInactive;
+                it.second._rawHandler->Start(handlerConfig, active);
+                it.second._state = active ? RawHandlerState::eActive : RawHandlerState::eInactive;
             }
             catch (const DMException& ex)
             {
@@ -616,7 +626,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         for (auto& it : _rawHandlerMap)
         {
             TRACELINEP(LoggingLevel::Verbose, "Stopping: ", it.first.c_str());
-            it.second->_rawHandler->Stop();
+            it.second._rawHandler->Stop();
         }
     }
 
@@ -629,17 +639,17 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         {
             TRACELINEP(LoggingLevel::Verbose, "Connection Status Changed: ", it.first.c_str());
 
-            if (it.second->_state != RawHandlerState::eActive)
+            if (it.second._state != RawHandlerState::eActive)
             {
                 TRACELINE(LoggingLevel::Verbose, "Not active. Skipping...");
                 continue;
             }
 
-            const string& handleId = it.second->_rawHandler->GetId();
+            const string& handleId = it.second._rawHandler->GetId();
 
             try
             {
-                it.second->_rawHandler->OnConnectionStatusChanged(status);
+                it.second._rawHandler->OnConnectionStatusChanged(status);
             }
             catch (const DMException& ex)
             {
@@ -655,6 +665,15 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     void AzureRawHost::Destroy()
     {
         TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+
+        // Nulling shared pointers is necessary break cycles.
+        for (auto& p : _rawHandlerMap)
+        {
+            p.second._rawHandler->SetHandlerHost(nullptr);
+            p.second._rawHandler = nullptr;
+        }
+
+        _this = nullptr;
 
         if (_deviceClientHandle != NULL)
         {

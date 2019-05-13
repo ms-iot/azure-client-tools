@@ -252,7 +252,9 @@
     <ClInclude Include="Plugins\PluginJsonConstants.h" />
     <ClInclude Include="Plugins\CrossBinaryRequest.h" />
     <ClInclude Include="Plugins\CrossBinaryResponse.h" />
-    <ClInclude Include="Plugins\PluginNamedPipeTransport.h" />
+    <ClInclude Include="plugins\PluginNamedPipeAgentTransport.h" />
+    <ClInclude Include="plugins\PluginNamedPipeBaseTransport.h" />
+    <ClInclude Include="plugins\PluginNamedPipePluginTransport.h" />
     <ClInclude Include="ReportedError.h" />
     <ClInclude Include="ReportedErrorList.h" />
     <ClInclude Include="ReportedSchema.h" />
@@ -273,7 +275,9 @@
     <ClCompile Include="Plugins\PluginHelpers.cpp" />
     <ClCompile Include="Plugins\CrossBinaryRequest.cpp" />
     <ClCompile Include="Plugins\CrossBinaryResponse.cpp" />
-    <ClCompile Include="Plugins\PluginNamedPipeTransport.cpp" />
+    <ClCompile Include="plugins\PluginNamedPipeAgentTransport.cpp" />
+    <ClCompile Include="plugins\PluginNamedPipeBaseTransport.cpp" />
+    <ClCompile Include="plugins\PluginNamedPipePluginTransport.cpp" />
     <ClCompile Include="ReportedError.cpp" />
     <ClCompile Include="ReportedErrorList.cpp" />
     <ClCompile Include="ReportedSchema.cpp" />

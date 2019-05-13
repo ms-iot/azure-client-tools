@@ -30,19 +30,22 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             _state(eInactive)
         {}
 
+        ~RawHandlerInfo();
+
         RawHandlerState _state;
         std::shared_ptr<DMCommon::IRawHandler> _rawHandler;
         std::vector<std::string> _dependencies;
     };
 
-    typedef std::map<std::string, std::shared_ptr<RawHandlerInfo>> RawHandlerMapType;
+    typedef std::map<std::string, RawHandlerInfo> RawHandlerMapType;
 
     class AzureRawHost : public IDeviceClient, public DMCommon::IRawHandlerHost, public IRawHandlerRouter
     {
         AzureRawHost();
 
     public:
-        static std::shared_ptr<AzureRawHost> GetInstance();
+        static std::shared_ptr<AzureRawHost> Create();
+        ~AzureRawHost();
 
         void SetServiceParameters(
             std::shared_ptr<ServiceParameters> serviceParameters);

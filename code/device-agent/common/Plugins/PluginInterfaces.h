@@ -67,12 +67,16 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const std::string& id) = 0;
 
         virtual void Unload() = 0;
+
+        virtual ~IPlugin() {}
     };
 
     class IPluginStateMonitor
     {
     public:
         virtual void OnPluginLoaded() = 0;
+
+        virtual ~IPluginStateMonitor() {}
     };
 
     // IPluginBinaryProxy
@@ -88,6 +92,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const Json::Value& targetParameters) = 0;
 
         virtual void Unload() = 0;
+
+        virtual ~IPluginBinaryProxy() {};
     };
 
     // IPluginTransport
@@ -103,4 +109,5 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
         virtual ~IPluginTransport() {}
     };
+
 }}}}

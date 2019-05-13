@@ -40,9 +40,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
 static const IOTHUB_CLIENT_TRANSPORT_PROVIDER IoTHubProtocol = AMQP_Protocol;
 
-shared_ptr<AzureDMClient> AzureDMClient::_this;
-recursive_mutex AzureDMClient::_lock;
-
 AzureDMClient::AzureDMClient() :
     _deviceClientHandle(NULL),
     _moduleClientHandle(NULL),
@@ -54,15 +51,7 @@ AzureDMClient::AzureDMClient() :
 
 std::shared_ptr<AzureDMClient> AzureDMClient::Create()
 {
-    LockGuard lk(&_lock);
-    _this = make_shared<AzureDMClient>();
-    return _this;
-}
-
-std::shared_ptr<AzureDMClient> AzureDMClient::GetInstance()
-{
-    LockGuard lk(&_lock);
-    return _this;
+    return make_shared<AzureDMClient>();
 }
 
 void AzureDMClient::RegisterDynamicHandler(
@@ -275,7 +264,6 @@ string AzureDMClient::GetConnectionString(
     return WideToMultibyte(wideDeviceConnectionString.c_str());
 }
 
-
 AzureDMClient::ConnectionStringInfo AzureDMClient::GetConnectionString() const
 {
     TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
@@ -397,13 +385,39 @@ void AzureDMClient::InitializeIoTHubConnection()
     }
 }
 
+void AzureDMClient::DeinitializeIoTHubConnection()
+{
+    if (_deviceClientHandle)
+    {
+        IoTHubDeviceClient_Destroy(_deviceClientHandle);
+        _deviceClientHandle = nullptr;
+    }
+
+    if (_moduleClientHandle)
+    {
+        IoTHubModuleClient_Destroy(_moduleClientHandle);
+        _moduleClientHandle = nullptr;
+    }
+
+    platform_deinit();
+}
+
 void AzureDMClient::Deinitialize()
 {
     TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
 
-    _activeHandlerHost->Destroy();
+    // Nulling shared pointers is necessary break cycles.
+    AgentStub::SetRawHandlerHost(nullptr);
 
-    platform_deinit();
+    _activeHandlerHost->Destroy();
+    _activeHandlerHost = nullptr;
+    _rawHandlerHost = nullptr;
+
+#ifdef USE_AZURE_DM_BRIDGE
+    DMBridgeServer::StopListening();
+#endif
+
+    DeinitializeIoTHubConnection();
 }
 
 void AzureDMClient::Run(shared_ptr<ServiceParameters> serviceParameters, HANDLE stopEvent)
@@ -417,12 +431,12 @@ void AzureDMClient::Run(shared_ptr<ServiceParameters> serviceParameters, HANDLE 
     if (azureInterfaceType == JsonAzureInterfaceTypeRaw)
     {
         _azureInterfaceType = AzureInterfaceType::eRaw;
-        _activeHandlerHost = _rawHandlerHost = AzureRawHost::GetInstance();
-        AgentStub::SetRawHandlerHost(_this->_rawHandlerHost);
+        _activeHandlerHost = _rawHandlerHost = AzureRawHost::Create();
+        AgentStub::SetRawHandlerHost(_rawHandlerHost);
     }
 
     _mdmServer = MdmServer::GetInstance();
-    AgentStub::SetMdmServer(_this->_mdmServer);
+    AgentStub::SetMdmServer(_mdmServer);
 
     _activeHandlerHost->SetServiceParameters(_serviceParameters);
     _activeHandlerHost->SetMdmServer(_mdmServer);
@@ -477,7 +491,7 @@ void AzureDMClient::Run(shared_ptr<ServiceParameters> serviceParameters, HANDLE 
                 // Shutdown...
                 _activeHandlerHost->EnableIoTHubNotifications(false);
                 _activeHandlerHost->SignalConnectionStatusChanged(ConnectionStatus::eOffline);
-                Deinitialize();
+                DeinitializeIoTHubConnection();
                 connected = false;
             }
 

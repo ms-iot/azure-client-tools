@@ -41,7 +41,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
     public:
         static std::shared_ptr<AzureDMClient> Create();
-        static std::shared_ptr<AzureDMClient> GetInstance();
 
         ~AzureDMClient();
 
@@ -60,6 +59,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 #endif // USE_AZURE_DM_BRIDGE
 
         void InitializeIoTHubConnection();
+
+        void DeinitializeIoTHubConnection();
 
         void Deinitialize();
 
@@ -82,9 +83,6 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         void HandlerInvokeSequence();
 
       // Data Members
-        static std::shared_ptr<AzureDMClient> _this;
-        static std::recursive_mutex _lock;
-
         unsigned int _azureInterfaceType;
 
         ULONGLONG _sasTokenTimestampInTicks;

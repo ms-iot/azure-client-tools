@@ -29,6 +29,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     {
     public:
         virtual std::string RunSyncML(const std::string& sid, const std::string& syncML) = 0;
+
+        virtual ~IMdmServer() {};
     };
 
     class ILocalDMClient
@@ -39,6 +41,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         virtual void GetRegistrationId(std::wstring& registrationId) = 0;
         virtual void GetEndorsementKey(std::wstring& endorsementKey) = 0;
         virtual void GetConnetionString(int slot, long long expiry, std::wstring& connectionString) = 0;
+
+        virtual ~ILocalDMClient() {}
     };
 
     class IRawHandlerHost
@@ -47,6 +51,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         virtual std::shared_ptr<IMdmServer> GetMdmServer() const = 0;
         virtual void Report(const std::string& id, DeploymentStatus deploymentStatus, const Json::Value& value) = 0;
         virtual void SendEvent(const std::string& id, const std::string& eventName, const Json::Value& value) = 0;
+
+        virtual ~IRawHandlerHost() {}
     };
 
     enum InvokeContext
@@ -95,6 +101,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     {
     public:
         virtual std::string GetHandlerType() const = 0;
+
+        virtual ~IHandler() {}
     };
 
     // IRawHandler

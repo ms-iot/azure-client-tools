@@ -19,7 +19,7 @@ Here's an overview of the steps:
 - Create the Device Provisioning Service and enroll the device.
 - Configure the device and start the Device Agent.
     - Device with Only the Device Agent
-    - Device with the Device Agent and another IoT Hub Application
+    - Device with the Device Agent and Two Other IoT Hub Applications
 
 ## Verify TPM Compatibility
 
@@ -94,7 +94,9 @@ You can now use your [Azure Portal](https://portal.azure.com) or [Azure Device E
 
 Note that the device client reports to the twin a list of all the available capabilities.
 
-### Device with the Device Agent and another IoT Hub Application
+### Device with the Device Agent and Two Other IoT Hub Applications
+
+#### Overview
 
 To be able to provision multiple applications on the device, and associate them to the same IoT Hub device, we need to use sub-device IoT Hub identities - namely [Module Twins](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-module-twins).
 
@@ -104,14 +106,35 @@ The Device Agent enables its users to make use of module twins to provision all 
 The device builder has to describe what device and sub-device identities are needed, where they need to be stored in the TPM, and the Device Agent will take care of that.
 The applications just need to wait for their connection strings to appear in the TPM, and once its been placed there by the Device Agent, they can proceed to connect.
 
-The DPS provisioning scenario looks like this:
+The DPS provisioning scenario is as follows:
 
-- DPS provisioning retrieves the device connection string.
+- DPS provisioning creates the device and its device twin and retrieves the device connection string.
 - The Device Agent uses the device connection string to create the other modules based on its configuration file.
 - The Device Agent stores the connection strings for the newly created modules in their designated TPM slots.
 - Applications wait until their connection strings appear in the TPM and then reads them from there.
 
-Configuring this scenario is not supported entirely through WDP. However, after installing the tools (using WDP; see above), and before starting the AzureDeviceManagementClient (using WDP) - you just need to modify the configuration file (`c:\dm\AzureDeviceManagementClient.json`) to have the following:
+Note the following considerations:
+
+- The device connection string is not optional and has to be stored in TPM slot 0 - this cannot be changed.
+- The Device Agent connection string can be either:
+    - The device connection string.
+        - Set the `dmModuleSlotNumber` to the same TPM slot as the device connection string (i.e. 0).
+    - A module connection string.
+        - Set the `dmModuleSlotNumber` to a TPM slot number different from 0. This will cause the Device Agent to create a module for itself and store its connection string in the designated TPM slot.
+- An application connection string can be either:
+    - The device connection string.
+        - You just need to make sure the Device Agent (or any other application) is not using TPM slot 0.
+    - A module connection string.
+        - Add a new module name and TPM slot number mapping under the `otherModuleIds` node.
+
+#### Example and Walk-Through
+
+For example, let's say we have two applications and the Device Agent - and we want the following configuration:
+- Application A will use the device twin connection string and it will pick it up from TPM slot 0.
+- The Device Agent will use a module twin connection string and it will pick it up from TPM slot 1.
+- Application B will use a module twin connection string and it will pick it up from TPM slot 2.
+
+The above configuration can be expressed as follows:
 
 <pre>
   ...
@@ -122,17 +145,29 @@ Configuring this scenario is not supported entirely through WDP. However, after 
   "dmModuleSlotNumber": 1,
   "dmModuleId": "dmModule",
   "otherModuleIds": {
-    "uxApp": 2
+    "AppB": 2
   },
   ...
 </pre>
 
-The above snippet configures three applications on the device to connect to IoT Hub after DPS provisioning is done:
-- An application will use the device twin connection string and it will pick it up from TPM slot 0.
-- The Device Agent will use a module twin connection string and it will pick it up from TPM slot 1.
-- A UWP application will use a module twin connection string and it will pick it up from TPM slot 2.
+The applications A and B need to be built in such a way to keep trying to acquire the connection string from their designated TPM slot. That way, when the connection string is placed there by the Device Agent, they will be able to pick it up.
 
-The application need to be built in such a way to keep trying to acquire the connection string from their designated TPM slot. That way, when the connection string is placed there by the Device Agent, they will be able to pick it up.
+Now, the steps to configure this:
+
+- In your browser, navigate to the device portal (WDP) using your browser (by typing http://&lt;ip&gt;:8080).
+    - On the left pane, click 'Azure Clients'
+        - The 'Azure Clients' page shows the current state of the device provisioning parameters and the device management client.
+        - Under the 'Device Management Client' section,
+            - Install the latest tools.
+                - The tools will be installed to `c:\dm` on the device.
+                - Logs will also be created in the same location.
+- From your desktop,
+    - Navigate to the device `\\ip\c$` and enter the user name and password.
+    - Open `\\ip\c$\dm\AzureDeviceManagementClient.json` in notepad or any text editor.
+    - Make sure the above json attributes are preset and set to the values indicated above.
+    - Save and close.
+- Back to your browser, and under the 'Device Management Client' section:
+    - Start the device management client by selecting `Start` from the `Actions` combobox.
 
 ----
 

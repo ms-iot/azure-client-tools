@@ -4,7 +4,7 @@ In this tutorial, we will walk the reader through the minimal steps to get a deb
 
 For a quick start on Windows IoT Core with Azure DPS, see this [page](quick-start-with-dps.md).
 
-- Download a pre-built version of the client: [x86](../../downloads/device.agent.2.0.0.2.x86.zip), [x64](../../downloads/device.agent.2.0.0.2.x64.zip), or [arm](../../downloads/device.agent.2.0.0.2.arm.zip).
+- Download a pre-built version of the client: [x86](../../downloads/device.agent.2.0.0.1.x86.zip), [x64](../../downloads/device.agent.2.0.0.1.x64.zip), or [arm](../../downloads/device.agent.2.0.0.1.arm.zip).
 - Extract to a folder (i.e c:\deploy.arm)
 - Update the c:\deploy.arm\bin\AzureDeviceManagementClient.json with the connection string.
 - From an admin window, run the client:

@@ -236,12 +236,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         // ToDo: Remove existing, and rebuild list...
         for (const auto& p : (*_rawHandlerMap))
         {
-            if (!IsGroupIncluded(_reportingModel.groupsModel, p.second->_rawHandler.get()))
+            if (!IsGroupIncluded(_reportingModel.groupsModel, p.second._rawHandler.get()))
             {
                 continue;
             }
 
-            const ReportedSchema& reportedSchema = p.second->_rawHandler->GetReportedSchema();
+            const ReportedSchema& reportedSchema = p.second._rawHandler->GetReportedSchema();
 
             if (!IsTypeIncluded(_reportingModel.types, reportedSchema))
             {
