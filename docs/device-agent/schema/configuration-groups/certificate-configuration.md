@@ -242,7 +242,8 @@ The state of a given certificate is identified by its thumbprint in the map.
     "desired": {
       "certificates": {
         "__meta": {
-            &lt;meta data object content&gt;
+          "deploymentId": "certificates_v1",
+          "serviceInterfaceVersion": "1.0.0"
         },
         "connectionString": "&lt;Azure Storage connection string&gt;",
         "rootCATrustedCertificates_Root": {
@@ -266,13 +267,10 @@ The state of a given certificate is identified by its thumbprint in the map.
     "reported": {
       "certificates": {
         "__meta": {
-            &lt;meta data object content&gt;
-        },
-        "__errors": {
-            "sub-group-id": {
-                &lt;error object content&gt;
-            }
-            ...
+            "deploymentStatus": "succeeded",
+            "deploymentId": "certificates_v1",
+            "deviceInterfaceVersion": "1.0.0",
+            "time": "..."
         },
         "rootCATrustedCertificates_Root": {
             "09DE264388CCF8607966266135DA76E0B8D7798B": "",

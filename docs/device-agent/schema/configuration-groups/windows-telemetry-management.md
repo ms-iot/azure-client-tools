@@ -69,23 +69,21 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "desired": {
       "windowsTelemetry": {
         "__meta": {
-            &lt;meta data object content&gt;
+            "deploymentId": "windows_telemetry_v1",
+            "serviceInterfaceVersion": "1.0.0"
         },
-        "level": "security|basic|enhanced|full"
+        "level": "security"
       }
     },
     "reported": {
       "windowsTelemetry": {
         "__meta": {
-            &lt;meta data object content&gt;
+            "deploymentStatus": "succeeded",
+            "deploymentId": "windows_telemetry_v1",
+            "deviceInterfaceVersion": "1.0.0",
+            "time": "..."
         },
-        "__errors": {
-            "sub-group-id": {
-                &lt;error object content&gt;
-            }
-            ...
-        },
-        "level": "security|basic|enhanced|full"
+        "level": "security"
       }
     }
   }

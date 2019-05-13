@@ -12,12 +12,13 @@ The Device Agent should be running now. Time to invoke the reboot remotely...
 1. Open [https://portal.azure.com](https://portal.azure.com) in a browser.
 2. Navigate to your IoT Hub, and then your device.
 3. Click `Device twin` at the top bar.
-4. Paste the following json snippet right after `"desired": {`
+4. Change time zone to Mountain by pasting the following json snippet right after `"desired": {`
     <pre>
     "desired": {
          "timeInfo": {
               "__meta": {
-                "deploymentId": "time_info_v1"
+                "deploymentId": "time_info_v1",
+                "serviceInterfaceVersion": "1.0.0"
               },
               "ntpServer": "time.windows.com",
               "dynamicDaylightTimeDisabled": false,
@@ -35,15 +36,14 @@ The Device Agent should be running now. Time to invoke the reboot remotely...
     }
     </pre>
 5. Click `Save`.
-6. Verify the close has changed on the device.
-7. Replace the previous json snippet with the following:
+6. Verify the clock has changed on the device.
+7. Change time zone back (for example, to Pacific) by replacing the previous json snippet with the following:
     <pre>
     "desired": {
           "timeInfo": {
                 "__meta": {
-                  "deploymentStatus": "succeeded",
-                  "deploymentId": "time_info_v1",
-                  "time": "<ignore>"
+                    "deploymentId": "time_info_v2",
+                    "serviceInterfaceVersion": "1.0.0"
                 },
                "ntpServer": "time.windows.com",
                "dynamicDaylightTimeDisabled": false,

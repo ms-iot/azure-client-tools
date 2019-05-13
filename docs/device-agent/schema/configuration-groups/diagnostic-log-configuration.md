@@ -369,22 +369,26 @@ The configuration of a given provider is identified by its GUID in the map.
   "properties": {
     "desired": {
         "eventTracingCollectors": {
+            "__meta": {
+              "deploymentId": "diagnostics_v1",
+              "serviceInterfaceVersion": "1.0.0"
+            },
             "collector00": {
-                  "traceLogFileMode": "sequential",
-                  "logFileSizeLimitMB": 500,
-                  "logFileFolder": "collectorFolderName",
-                  "logFileName": "logFileName",
-                  "started": false,
-                  "providers": {
-                      "guid00": {
-                          "traceLevel": "verbose",
-                          "keywords": "",
-                          "enabled": true
-                      }
-                    },
-                  "__meta": {
-                    "reportingMode": "detailed"
-                  }
+                "traceLogFileMode": "sequential",
+                "logFileSizeLimitMB": 500,
+                "logFileFolder": "collectorFolderName",
+                "logFileName": "logFileName",
+                "started": false,
+                "providers": {
+                    "E1688237-74F7-54F0-7FF7-9BA255FA157C": {
+                        "traceLevel": "verbose",
+                        "keywords": "",
+                        "enabled": true
+                    }
+                  },
+                "__meta": {
+                  "reportingMode": "detailed"
+                }
             },
             "collector01": {
                 "__meta": {
@@ -396,32 +400,25 @@ The configuration of a given provider is identified by its GUID in the map.
     "reported": {
       "eventTracingCollectors" :
         {
-            "__errors": {
-                "sub-group-id": {
-                &lt;error object content&gt;
-                }
-                ...
-            },
-            "__meta" :
-            {
-                &lt;meta data object content&gt;
+            "__meta": {
+              "deploymentId": "diagnostics_v1",
+              "deploymentStatus": "succeeded",
+              "deviceInterfaceVersion": "1.0.0",
+              "time": "..."
             },
             "collector00" :{
-                    "logFileFolder" : "collectorFolderName",
-                    "logFileName": "logFileName",
-                    "logFileSizeLimitMB" : 500,
-                    "providers" :
-                    {
-                        "guid00" :
-                        {
-                            "enabled" : true,
-                            "keywords" : "0",
-                            "traceLevel" : "verbose"
-                        }
-                    },
-                    "started" : true,
-                    "traceLogFileMode" : "sequential"
-                }
+                "logFileFolder" : "collectorFolderName",
+                "logFileName": "logFileName",
+                "logFileSizeLimitMB" : 500,
+                "providers" : {
+                    "E1688237-74F7-54F0-7FF7-9BA255FA157C" : {
+                        "enabled" : true,
+                        "keywords" : "0",
+                        "traceLevel" : "verbose"
+                    }
+                },
+                "started" : true,
+                "traceLogFileMode" : "sequential"
             },
             "collector01": ""
     }

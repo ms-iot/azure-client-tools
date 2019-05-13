@@ -245,7 +245,8 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "desired": {
       "windowsUpdate": {
         "__meta": {
-            &lt;meta data object content&gt;
+            "deploymentId": "windows_update_v1",
+            "serviceInterfaceVersion": "1.0.0"
         },
         "activeHoursStart": 1,
         "activeHoursEnd": 2,
@@ -263,13 +264,10 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
     "reported": {
       "windowsUpdate": {
         "__meta": {
-            &lt;meta data object content&gt;
-        },
-        "__errors": {
-            "sub-group-id": {
-                &lt;error object content&gt;
-            }
-            ...
+            "deploymentStatus": "succeeded",
+            "deploymentId": "windows_update_v1",
+            "deviceInterfaceVersion": "1.0.0",
+            "time": "..."
         },
         "activeHoursEnd": 2,
         "activeHoursStart": 1,
