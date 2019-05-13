@@ -14,7 +14,7 @@ namespace DMValidator
 {
     class Program
     {
-        private const string QueryDeviceId = "DeviceId";
+        private const string QueryDeviceId = "deviceId";
         private const string QueryDeviceList = "SELECT deviceId from Devices";
 
         static void Main(string[] args)
@@ -119,7 +119,8 @@ namespace DMValidator
             foreach (string s in results)
             {
                 JObject jObject = (JObject)JsonConvert.DeserializeObject(s);
-                deviceList.Add((string)jObject[QueryDeviceId]);
+                JToken jToken = jObject[QueryDeviceId];
+                deviceList.Add((string)jToken);
             }
             deviceList.Sort();
 
