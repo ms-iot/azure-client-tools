@@ -50,7 +50,7 @@ void DMBridgeServer::Setup(shared_ptr<Microsoft::Azure::DeviceManagement::Common
         (RPC_WSTR)RPC_ENDPOINT,
         &rpcSecurityDescriptor);
 
-    if (status != RPC_S_OK)
+    if (status != RPC_S_OK && status != RPC_S_DUPLICATE_ENDPOINT)
     {
         throw DMException(DMSubsystem::RPC, status, "Failed to setup RPC protocol");
     }
@@ -98,6 +98,17 @@ void DMBridgeServer::Listen()
     {
         throw DMException(DMSubsystem::RPC, status, "Failed to listen for RPC");
     }
+
+    vector<RPC_IF_HANDLE> interfaces = {
+        { Dps_v1_0_s_ifspec },
+        { Reboot_v1_0_s_ifspec },
+        { Tpm_v1_0_s_ifspec }
+    };
+
+    UnregisterInterfaces(interfaces);
+
+    // Nulling shared pointers is necessary break cycles.
+    _localDmAccess = nullptr;
 }
 
 void DMBridgeServer::StopListening()
@@ -136,6 +147,27 @@ void DMBridgeServer::RegisterInterfaces(
         if (status != RPC_S_OK)
         {
             throw DMException(DMSubsystem::RPC, status, "Failed to register interface");
+        }
+    }
+}
+
+void DMBridgeServer::UnregisterInterfaces(
+    const std::vector<RPC_IF_HANDLE>& interfaces)
+{
+    TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+    TRACELINEP(LoggingLevel::Verbose, "Number of interfaces: ", static_cast<int>(interfaces.size()));
+    RPC_STATUS status = RPC_S_OK;
+    for (RPC_IF_HANDLE rpcInterface : interfaces)
+    {
+        status = RPC_S_OK;
+        status = RpcServerUnregisterIf(
+            rpcInterface,
+            nullptr,
+            1 /* wait for calls to complete */);
+
+        if (status != RPC_S_OK)
+        {
+            throw DMException(DMSubsystem::RPC, status, "Failed to unregister interface");
         }
     }
 }

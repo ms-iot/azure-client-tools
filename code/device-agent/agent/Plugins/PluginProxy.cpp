@@ -25,6 +25,14 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         }
     }
 
+    PluginProxy::~PluginProxy()
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+
+        // Nulling shared pointers is necessary break cycles.
+        _binaryProxy = nullptr;
+    }
+
     void PluginProxy::Load()
     {
         TRACELINE(LoggingLevel::Verbose, __FUNCTION__);

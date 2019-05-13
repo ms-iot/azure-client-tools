@@ -17,6 +17,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
             const std::string& id,
             std::shared_ptr<DMCommon::IPluginBinaryProxy> binaryProxy);
 
+        ~RawHandlerProxy();
+
         std::string GetId() const;
 
         std::string GetHandlerType() const;

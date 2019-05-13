@@ -40,9 +40,6 @@
     <ClCompile Include="Plugins\MessageQueue.cpp">
       <Filter>Source Files\Plugins</Filter>
     </ClCompile>
-    <ClCompile Include="Plugins\PluginNamedPipeTransport.cpp">
-      <Filter>Source Files\Plugins</Filter>
-    </ClCompile>
     <ClCompile Include="HandlerBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,6 +50,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="plugins\Message.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\PluginNamedPipeAgentTransport.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\PluginNamedPipePluginTransport.cpp">
+      <Filter>Source Files\Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="plugins\PluginNamedPipeBaseTransport.cpp">
       <Filter>Source Files\Plugins</Filter>
     </ClCompile>
   </ItemGroup>
@@ -117,9 +123,6 @@
     <ClInclude Include="Plugins\MessageQueue.h">
       <Filter>Header Files\Plugins</Filter>
     </ClInclude>
-    <ClInclude Include="Plugins\PluginNamedPipeTransport.h">
-      <Filter>Header Files\Plugins</Filter>
-    </ClInclude>
     <ClInclude Include="HandlerBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -130,6 +133,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="plugins\Message.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="plugins\PluginNamedPipeAgentTransport.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="plugins\PluginNamedPipePluginTransport.h">
+      <Filter>Header Files\Plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="plugins\PluginNamedPipeBaseTransport.h">
       <Filter>Header Files\Plugins</Filter>
     </ClInclude>
   </ItemGroup>

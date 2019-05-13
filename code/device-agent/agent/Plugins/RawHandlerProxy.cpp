@@ -19,6 +19,10 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
         _binaryProxy(binaryProxy)
     {}
 
+    RawHandlerProxy::~RawHandlerProxy()
+    {
+        TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
+    }
 
     std::string RawHandlerProxy::GetHandlerType() const
     {

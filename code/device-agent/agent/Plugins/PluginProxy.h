@@ -17,6 +17,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     public:
 
         PluginProxy(const std::string& pluginFullPath, bool outOfProc, long keepAliveTime);
+        ~PluginProxy();
 
         void Load();
 

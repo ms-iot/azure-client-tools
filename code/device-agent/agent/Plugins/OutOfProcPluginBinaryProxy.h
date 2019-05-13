@@ -29,6 +29,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 
     public:
         OutOfProcPluginBinaryProxy(const std::string& pluginFullPath, long keepAliveTime);
+        ~OutOfProcPluginBinaryProxy();
 
         void Load();
 

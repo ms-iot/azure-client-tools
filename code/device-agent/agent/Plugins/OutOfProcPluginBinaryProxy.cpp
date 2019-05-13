@@ -8,7 +8,7 @@
 #include "../../common/plugins/PluginConstants.h"
 #include "AgentStub.h"
 #include "../../common/plugins/PluginJsonConstants.h"
-#include "../../common/plugins/PluginNamedPipeTransport.h"
+#include "../../common/plugins/PluginNamedPipeAgentTransport.h"
 
 using namespace std;
 using namespace DMUtils;
@@ -19,7 +19,12 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
 OutOfProcPluginBinaryProxy::OutOfProcPluginBinaryProxy(const std::string& pluginFullPath, long keepAliveTime)
 {
     std::wstring widePluginPath = Utils::MultibyteToWide(pluginFullPath.c_str());
-    _transport = shared_ptr<DMCommon::PluginNamedPipeTransport>(new DMCommon::PluginNamedPipeTransport(true, widePluginPath, keepAliveTime, L"", L"", this));
+    _transport = shared_ptr<DMCommon::PluginNamedPipeAgentTransport>(new DMCommon::PluginNamedPipeAgentTransport(widePluginPath, keepAliveTime, L"", L"", this));
+}
+
+OutOfProcPluginBinaryProxy::~OutOfProcPluginBinaryProxy()
+{
+    TRACELINE(LoggingLevel::Verbose, __FUNCTION__);
 }
 
 void OutOfProcPluginBinaryProxy::Load()

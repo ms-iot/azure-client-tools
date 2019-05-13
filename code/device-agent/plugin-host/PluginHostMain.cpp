@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "PluginLoader.h"
 #include "PluginHostStub.h"
-#include "../common/plugins/PluginNamedPipeTransport.h"
+#include "../common/plugins/PluginNamedPipePluginTransport.h"
 
 using namespace std;
 using namespace DMCommon;
@@ -82,10 +82,7 @@ int wmain(int argc, wchar_t *argv[])
         PluginLoader _pluginBinary(pluginPath.c_str());
         _pluginBinary.Load();
 
-        shared_ptr<DMCommon::IPluginTransport> transport = make_shared<DMCommon::PluginNamedPipeTransport>(false, L"", 0, clientPipeName, pluginPipeName, nullptr);
-
-        // Get the shutdown event. Main thread will wait on this event
-        g_shutdownEvent = transport->GetShutdownNotificationEvent();
+        shared_ptr<DMCommon::IPluginTransport> transport = make_shared<DMCommon::PluginNamedPipePluginTransport>(pluginPath, clientPipeName, pluginPipeName);
 
         // Set plugin interfaces
         transport->SetPluginInterface(_pluginBinary.PluginCreate, _pluginBinary.PluginInvoke, _pluginBinary.PluginDeleteBuffer);
@@ -99,14 +96,15 @@ int wmain(int argc, wchar_t *argv[])
         transport->Initialize();
         TRACELINE(LoggingLevel::Verbose, "Transport initialization successful");
 
+        // Get the shutdown event. Main thread will wait on this event
+        g_shutdownEvent = transport->GetShutdownNotificationEvent();
+
         // Wait for shutdown event or parent process termination
         HANDLE waitHandles[2];
         waitHandles[0] = g_shutdownEvent;
         waitHandles[1] = g_parentProcessHandle;
         
         WaitForMultipleObjects(2, waitHandles, false, INFINITE);
-
-        exit(0);
     }
     catch (const DMException& dmEx)
     {
