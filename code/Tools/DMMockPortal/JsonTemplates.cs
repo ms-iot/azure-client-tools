@@ -16,7 +16,7 @@ namespace DMMockPortal
         public static readonly string DevicesQuery;
         public static readonly string FailedCount = "failedCount";
         public static readonly string PendingCount = "pendingCount";
-        public static readonly string DeviceId = "DeviceId";
+        public static readonly string DeviceId = "deviceId";
         public static readonly string Where = "where";
         public static readonly string Summary = "__summary";
         public static readonly string Meta = "__meta";
