@@ -96,8 +96,14 @@ namespace DMMockPortal
                     ++PendingDeviceCount;
                 }
 
+                string deviceId = "<unkown>";
+                if (jObject.ContainsKey(JsonTemplates.DeviceId))
+                {
+                    deviceId = (string)jObject[JsonTemplates.DeviceId];
+                }
+
                 DeviceSummary ds = new DeviceSummary();
-                ds.Name = (string)jObject[JsonTemplates.DeviceId];
+                ds.Name = deviceId;
                 ds.FailedCount = failedCount.ToString();
                 ds.PendingCount = pendingCount.ToString();
 
