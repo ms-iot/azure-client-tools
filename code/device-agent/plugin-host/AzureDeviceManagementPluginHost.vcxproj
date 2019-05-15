@@ -31,7 +31,8 @@
     <ProjectGuid>{7DAE0696-9FEC-476F-99A3-40D71B6C9278}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>AzureDeviceManagementPluginHost</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.16299.0</WindowsTargetPlatformMinVersion>
     <WindowsSDKDesktopARMSupport>true</WindowsSDKDesktopARMSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -132,7 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc</AdditionalIncludeDirectories>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsLibPath);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -152,7 +153,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc</AdditionalIncludeDirectories>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsLibPath);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -173,7 +174,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc</AdditionalIncludeDirectories>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsLibPath);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -195,7 +196,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc</AdditionalIncludeDirectories>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsLibPath);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -219,7 +220,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc</AdditionalIncludeDirectories>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsLibPath);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -243,7 +244,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc</AdditionalIncludeDirectories>
       <CompileAsWinRT>true</CompileAsWinRT>
-      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsLibPath);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
