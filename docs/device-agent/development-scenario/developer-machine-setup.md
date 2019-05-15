@@ -32,7 +32,7 @@ git clone --recursive --branch master https://github.com/Azure/azure-iot-sdk-csh
 
 <pre>
 cd /d d:\git
-git clone --recursive --branch master https://github.com/ms-iot/windows-iot-azure-dm-standalone-client.git dm
+git clone --recursive --branch master https://github.com/ms-iot/azure-client-tools.git dm
 </pre>
 
 ----
