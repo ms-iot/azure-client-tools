@@ -10,6 +10,9 @@
 # Declare files that will always have CRLF line endings on checkout. E.g.,
 #*.sln text eol=crlf
 *.cmd text eol=crlf
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
 
 # Declare files that will always have LF line endings on checkout. E.g.,
 *.sh text eol=lf
