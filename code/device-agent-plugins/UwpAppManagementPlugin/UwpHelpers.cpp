@@ -9,7 +9,6 @@ using namespace DMUtils;
 using namespace std;
 
 constexpr wchar_t IotStartupExe[] = L"%windir%\\system32\\iotstartup.exe";
-constexpr wchar_t ListCmd[] = L" list ";
 constexpr wchar_t AddCmd[] = L" add ";
 constexpr wchar_t RemoveCmd[] = L" remove ";
 constexpr wchar_t StartCmd[] = L" run ";
@@ -65,7 +64,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
         TRACELINEP(LoggingLevel::Verbose, "Getting app startup for: ", pkgFamilyName.c_str());
 
         wstring cmd = IotStartupExePath();
-        cmd += ListCmd;
+        cmd += Startup;
         cmd += MultibyteToWide(pkgFamilyName.c_str());
 
         unsigned long returnCode = 0;
