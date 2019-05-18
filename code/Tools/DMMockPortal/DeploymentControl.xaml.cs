@@ -70,19 +70,10 @@ namespace DMMockPortal
             }
         }
 
-        private void OnTargetPropertiesPaste(object sender, RoutedEventArgs e)
+        private void OnHelp(object sender, RoutedEventArgs e)
         {
-            TargetConditionValueBox.Text = JsonTemplates.TargetPropertiesCondition;
-        }
-
-        private void OnTargetTagsPaste(object sender, RoutedEventArgs e)
-        {
-            TargetConditionValueBox.Text = JsonTemplates.TargetTagsCondition;
-        }
-
-        private void OnPropertiesPaste(object sender, RoutedEventArgs e)
-        {
-            DesiredPropertiesValueBox.Text = JsonTemplates.DesiredProperties;
+            Dialogs.SamplesDialog sd = new Dialogs.SamplesDialog();
+            sd.ShowDialog();
         }
 
         private void OnTargetRun(object sender, RoutedEventArgs e)
@@ -188,45 +179,53 @@ namespace DMMockPortal
             string fileContent = "";
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Profile files (*.json)|*.json";
             if (openFileDialog.ShowDialog() != true)
             {
                 return;
             }
 
-            fileContent = File.ReadAllText(openFileDialog.FileName);
+            try
+            {
+                fileContent = File.ReadAllText(openFileDialog.FileName);
 
-            JObject root = (JObject)JsonConvert.DeserializeObject(fileContent);
+                JObject root = (JObject)JsonConvert.DeserializeObject(fileContent);
 
-            DeploymentNameValueBox.Text = (string)root["name"];
-            PriorityValueBox.Text = ((long)root["priority"]).ToString();
-            DesiredPropertiesValueBox.Text = ((JObject)root["desiredState"]).ToString();
-            TargetConditionValueBox.Text = (string)root["targetCondition"];
+                DeploymentNameValueBox.Text = (string)root["name"];
+                PriorityValueBox.Text = ((long)root["priority"]).ToString();
+                DesiredPropertiesValueBox.Text = ((JObject)root["desiredState"]).ToString();
+                TargetConditionValueBox.Text = (string)root["targetCondition"];
 
-            MetricsList.Items.Clear();
+                MetricsList.Items.Clear();
 
-            MetricSummary ms0 = new MetricSummary();
+                MetricSummary ms0 = new MetricSummary();
 
-            ms0.Name = "successQuery";
-            ms0.Query = "SELECT deviceId FROM Devices WHERE " + (string)root["successCondition"];
-            ms0.Count = "<unknown>";
+                ms0.Name = "successQuery";
+                ms0.Query = "SELECT deviceId FROM Devices WHERE " + (string)root["successCondition"];
+                ms0.Count = "<unknown>";
 
-            MetricsList.Items.Add(ms0);
+                MetricsList.Items.Add(ms0);
 
-            MetricSummary ms1 = new MetricSummary();
+                MetricSummary ms1 = new MetricSummary();
 
-            ms1.Name = "failureQuery";
-            ms1.Query = "SELECT deviceId FROM Devices WHERE " + (string)root["failureCondition"];
-            ms1.Count = "<unknown>";
+                ms1.Name = "failureQuery";
+                ms1.Query = "SELECT deviceId FROM Devices WHERE " + (string)root["failureCondition"];
+                ms1.Count = "<unknown>";
 
-            MetricsList.Items.Add(ms1);
+                MetricsList.Items.Add(ms1);
 
-            MetricSummary ms2 = new MetricSummary();
+                MetricSummary ms2 = new MetricSummary();
 
-            ms2.Name = "pendingQuery";
-            ms2.Query = "SELECT deviceId FROM Devices WHERE " + (string)root["pendingCondition"];
-            ms2.Count = "<unknown>";
+                ms2.Name = "pendingQuery";
+                ms2.Query = "SELECT deviceId FROM Devices WHERE " + (string)root["pendingCondition"];
+                ms2.Count = "<unknown>";
 
-            MetricsList.Items.Add(ms2);
+                MetricsList.Items.Add(ms2);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
         }
 
         private async void DeleteDeploymentAsync()
@@ -404,7 +403,7 @@ namespace DMMockPortal
                 DeviceListPanel.Visibility = Visibility.Visible;
             }
 
-            DeviceListPanel.LoadDeploymentDevicesAsync((_deploymentSummary.Name == DMConstants.AllDevicesConfigName) ? "" : _deploymentSummary.AzureConfiguration.TargetCondition);
+            DeviceListPanel.LoadDeploymentDevicesAsync(TargetConditionValueBox.Text);
         }
 
         private void OnSaveDeployment(object sender, RoutedEventArgs e)

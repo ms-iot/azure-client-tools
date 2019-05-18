@@ -172,9 +172,16 @@ namespace DMMockPortal
                 }
             }
 
-            await DeploymentPanel.CreateDeploymentAsync();
+            try
+            {
+                await DeploymentPanel.CreateDeploymentAsync();
 
-            MessageBox.Show("'" + DeploymentPanel.DeploymentName + "' has been saved successfully.");
+                MessageBox.Show("'" + DeploymentPanel.DeploymentName + "' has been saved successfully.");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error");
+            }
 
             RefreshDeploymentListAsync();
         }

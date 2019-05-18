@@ -30,7 +30,7 @@ Device Management client supports declarative app management with Azure IoT Hub 
       "appxSource" : "dmtest\\UwpApp1_1.0.0.0_x64.appx",
       "depsSources": "dmtest\\Microsoft.NET.Native.Framework.1.7.appx;dmtest\\Microsoft.NET.Native.Runtime.1.7.appx;dmtest\\Microsoft.VCLibs.x64.14.00.appx",
       "startup" : "foreground",
-      "launchAfterInstall: true
+      "launchAfterInstall": true
      }
     }
   }

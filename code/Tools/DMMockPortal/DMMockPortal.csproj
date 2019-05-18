@@ -102,6 +102,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Dialogs\SamplesDialog.xaml.cs">
+      <DependentUpon>SamplesDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DMConstants.cs" />
     <Compile Include="DeploymentControl.xaml.cs">
       <DependentUpon>DeploymentControl.xaml</DependentUpon>
@@ -145,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DeviceTwinControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SamplesDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

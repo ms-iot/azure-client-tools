@@ -8,11 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="900">
     <UserControl.Resources>
-        <!--
-        <local:TabPage x:Key="FirstPage">
-            
-        </local:TabPage>
-        -->
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -32,14 +27,20 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Margin="3,3,3,15" FontSize="20" Text="Deployment Details"/>
-                <Button Margin="3" Width="15" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Content="X" Click="OnCollapse"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button Margin="3" Width="15" Height="20" Content="?" Click="OnHelp"/>
+                    <Button Margin="3" Width="15" Height="20" Content="X" Click="OnCollapse"/>
+                </StackPanel>
             </Grid>
-            <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Button Margin="3" Width="60" Content="Import" Click="OnImportDeployment"/>
-                <Button Margin="3" Width="60" Content="Delete" Click="OnDeleteDeployment"/>
-                <Button Margin="3" Width="60" Content="Save" Click="OnSaveDeployment"/>
-                <Button Margin="3" Width="60" Content="Export" Click="OnExportDeployment"/>
-            </StackPanel>
+            <Grid Grid.Row="1">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Margin="3" Width="60" Content="Import" Click="OnImportDeployment"/>
+                    <Button Margin="3" Width="60" Content="Delete" Click="OnDeleteDeployment"/>
+                    <Button Margin="3" Width="60" Content="Save" Click="OnSaveDeployment"/>
+                    <Button Margin="3" Width="60" Content="Export" Click="OnExportDeployment"/>
+                </StackPanel>
+                <Button Margin="3" Width="120" Content="Target Devices &gt;&gt;" Click="OnShowDeviceListPanel" HorizontalAlignment="Right"/>
+            </Grid>
             <Grid Grid.Row="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -140,24 +141,22 @@
                             <Border Grid.Row="5" Grid.Column="0" BorderThickness="0,1,1,0" BorderBrush="#444444" Background="Transparent"/>
                         </Grid>
                     </Grid>
-                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                        <Button Margin="3" Width="15" Content="B" Click="OnPropertiesBrowse"/>
-                        <Button Margin="3" Width="15" Content="P" Click="OnPropertiesPaste"/>
-                    </StackPanel>
+                    <Button Grid.Row="1" Grid.Column="0" Margin="3" Width="70" Content="Import" Click="OnPropertiesBrowse" HorizontalAlignment="Right"/>
                 </Grid>
                 <Border Grid.Row="8" Grid.Column="0" Height="20"/>
                 <TextBlock Grid.Row="9" Grid.Column="0" Margin="3" Text="Target Condition"/>
-                <TextBox Grid.Row="10" Grid.Column="0" Margin="3" x:Name="TargetConditionValueBox" />
-                <StackPanel Grid.Row="11" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Margin="3" Width="15" Content="P" Click="OnTargetPropertiesPaste"/>
-                    <Button Margin="3" Width="15" Content="T" Click="OnTargetTagsPaste"/>
-                    <Button Margin="3" Width="15" Content="&gt;" Click="OnTargetRun"/>
-                </StackPanel>
-                <Button Grid.Row="11" Grid.Column="0" Margin="3" Width="120" Content="Target Devices &gt;&gt;" Click="OnShowDeviceListPanel" HorizontalAlignment="Right"/>
-                <Border Grid.Row="12" Grid.Column="0" Height="20"/>
+                <Grid Grid.Row="10" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Margin="3" x:Name="TargetConditionValueBox" />
+                    <Button Grid.Column="1" Margin="3" Width="70" Content="Devices" Click="OnTargetRun"/>
+                </Grid>
+                <Border Grid.Row="11" Grid.Column="0" Height="20"/>
 
-                <TextBlock Grid.Row="13" Grid.Column="0" Margin="3" Text="Metrics"/>
-                <StackPanel Grid.Row="14" Grid.Column="0" Orientation="Vertical">
+                <TextBlock Grid.Row="12" Grid.Column="0" Margin="3" Text="Metrics"/>
+                <StackPanel Grid.Row="13" Grid.Column="0" Orientation="Vertical">
                     <ListView Margin="3" Height="100" x:Name="MetricsList" SelectionChanged="OnMetricChanged">
                         <ListView.View>
                             <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >
@@ -176,16 +175,16 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Row="0" Grid.Column="0" Margin="3,3,0,3" x:Name="MetricConditionNameBox"/>
                         <TextBox Grid.Row="0" Grid.Column="1" Margin="0,3,3,3" x:Name="MetricConditionValueBox"/>
-                        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Button Margin="3" Width="15" Content="P" Click="OnMetricPropertiesPaste"/>
-                            <Button Margin="3" Width="15" Content=">" Click="OnMetricRunEditAsync"/>
-                            <Button Margin="3" Width="15" Content="+" Click="OnAddMetricCondition"/>
-                            <Button Margin="3" Width="15" Content="-" Click="OnRemoveMetricCondition"/>
-                        </StackPanel>
+                        <Button Grid.Row="0" Grid.Column="2" Margin="3" Width="70" Content="Devices" Click="OnMetricRunEditAsync"/>
                     </Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Margin="3" Width="20" Content="+" Click="OnAddMetricCondition"/>
+                        <Button Margin="3" Width="20" Content="-" Click="OnRemoveMetricCondition"/>
+                    </StackPanel>
                 </StackPanel>
                 <Border Grid.Row="15" Grid.Column="0" Height="20"/>
 

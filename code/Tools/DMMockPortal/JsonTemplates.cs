@@ -11,8 +11,6 @@ namespace DMMockPortal
         public static readonly string Tags;
         public static readonly string SuccessQueryName = "successQuery";
         public static readonly string SuccessQueryValue = "SELECT deviceId FROM devices WHERE properties.reported.apps.toaster.__meta.state='failed'";
-        public static readonly string TargetPropertiesCondition = "properties.reported.rebootInfo.__meta.state!='succeeded'";
-        public static readonly string TargetTagsCondition = "tags.location='North America'";
         public static readonly string DevicesQuery;
         public static readonly string FailedCount = "failedCount";
         public static readonly string PendingCount = "pendingCount";
