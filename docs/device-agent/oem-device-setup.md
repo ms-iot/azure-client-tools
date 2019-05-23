@@ -20,15 +20,18 @@ To enable the Azure Device Agent in such images,
 - OEM authors packages to include all the necessary binaries. For example:
 
 <pre>
-    &lt;Files&gt;
-    &lt;File Source="AzureDeviceManagementClient.exe" DestinationDir="c:\dm\bin" /&gt;
-    &lt;File Source="AzureDeviceManagementClient.json" DestinationDir="c:\dm\bin" /&gt;
-    &lt;File Source="DeviceInfoPlugin.dll" DestinationDir="c:\dm\bin" /&gt;
-    &lt;File Source="RebootPlugin.dll" DestinationDir="c:\dm\bin" /&gt;
-    &lt;File Source="DeviceInfoManifest.json" DestinationDir="c:\dm\manifests" /&gt;
-    &lt;File Source="RebootManifest.json" DestinationDir="c:\dm\manifests" /&gt;
-    &lt;File Source="DMSetup.cmd" /&gt;
-    &lt;/Files&gt;
+    &lt;files&gt;
+    &lt;file source="Limpet.exe" destinationDir="$(runtime.system32)" /&gt;
+
+    &lt;file Source="AzureDeviceManagementClient.exe" destinationDir="$(runtime.bootDrive)\dm" /&gt;
+    &lt;file Source="AzureDeviceManagementClient.json" destinationDir="$(runtime.bootDrive)\dm" /&gt;
+    &lt;file Source="DeviceInfoPlugin.dll" destinationDir="$(runtime.bootDrive)\dm" /&gt;
+    &lt;file Source="RebootPlugin.dll" destinationDir="$(runtime.bootDrive)\dm" /&gt;
+    &lt;file Source="DeviceInfoManifest.json" destinationDir="$(runtime.bootDrive)\dm\manifests" /&gt;
+    &lt;file Source="RebootManifest.json" destinationDir="$(runtime.bootDrive)\dm\manifests" /&gt;
+
+    &lt;file Source="DMSetup.cmd" destinationDir="$(runtime.bootDrive)\OEMInstall" /&gt;
+    &lt;/files&gt;
 </pre>
 
 ## Configuring the Binaries
@@ -59,10 +62,10 @@ To force a time sync, a recurring task can execute the following snippet on star
 #### DMSetup.cmd
 
 <pre>
-    c:\windows\system32\AzureDeviceManagementClient.exe -install
+    c:\dm\AzureDeviceManagementClient.exe -install
     c:\windows\system32\sc.exe config AzureDeviceManagementClient start=auto
     c:\windows\system32\sc.exe failure AzureDeviceManagementClient reset= 0 actions= restart/0/restart/0/restart/0
-    net start systemconfigurator
+    net start AzureDeviceManagementClient
 </pre>
 
 #### OEMCustomization.cmd
@@ -77,7 +80,7 @@ reg query HKLM\Software\IoT /v FirstBootDone >nul 2>&1
 if %errorlevel% == 1 ( 
      REM Enable Administrator User 
      net user Administrator p@ssw0rd /active:yes 
-     call DMSetup.cmd
+     call c:\OEMInstall\DMSetup.cmd
 
      REM Resync with time server every hour	
      schtasks /Create /SC HOURLY /TN TimeSyncEveryHour /TR "w32tm /resync /force" /RU "SYSTEM"
