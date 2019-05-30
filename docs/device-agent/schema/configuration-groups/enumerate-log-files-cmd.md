@@ -31,13 +31,13 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 }
 </pre>
 
-## Parameters
+## Payload
 
 | Name | Required | Type | Description |
 |-----|-----|-----|-----|
 | `folderName` | Yes | String | Diagnostic log folder name. |
 
-Sample:
+Sample payload:
 
 <pre>
 {

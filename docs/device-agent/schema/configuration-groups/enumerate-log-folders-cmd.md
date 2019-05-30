@@ -31,11 +31,11 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 }
 </pre>
 
-## Parameters
+## Payload
  
  none.
 
-Sample:
+Sample payload:
 
   <pre>
 {

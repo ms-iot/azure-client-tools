@@ -31,7 +31,7 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 }
 </pre>
 
-## Parameters
+## Payload
 
 | Name | Required | Type | Description |
 |-----|-----|-----|-----|
@@ -40,7 +40,7 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 | `connectionString` | Yes | String | Azure storage connection strings to upload diagnostic log. |
 | `container` | Yes | String | Azure storage container name you want to upload the diagnostic logs to. |
 
-Sample:
+Sample payload:
 
 <pre>
 {

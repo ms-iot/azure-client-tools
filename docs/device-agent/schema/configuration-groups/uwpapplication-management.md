@@ -132,9 +132,9 @@ For managing application lifecyle, operator needs to do a direct method call.
 ### Method Name
 `ManageAppLifeCycleCmd`
 
-### Parameters 
+### Payload 
 
-#### Start an application
+Sample payload to start an application:
 
 <pre>
 {
@@ -146,7 +146,7 @@ For managing application lifecyle, operator needs to do a direct method call.
 }
 </pre>
 
-#### Stop an application 
+Sample payload to stop an application:
 
 <pre>
 {

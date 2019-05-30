@@ -29,13 +29,13 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 }
 </pre>
 
-## Parameters
+## Payload
 
 | Name | Required | Type | Description |
 |-----|-----|-----|-----|
 | `clearTpm` | No | Bool | If true, it clears the TPM. |
 
-Sample:
+Sample payload:
 
 <pre>
 {

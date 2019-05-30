@@ -29,14 +29,14 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 }
 </pre>
 
-## Parameters
+## Payload
 
 | Name | Required | Type | Description |
 |-----|-----|-----|-----|
 | `partitionGuid` | Yes | String | Guid of the partition holding the recovery image. |
 | `clearTpm` | No | Bool | If true, it clears the TPM. |
 
-Sample:
+Sample payload:
 
 <pre>
 {

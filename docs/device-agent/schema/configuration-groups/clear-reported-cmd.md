@@ -16,11 +16,11 @@ The clear reported properties command enables the operator to delete all reporte
 - Start-up Configuration
     - None.
 
-## Parameters
+## Payload
 
 - None
 
-Sample:
+Sample payload:
 
 <pre>
 {}
