@@ -6,7 +6,7 @@ The delete log files command deletes the specified diagnostic log file from the 
 
 | Handler Identifier | Plug-in Binary |
 |----|----|
-| `DeleteLogFilesCmd` | DiagnosticLogsManagementPlugin.dll<br/>cpprest141[d]_2_10.dll<br/>wastorage.dll |
+| `DeleteLogFileCmd` | DiagnosticLogsManagementPlugin.dll<br/>cpprest141[d]_2_10.dll<br/>wastorage.dll |
 
 ## Life Cycle and Start-up Configuration
 

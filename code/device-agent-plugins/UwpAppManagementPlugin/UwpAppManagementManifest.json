@@ -8,6 +8,12 @@
     {
       "id": "uwpApps",
       "dependencyList": [ "certificates" ]
+    },
+    {
+      "id": "GetInstalledUwpAppsCmd"
+    },
+    {
+      "id": "ManageAppLifeCycleCmd"
     }
   ]
 }

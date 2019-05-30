@@ -6,7 +6,7 @@ The Certificate details get command enables the operator to retrieve details abo
 
 | Handler Identifier | Plug-in Binary |
 |----|----|
-| `getDetailedCertificateInfo` | CertificateManagementPlugin.dll<br/>cpprest141[d]_2_10.dll<br/>wastorage.dll |
+| `GetDetailedCertificateInfoCmd` | CertificateManagementPlugin.dll<br/>cpprest141[d]_2_10.dll<br/>wastorage.dll |
 
 ## Life Cycle and Start-up Configuration
 

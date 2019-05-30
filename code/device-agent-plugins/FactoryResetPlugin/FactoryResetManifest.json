@@ -3,5 +3,10 @@
   "direct": false,
   "outOfProc": true,
   "keepAliveTime": 50000,
-  "agentPluginProtocolVersion": "1.0.0"
+  "agentPluginProtocolVersion": "1.0.0",
+  "handlers": [
+    {
+      "id": "StartFactoryResetCmd"
+    }
+  ]
 }
