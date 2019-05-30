@@ -29,14 +29,14 @@ In the [device-agent configuration file](../../reference/device-agent-configurat
 }
 </pre>
 
-## Parameters
+## Payload
 
 | Name | Required | Type | Description |
 |-----|-----|-----|-----|
 | `path` | Yes | String | Certificate store CSP path. See below for a list of supported paths. |
 | `hash` | Yes | String | Thumbprint of the installed certificate. |
 
-Sample:
+Sample payload:
 
 <pre>
 {
