@@ -6,7 +6,7 @@
   "agentPluginProtocolVersion": "1.0.0",
   "handlers": [
     {
-      "id": "remoteWipeCmd"
+      "id": "StartRemoteWipeCmd"
     }
   ]
 }

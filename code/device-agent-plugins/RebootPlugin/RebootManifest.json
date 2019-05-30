@@ -9,7 +9,7 @@
       "id": "rebootInfo"
     },
     {
-      "id": "rebootCmd"
+      "id": "StartRebootCmd"
     }
   ]
 }

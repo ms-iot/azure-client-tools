@@ -9,16 +9,16 @@
       "id": "eventTracingCollectors"
     },
     {
-      "id": "enumerateLogFoldersCmd"
+      "id": "EnumerateLogFoldersCmd"
     },
     {
-      "id": "enumerateLogFilesCmd"
+      "id": "EnumerateLogFilesCmd"
     },
     {
-      "id": "deleteLogFileCmd"
+      "id": "DeleteLogFileCmd"
     },
     {
-      "id": "uploadLogFileCmd"
+      "id": "UploadLogFileCmd"
     }
   ]
 }

@@ -9,7 +9,7 @@
       "id": "certificates"
     },
     {
-      "id": "getDetailedCertificateInfo"
+      "id": "GetDetailedCertificateInfoCmd"
     }
   ]
 }
