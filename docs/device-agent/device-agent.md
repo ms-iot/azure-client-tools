@@ -6,6 +6,7 @@ The device agent is shared as an open source project in this repo.
 
 - [Quick Starts](quick-start.md)
 - [Development Scenario Walk-through](development-scenario.md)
+- [QR Walk-through](walk-through-scenarios/qr-provisioning.md)
 - [Device Agent Reference](reference.md)
 
 ## Overview

@@ -50,3 +50,4 @@ project.assets.json
 /code/device-agent/uwp-bridge-lib/DMBridgeInterface/DMBridgeInterface_h.h
 *.aps
 /code/Tools/ZipHelperUtility/.vs/ZipHelperUtility/v15/Server/sqlite3
+/code/Samples/OOB/QROOB/Generated Files

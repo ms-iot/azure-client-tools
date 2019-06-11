@@ -10,3 +10,6 @@
 [submodule "deps/azure-iot-sdk-c"]
 	path = deps/azure-iot-sdk-c
 	url = https://github.com/ms-iot/azure-iot-sdk-c
+[submodule "deps/QR-Code-generator"]
+	path = deps/QR-Code-generator
+	url = https://github.com/nayuki/QR-Code-generator.git
