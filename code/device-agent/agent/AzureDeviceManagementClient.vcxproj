@@ -54,6 +54,7 @@
   <PropertyGroup Label="UserMacros">
     <AzurePlatform Condition="'$(Platform)'=='Win32'">x86</AzurePlatform>
     <AzurePlatform Condition="'$(Platform)'!='Win32'">$(Platform)</AzurePlatform>
+    <AzureSDKPath>..\..\..\deps\azure-iot-sdk-c</AzureSDKPath>
     <LimpetApiRoot Condition="'$(LimpetApiRoot)'==''">..\LimpetApi</LimpetApiRoot>
     <LimpetApiIncludePath Condition="'$(LimpetApiIncludePath)'==''">$(LimpetApiRoot)\inc</LimpetApiIncludePath>
     <UrchinIncPath>..\..\..\deps\security\urchin\inc</UrchinIncPath>
@@ -76,7 +77,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)'=='Debug'">_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)'=='Release'">NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.;..\..\..\deps\azure-iot-sdk-c\c-utility\inc;..\..\..\deps\azure-iot-sdk-c\iothub_client\inc;$(SolutionDir);$(SolutionDir)\AzureDeviceManagementBridge\SharedUtilities;$(LimpetApiIncludePath);$(UrchinIncPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(AzureSDKPath)\c-utility\inc;$(AzureSDKPath)\c-utility\inc;$(AzureSDKPath)\c-utility\deps\azure-macro-utils-c\inc;$(AzureSDKPath)\c-utility\deps\umock-c\inc;$(AzureSDKPath)\iothub_client\inc;$(SolutionDir);$(SolutionDir)\AzureDeviceManagementBridge\SharedUtilities;$(LimpetApiIncludePath);$(UrchinIncPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata\10.0.16299.0;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -87,7 +88,7 @@
       <EnableCOMDATFolding Condition="'$(Configuration)'=='Release'">true</EnableCOMDATFolding>
       <OptimizeReferences Condition="'$(Configuration)'=='Release'">true</OptimizeReferences>
       <AdditionalDependencies>dmbridge.lib;iothub_service_client.lib;uhttp.lib;prov_http_transport.lib;prov_auth_client.lib;prov_device_ll_client.lib;aziotsharedutil.lib;parson.lib;hsm_security_client.lib;msr_riot.lib;utpm.lib;prov_auth_client.lib;platform.lib;urchin.lib;limpetapi.lib;AzureDeviceProvisioningClient.lib;aziotsharedutil.lib;uamqp.lib;iothub_client_amqp_transport.lib;iothub_client.lib;parson.lib;prov_auth_client.lib;hsm_security_client.lib;msr_riot.lib;utpm.lib;mdmlocalmanagement.lib;xmllite.lib;Rpcrt4.lib;Winhttp.lib;Crypt32.lib;Ncrypt.lib;Ws2_32.lib;Secur32.lib;kernel32.lib;advapi32.lib;tbs.lib;onecoreuap.lib;RuntimeObject.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\iothub_service_client\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\deps\uhttp\$(Configuration);$(SolutionDir)$(Platform)\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\provisioning_client\deps\utpm\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\provisioning_client\deps\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\provisioning_client\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\iothub_client\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\c-utility\$(Configuration);..\..\..\deps\azure-iot-sdk-c\$(AzurePlatform)\uamqp\$(Configuration);$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(AzureSDKPath)\$(AzurePlatform)\iothub_service_client\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\deps\uhttp\$(Configuration);$(SolutionDir)$(Platform)\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\provisioning_client\deps\utpm\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\provisioning_client\deps\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\provisioning_client\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\iothub_client\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\c-utility\$(Configuration);$(AzureSDKPath)\$(AzurePlatform)\uamqp\$(Configuration);$(SolutionDir)output\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
