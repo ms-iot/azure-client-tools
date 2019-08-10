@@ -25,6 +25,7 @@
 #include "azure_c_shared_utility/xlogging.h"
 
 #include "azure_c_shared_utility/connection_string_parser.h"
+#include "azure_macro_utils/macro_utils.h"
 
 #include "azure_prov_client/prov_device_ll_client.h"
 #include "azure_prov_client/prov_security_factory.h"
@@ -34,7 +35,7 @@
 #include "iothub_registrymanager.h"
 
 #include "azure_c_shared_utility/sastoken.h"
-#include "azure_c_shared_utility/base64.h"
+#include "azure_c_shared_utility/azure_base64.h"
 
 #define IOTDPSCLIENT_PARAMETERS_REGPATH             L"SYSTEM\\CurrentControlSet\\Services\\AzureDeviceManagementClient\\Parameters"
 #define IOTDPSCLIENT_PARAMETERS_REGNAME_DPSSCOPE    L"IdScope"
@@ -96,8 +97,8 @@ typedef struct CLIENT_SAMPLE_INFO_TAG
 
 CLIENT_SAMPLE_INFO dps_info;
 
-DEFINE_ENUM_STRINGS(PROV_DEVICE_RESULT, PROV_DEVICE_RESULT_VALUE);
-DEFINE_ENUM_STRINGS(PROV_DEVICE_REG_STATUS, PROV_DEVICE_REG_STATUS_VALUES);
+MU_DEFINE_ENUM_STRINGS(PROV_DEVICE_RESULT, PROV_DEVICE_RESULT_VALUE);
+MU_DEFINE_ENUM_STRINGS(PROV_DEVICE_REG_STATUS, PROV_DEVICE_REG_STATUS_VALUES);
 
 
 static void registation_status_callback(PROV_DEVICE_REG_STATUS reg_status, void* user_context)
@@ -112,7 +113,7 @@ static void registation_status_callback(PROV_DEVICE_REG_STATUS reg_status, void*
     {
         CLIENT_SAMPLE_INFO* local_dps_info = (CLIENT_SAMPLE_INFO*)user_context;
 
-        TRACEP(LoggingLevel::Verbose, "Provisioning Status: ", ENUM_TO_STRING(PROV_DEVICE_REG_STATUS, reg_status));
+        TRACEP(LoggingLevel::Verbose, "Provisioning Status: ", MU_ENUM_TO_STRING(PROV_DEVICE_REG_STATUS, reg_status));
         if (reg_status == PROV_DEVICE_REG_STATUS_CONNECTED)
         {
             local_dps_info->sleep_time = 600;
@@ -325,7 +326,7 @@ static void register_device_callback(PROV_DEVICE_RESULT register_result, const c
         }
         else
         {
-            TRACEP(LoggingLevel::Verbose, "Failure encountered on registration: %s\r\n", ENUM_TO_STRING(PROV_DEVICE_RESULT, register_result));
+            TRACEP(LoggingLevel::Verbose, "Failure encountered on registration: %s\r\n", MU_ENUM_TO_STRING(PROV_DEVICE_RESULT, register_result));
             reg_dps_info->registration_complete = DPS_FAILURE;
         }
     }

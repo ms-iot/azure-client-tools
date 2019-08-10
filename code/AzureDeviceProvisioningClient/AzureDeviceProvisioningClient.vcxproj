@@ -87,7 +87,7 @@
       <AdditionalUsingDirectories Condition="'$(VisualStudioVersion)' == '15.0'">$(VSInstallDir)\Common7\IDE\VC\vcpackages;$(WindowsSdkDir)\UnionMetadata;$(WindowsSdkDir)\UnionMetadata\$(TargetPlatformVersion);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalUsingDirectories Condition="'$(VisualStudioVersion)' == '14.0'">$(VCInstallDir)\vcpackages;$(WindowsSdkDir)\UnionMetadata;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory);$(AzureSDKPath)\c-utility\inc;$(AzureSDKPath)\provisioning_client\inc;$(AzureSDKPath)\iothub_service_client\inc;$(UrchinIncPath);..\LimpetApi\inc;inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory);$(AzureSDKPath)\c-utility\inc;$(AzureSDKPath)\c-utility\deps\azure-macro-utils-c\inc;$(AzureSDKPath)\c-utility\deps\umock-c\inc;$(AzureSDKPath)\provisioning_client\inc;$(AzureSDKPath)\iothub_service_client\inc;$(UrchinIncPath);..\LimpetApi\inc;inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
