@@ -39,6 +39,7 @@ using namespace std::experimental::filesystem::v1;
 namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace Client {
 
 static const IOTHUB_CLIENT_TRANSPORT_PROVIDER IoTHubProtocol = AMQP_Protocol;
+constexpr const char* IoTHubClientProductInfo = "device-agent";
 
 AzureDMClient::AzureDMClient() :
     _deviceClientHandle(NULL),
@@ -361,6 +362,12 @@ void AzureDMClient::InitializeIoTHubConnection()
 
         bool traceOn = true;
         IoTHubDeviceClient_SetOption(_deviceClientHandle, OPTION_LOG_TRACE, &traceOn);
+        
+        // Include additional product information
+        if (IoTHubDeviceClient_SetOption(_deviceClientHandle, OPTION_PRODUCT_INFO, IoTHubClientProductInfo) != IOTHUB_CLIENT_OK)
+        {
+            TRACELINE(LoggingLevel::Warning, "Unable to set product info using IoTHubDeviceClient_SetOption");
+        }
 
         _activeHandlerHost->InitializeDeviceConnection(_deviceClientHandle);
     }
@@ -377,6 +384,12 @@ void AzureDMClient::InitializeIoTHubConnection()
 
         bool traceOn = true;
         IoTHubModuleClient_SetOption(_moduleClientHandle, OPTION_LOG_TRACE, &traceOn);
+
+        // Include additional product information
+        if (IoTHubModuleClient_SetOption(_moduleClientHandle, OPTION_PRODUCT_INFO, IoTHubClientProductInfo) != IOTHUB_CLIENT_OK)
+        {
+            TRACELINE(LoggingLevel::Warning, "Unable to set product info using IoTHubModuleClient_SetOption");
+        }
 
         if (_azureInterfaceType == AzureInterfaceType::eRaw)
         {
