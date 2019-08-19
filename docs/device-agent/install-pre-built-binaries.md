@@ -15,9 +15,9 @@ The binaries can be downloaded in either of two ways:
 ## Using The Zip Files
 
 - Download the architecture matching your target device:
-    - [device.agent.2.0.0.4.arm.zip](../../downloads/device.agent.2.0.0.4.arm.zip).
-    - [device.agent.2.0.0.4.x64.zip](../../downloads/device.agent.2.0.0.4.x64.zip).
-    - [device.agent.2.0.0.4.x86.zip](../../downloads/device.agent.2.0.0.4.x86.zip).
+    - [device.agent.2.0.0.5.arm.zip](../../downloads/device.agent.2.0.0.5.arm.zip).
+    - [device.agent.2.0.0.5.x64.zip](../../downloads/device.agent.2.0.0.5.x64.zip).
+    - [device.agent.2.0.0.5.x86.zip](../../downloads/device.agent.2.0.0.5.x86.zip).
 - Extract and copy to the device.
 
 ## Using WDP
