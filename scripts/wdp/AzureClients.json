@@ -116,7 +116,9 @@
         }
       ],
       "PostDownloadCommands": [
-        "c:\\dm\\AzureDeviceManagementClient.exe -install"
+        "c:\\dm\\AzureDeviceManagementClient.exe -install",
+        "c:\\windows\\system32\\sc.exe config AzureDeviceManagementClient start=auto",
+        "c:\\windows\\system32\\sc.exe failure AzureDeviceManagementClient reset= 0 actions= restart/0/restart/0/restart/0"
       ],
       "StartCommands": [
         "net start AzureDeviceManagementClient"
@@ -241,7 +243,9 @@
         }
       ],
       "PostDownloadCommands": [
-        "c:\\dm\\AzureDeviceManagementClient.exe -install"
+        "c:\\dm\\AzureDeviceManagementClient.exe -install",
+        "c:\\windows\\system32\\sc.exe config AzureDeviceManagementClient start=auto",
+        "c:\\windows\\system32\\sc.exe failure AzureDeviceManagementClient reset= 0 actions= restart/0/restart/0/restart/0"
       ],
       "StartCommands": [
         "net start AzureDeviceManagementClient"
@@ -366,7 +370,9 @@
         }
       ],
       "PostDownloadCommands": [
-        "c:\\dm\\AzureDeviceManagementClient.exe -install"
+        "c:\\dm\\AzureDeviceManagementClient.exe -install",
+        "c:\\windows\\system32\\sc.exe config AzureDeviceManagementClient start=auto",
+        "c:\\windows\\system32\\sc.exe failure AzureDeviceManagementClient reset= 0 actions= restart/0/restart/0/restart/0"
       ],
       "StartCommands": [
         "net start AzureDeviceManagementClient"

@@ -12,7 +12,7 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace C
     static const char* LogFilePrefix = "Core";
     static const char* LogFilePathDefaultValue = "";
     static const char* PluginManifestPathDefaultValue = "";
-    static const char* PluginsDataPathDefaultValue = "..\\DMData";
+    static const char* PluginsDataPathDefaultValue = "DMData";
     static const unsigned int SasExpiryIntervalDefaultValue = 24 * 3600; // in seconds
     static const unsigned int SasRenewalGracePeriodDefaultValue = 1 * 3600; // in seconds
     static const bool DpsIsEnabledDefaultValue = true;

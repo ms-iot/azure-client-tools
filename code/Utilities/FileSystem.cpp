@@ -105,7 +105,8 @@ namespace Microsoft { namespace Azure { namespace DeviceManagement { namespace U
             {
                 path += "\\";
                 path += s;
-                if (ERROR_SUCCESS != CreateDirectoryA(path.c_str(), NULL))
+                // If the function fails, the return value is zero
+                if (0 == CreateDirectoryA(path.c_str(), NULL))
                 {
                     if (ERROR_ALREADY_EXISTS != GetLastError())
                     {
