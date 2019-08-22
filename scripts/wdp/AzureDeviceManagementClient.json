@@ -1,6 +1,7 @@
 {
   "textLogFilesPath": "c:\\dm",
   "pluginManifestsPath": "manifests",
+  "pluginsDataPath": "DMData",
   "sasExpiryInterval": 86400,
   "sasRenewalGracePeriod": 3600,
   "dpsEnabled": true,
@@ -16,13 +17,13 @@
     "__deviceSchemas": {
       "reportOnConnect": true
     },
-    "factoryResetCmd": {
+    "StartFactoryResetCmd": {
       "handlerTestMode": true
     },
-    "rebootCmd": {
+    "StartRebootCmd": {
       "handlerTestMode": false
     },
-    "remoteWipeCmd": {
+    "StartRemoteWipeCmd": {
       "handlerTestMode": true
     }
   }

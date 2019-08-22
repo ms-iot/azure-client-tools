@@ -1,7 +1,7 @@
 {
   "textLogFilesPath": "..\\logs",
   "pluginManifestsPath": "..\\manifests",
-  "pluginsDataPath": "..\\data",
+  "pluginsDataPath": "DMData",
   "sasExpiryInterval": 86400,
   "sasRenewalGracePeriod": 3600,
   "dpsEnabled": true,
