@@ -3058,10 +3058,17 @@ UINT32 LimpetIssueCertificate(
         certInfo.SignatureAlgorithm.pszObjId = &oidRsaSha256Rsa[0];
         certInfo.Issuer.cbData = caCert.get()->pCertInfo->Issuer.cbData;
         certInfo.Issuer.pbData = caCert.get()->pCertInfo->Issuer.pbData;
+        
+        // Set the NotBefore date to the current date and time
         GetSystemTime(&systemTime);
         SystemTimeToFileTime(&systemTime, &certInfo.NotBefore);
+        
+        // Set the NotAfter date 10 years later, accounting for leap day correctly
         systemTime.wYear += 10;
+        bool isLeapYear = systemTime.wYear % 4 == 0 && (systemTime.wYear % 100 != 0 || systemTime.wYear % 400 == 0);
+        systemTime.wDay = systemTime.wMonth == 2 && systemTime.wDay == 29 && !isLeapYear ? 28 : systemTime.wDay;
         SystemTimeToFileTime(&systemTime, &certInfo.NotAfter);
+
         certInfo.SubjectPublicKeyInfo = selfSignedCert.get()->pCertInfo->SubjectPublicKeyInfo;
 
         // Create the subject name
