@@ -10,7 +10,7 @@ The plug-ins source code can then be built, signed, and packaged in the device i
 The repo comes with pre-built **debug** nugets that you can directly consume into your project.
 The nugets can be found here:
 
-- [`downloads/azure-device-agent-plugin-lib.2.0.0.nupkg`](../../../downloads/azure-device-agent-plugin-lib.2.0.0.nupkg)
+- [`downloads/azure-device-agent-plugin-lib.2.0.3.nupkg`](../../../downloads/azure-device-agent-plugin-lib.2.0.0.nupkg)
 
 If you make changes to the agent libraries source code, you can generate those nugets by following the instructions on the [SDK Build](sdk-build.md) page.
 
